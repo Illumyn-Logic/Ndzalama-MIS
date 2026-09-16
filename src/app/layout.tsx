@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
+import { DemoAuthProvider } from '@/context/demo-auth-context';
+import { DemoRoleSwitcher } from '@/components/common/demo-role-switcher';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -15,10 +17,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: {
     template: '%s | Ndzalama Training',
-    default: 'Ndzalama Training',
+    default: 'Ndzalama Training — SAQA & QCTO Accredited ETD Provider',
   },
   description:
-    'Ndzalama Training offers SAQA-accredited programmes in facilitation, assessment, moderation, SDF, ECD and more.',
+    'Ndzalama Training offers SAQA-accredited programmes in facilitation, assessment, moderation, SDF, ECD and more. ETDP SETA Accredited: ETDP0204.',
 };
 
 export default function RootLayout({
@@ -32,8 +34,12 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-white dark:bg-[#0a0a0a] text-[#333] dark:text-white">
-        {children}
+        <DemoAuthProvider>
+          {children}
+          <DemoRoleSwitcher />
+        </DemoAuthProvider>
       </body>
     </html>
   );
 }
+

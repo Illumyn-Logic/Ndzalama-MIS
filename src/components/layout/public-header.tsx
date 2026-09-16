@@ -327,6 +327,26 @@ export function PublicHeader() {
             {/* Courses mega dropdown */}
             <CoursesDropdown isActive={isCoursesActive} />
 
+            <Link
+              href="/posts"
+              className={cn(
+                'px-4 py-2 text-sm font-medium rounded transition-colors hover:text-[#84ba3f]',
+                pathname.startsWith('/posts') ? 'text-[#84ba3f]' : 'text-[#333] dark:text-gray-300',
+              )}
+            >
+              Updates
+            </Link>
+
+            <Link
+              href="/verify"
+              className={cn(
+                'px-4 py-2 text-sm font-medium rounded transition-colors hover:text-[#84ba3f]',
+                pathname === '/verify' ? 'text-[#84ba3f]' : 'text-[#333] dark:text-gray-300',
+              )}
+            >
+              Verify
+            </Link>
+
             {/* Accreditation dropdown */}
             <NavDropdown label="Accreditation" isActive={isAccreditationActive}>
               {accreditationLinks.map((l) => (
@@ -347,16 +367,16 @@ export function PublicHeader() {
             {/* CTA group */}
             <div className="flex items-center gap-2 ml-3">
               <Link
-                href="/register"
-                className="px-5 py-2 text-sm font-semibold rounded-full bg-[#84ba3f] text-white hover:bg-[#6ea032] transition-colors"
+                href="/apply"
+                className="px-5 py-2 text-sm font-semibold rounded-full bg-[#84ba3f] text-white hover:bg-[#6ea032] transition-colors shadow-sm"
               >
                 Apply Now
               </Link>
               <Link
-                href="/login"
-                className="px-5 py-2 text-sm font-semibold rounded-full border-2 border-[#6b7280] text-[#6b7280] hover:bg-[#6b7280] hover:text-white transition-colors dark:border-gray-400 dark:text-gray-400 dark:hover:bg-gray-500 dark:hover:text-white"
+                href="/dashboard/learner"
+                className="px-5 py-2 text-sm font-semibold rounded-full border-2 border-[#006600] text-[#006600] hover:bg-[#006600] hover:text-white transition-colors dark:border-[#84ba3f] dark:text-[#84ba3f] dark:hover:bg-[#84ba3f] dark:hover:text-white"
               >
-                Student Portal
+                Portals
               </Link>
             </div>
           </nav>

@@ -1,67 +1,102 @@
-import type { Metadata } from 'next';
-import Link from 'next/link';
-import { Container } from '@/components/ui/container';
+'use client';
 
-export const metadata: Metadata = { title: 'Student Portal | Ndzalama' };
+import { useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { Container } from '@/components/ui/container';
+import { useDemoAuth } from '@/context/demo-auth-context';
+import { FaLock, FaEnvelope, FaSignInAlt, FaShieldAlt } from 'react-icons/fa';
 
 export default function LoginPage() {
+  const router = useRouter();
+  const { switchRole } = useDemoAuth();
+  const [email, setEmail] = useState('lerato.ndlovu@gmail.com');
+  const [password, setPassword] = useState('••••••••');
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    await new Promise((res) => setTimeout(res, 400));
+    switchRole('learner');
+    router.push('/dashboard/learner');
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 py-12 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-[#0a0a0a] py-12 px-4">
       <Container className="max-w-md w-full">
         <div className="text-center mb-8">
-          <Link href="/" className="text-2xl font-bold text-[#006600] dark:text-[#84ba3f]">
-            Ndzalama
-          </Link>
-          <h1 className="mt-4 text-2xl font-bold text-[#333] dark:text-white">
-            Student Portal
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#84ba3f]/15 text-[#4c7a1f] dark:text-[#84ba3f] text-xs font-bold uppercase tracking-wider mb-2">
+            <FaShieldAlt aria-hidden="true" />
+            Ndzalama Single Sign-On
+          </span>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+            Learner & Staff Portal
           </h1>
+          <p className="mt-1 text-xs sm:text-sm text-slate-500">
+            Sign in to access your modules, submit PoEs, or manage applications.
+          </p>
         </div>
-        <div className="bg-white dark:bg-[#16171d] rounded-2xl shadow-sm border border-slate-200 dark:border-[#2e303a] p-8 space-y-5">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-[#333] dark:text-white">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              placeholder="you@example.com"
-              className="mt-1 w-full px-4 py-2 border border-[#e5e4e7] dark:border-[#2e303a] rounded-lg bg-white dark:bg-[#0a0a0a] text-[#333] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#84ba3f]"
-            />
-          </div>
-          <div>
-            <div className="flex items-center justify-between">
-              <label htmlFor="password" className="block text-sm font-medium text-[#333] dark:text-white">
-                Password
+
+        <div className="bg-white dark:bg-[#16171d] rounded-3xl shadow-xl border border-slate-200 dark:border-[#2e303a] p-8 space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">
+                Email Address
               </label>
-              <Link href="/forgot-password" className="text-xs text-[#84ba3f] hover:underline">
-                Forgot password?
-              </Link>
+              <div className="relative">
+                <FaEnvelope className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs" aria-hidden="true" />
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@example.com"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#84ba3f]"
+                />
+              </div>
             </div>
-            <input
-              id="password"
-              type="password"
-              placeholder="••••••••"
-              className="mt-1 w-full px-4 py-2 border border-[#e5e4e7] dark:border-[#2e303a] rounded-lg bg-white dark:bg-[#0a0a0a] text-[#333] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#84ba3f]"
-            />
+
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <label htmlFor="password" className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                  Password
+                </label>
+                <Link href="/forgot-password" className="text-xs text-[#84ba3f] hover:underline">
+                  Forgot password?
+                </Link>
+              </div>
+              <div className="relative">
+                <FaLock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs" aria-hidden="true" />
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#84ba3f]"
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={submitting}
+              className="w-full py-3.5 rounded-xl font-bold text-xs sm:text-sm bg-[#84ba3f] text-white hover:bg-[#6ea032] transition-colors shadow-md flex items-center justify-center gap-2"
+            >
+              <FaSignInAlt aria-hidden="true" />
+              {submitting ? 'Authenticating…' : 'Sign In to Portal'}
+            </button>
+          </form>
+
+          <div className="pt-2 border-t border-slate-100 dark:border-slate-800 text-center space-y-1.5 text-xs text-slate-500">
+            <p>
+              Don&apos;t have an account yet?{' '}
+              <Link href="/apply" className="text-[#84ba3f] font-bold hover:underline">
+                Register & Apply Now
+              </Link>
+            </p>
           </div>
-          <button
-            type="submit"
-            className="w-full py-3 rounded-lg font-medium bg-[#84ba3f] text-white hover:bg-[#6ea032] transition-colors"
-          >
-            Sign In
-          </button>
-          <p className="text-center text-sm text-[#666] dark:text-gray-400">
-            Don&apos;t have an account?{' '}
-            <Link href="/register" className="text-[#84ba3f] font-medium hover:underline">
-              Register
-            </Link>
-          </p>
-          <p className="text-center text-sm text-[#666] dark:text-gray-400">
-              Want to apply for a course?{' '}
-              <Link href="/register" className="text-[#84ba3f] font-medium hover:underline">
-              Apply Now
-            </Link>
-          </p>
         </div>
       </Container>
     </div>
