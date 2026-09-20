@@ -2,33 +2,14 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useDemoAuth } from '@/context/demo-auth-context';
-import { type UserRole } from '@/lib/offline-data';
+import { useSession, signOut } from 'next-auth/react';
 import { cn } from '@/lib/utils';
 import {
-  FaTachometerAlt,
-  FaUserGraduate,
-  FaBook,
-  FaClipboardList,
-  FaCalendarAlt,
-  FaShieldAlt,
-  FaFileExport,
-  FaTasks,
-  FaCheckDouble,
-  FaChalkboardTeacher,
-  FaCertificate,
-  FaFileUpload,
-  FaHome,
-  FaCog,
-  FaGraduationCap,
-  FaFileSignature,
-  FaChartLine,
-  FaComments,
-  FaChartPie,
-  FaUsersCog,
-  FaQuestionCircle,
-  FaReceipt,
-  FaIdCard,
+  FaTachometerAlt, FaUserGraduate, FaBook, FaClipboardList, FaCalendarAlt,
+  FaShieldAlt, FaFileExport, FaTasks, FaCheckDouble, FaChalkboardTeacher,
+  FaCertificate, FaFileUpload, FaHome, FaCog, FaGraduationCap, FaFileSignature,
+  FaChartLine, FaComments, FaChartPie, FaQuestionCircle, FaReceipt,
+  FaIdCard, FaSignOutAlt
 } from 'react-icons/fa';
 
 interface NavItem {
@@ -37,7 +18,8 @@ interface NavItem {
   icon: React.ReactNode;
 }
 
-const roleNavigations: Record<UserRole, { title: string; subtitle: string; items: NavItem[] }> = {
+// Changed Record type to string to safely map Prisma's uppercase enums to our lowercase keys
+const roleNavigations: Record<string, { title: string; subtitle: string; items: NavItem[] }> = {
   visitor: {
     title: 'Public Portal',
     subtitle: 'Ndzalama Training',
@@ -138,11 +120,24 @@ const roleNavigations: Record<UserRole, { title: string; subtitle: string; items
   },
 };
 
+function getInitials(name?: string | null) {
+  if (!name) return 'U';
+  return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+}
+
 export function DashboardSidebar() {
   const pathname = usePathname();
-  const { currentRole, currentUser } = useDemoAuth();
+  const { data: session, status } = useSession();
 
+  if (status === 'loading') {
+    return <div className="fixed inset-y-0 left-0 z-30 w-72 bg-[#03367A] animate-pulse" />;
+  }
+
+  const user = session?.user;
+  // Map Prisma's UPPERCASE roles to our lowercase navigation keys
+  const currentRole = (user?.role || 'visitor').toLowerCase(); 
   const config = roleNavigations[currentRole] || roleNavigations.admin;
+  const initials = getInitials(user?.name);
 
   return (
     <aside className="fixed inset-y-0 left-0 z-30 w-72 bg-[#03367A] text-white shadow-2xl hidden lg:flex flex-col">
@@ -164,18 +159,19 @@ export function DashboardSidebar() {
       {/* User Persona Profile Strip */}
       <div className="mx-3 mt-4 p-3.5 rounded-2xl bg-white/10 border border-white/10 backdrop-blur-sm flex items-center gap-3">
         <div className="w-10 h-10 rounded-full bg-[#84ba3f] text-white text-sm font-bold flex items-center justify-center shrink-0 shadow">
-          {currentUser.avatar}
+          {initials}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-xs font-bold text-white truncate">{currentUser.name}</p>
-          <p className="text-[11px] text-sky-200/80 truncate">{currentUser.title}</p>
+          <p className="text-xs font-bold text-white truncate">{user?.name || 'User'}</p>
+          <p className="text-[11px] text-sky-200/80 truncate">{user?.email}</p>
         </div>
       </div>
 
       {/* Nav List */}
       <nav className="flex-1 space-y-1 px-3 py-4 overflow-y-auto" aria-label="Dashboard navigation">
         {config.items.map((item) => {
-          const isActive = pathname === item.href;
+          // usePathname doesn't include query params (?tab=...), so we split the href to match the base path
+          const isActive = pathname === item.href.split('?')[0]; 
           return (
             <Link
               key={item.label}
@@ -194,19 +190,29 @@ export function DashboardSidebar() {
         })}
       </nav>
 
-      {/* System Status Footer */}
-      <div className="m-4 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm text-xs">
-        <div className="flex items-center justify-between">
-          <span className="text-sky-200/80">Accreditation</span>
-          <span className="font-mono font-bold text-[#84ba3f]">ETDP0204</span>
+      {/* System Status & Logout Footer */}
+      <div className="m-4 space-y-3">
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm text-xs">
+          <div className="flex items-center justify-between">
+            <span className="text-sky-200/80">Accreditation</span>
+            <span className="font-mono font-bold text-[#84ba3f]">ETDP0204</span>
+          </div>
+          <div className="mt-2 flex items-center justify-between">
+            <span className="text-sky-200/80">System Mode</span>
+            <span className="inline-flex items-center gap-1.5 font-bold text-emerald-300">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              Live Neon DB
+            </span>
+          </div>
         </div>
-        <div className="mt-2 flex items-center justify-between">
-          <span className="text-sky-200/80">System Mode</span>
-          <span className="inline-flex items-center gap-1.5 font-bold text-emerald-300">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            Offline Local DB
-          </span>
-        </div>
+        
+        <button
+          onClick={() => signOut({ callbackUrl: '/login' })}
+          className="flex items-center justify-center gap-2 w-full rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-300 hover:text-red-200 px-4 py-2.5 text-xs font-bold transition-all"
+        >
+          <FaSignOutAlt />
+          Sign Out
+        </button>
       </div>
     </aside>
   );

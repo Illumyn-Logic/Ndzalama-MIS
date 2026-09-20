@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { detailedCourses, cohortSchedules, type DetailedCourse } from '@/lib/offline-data';
+import { detailedCourses, cohortSchedules, type DetailedCourse } from '@/lib/offline_data';
 import { Container } from '@/components/ui/container';
 import {
   FaCheckCircle,

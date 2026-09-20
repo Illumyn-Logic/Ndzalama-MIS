@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { initialApplications, cohortSchedules, type LearnerApplication } from '@/lib/offline-data';
+import { initialApplications, cohortSchedules, type LearnerApplication } from '@/lib/offline_data';
 import {
   FaUserGraduate,
   FaFileExport,

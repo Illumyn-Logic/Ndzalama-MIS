@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { initialModeratorQueue, type ModeratorQueueItem } from '@/lib/offline-data';
+import { initialModeratorQueue, type ModeratorQueueItem } from '@/lib/offline_data';
 import {
   FaShieldAlt,
   FaCheckCircle,

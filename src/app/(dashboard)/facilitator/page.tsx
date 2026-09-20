@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { cohortSchedules, detailedCourses } from '@/lib/offline-data';
+import { cohortSchedules, detailedCourses } from '@/lib/offline_data';
 import {
   FaChalkboardTeacher,
   FaCalendarAlt,

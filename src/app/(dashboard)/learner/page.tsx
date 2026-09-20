@@ -8,7 +8,7 @@ import {
   cohortSchedules,
   type LearnerEnrolledCourse,
   type DetailedCourse,
-} from '@/lib/offline-data';
+} from '@/lib/offline_data';
 import {
   FaBook,
   FaFileUpload,

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { initialAssessorQueue, type AssessorQueueItem } from '@/lib/offline-data';
+import { initialAssessorQueue, type AssessorQueueItem } from '@/lib/offline_data';
 import {
   FaTasks,
   FaCheckCircle,

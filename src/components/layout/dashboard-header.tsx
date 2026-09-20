@@ -1,11 +1,19 @@
 'use client';
 
 import Link from 'next/link';
-import { useDemoAuth } from '@/context/demo-auth-context';
-import { FaHome, FaUserCircle, FaExchangeAlt, FaShieldAlt } from 'react-icons/fa';
+import { useSession } from 'next-auth/react';
+import { FaHome } from 'react-icons/fa';
+
+function getInitials(name?: string | null) {
+  if (!name) return 'U';
+  return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+}
 
 export function DashboardHeader() {
-  const { currentUser, currentRole, switchRole } = useDemoAuth();
+  const { data: session } = useSession();
+  const user = session?.user;
+  const role = user?.role || 'GUEST';
+  const initials = getInitials(user?.name);
 
   return (
     <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/90 px-6 py-4 backdrop-blur-md dark:bg-[#16171d]/90 dark:border-slate-800">
@@ -13,7 +21,8 @@ export function DashboardHeader() {
         <div>
           <div className="flex items-center gap-2">
             <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#84ba3f]">
-              {currentRole.toUpperCase()} WORKSPACE
+              {/* Format SUPER_ADMIN to Super Admin */}
+              {role.replace('_', ' ')} WORKSPACE
             </span>
             <span className="text-slate-300 dark:text-slate-700">•</span>
             <span className="text-xs text-slate-500 font-mono">ETDP SETA: ETDP0204</span>
@@ -38,14 +47,14 @@ export function DashboardHeader() {
               className="flex h-9 w-9 items-center justify-center rounded-full bg-[#84ba3f] text-xs font-bold text-white shadow-sm flex-shrink-0"
               aria-hidden="true"
             >
-              {currentUser.avatar}
+              {initials}
             </div>
             <div className="text-left hidden md:block">
               <p className="text-xs font-bold text-slate-900 dark:text-white leading-tight">
-                {currentUser.name}
+                {user?.name || 'User'}
               </p>
               <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-tight">
-                {currentUser.title.split(' ')[0]} ({currentUser.role})
+                {user?.email}
               </p>
             </div>
           </div>

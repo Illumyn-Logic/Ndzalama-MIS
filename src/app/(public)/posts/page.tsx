@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Container } from '@/components/ui/container';
 import { SectionTitle } from '@/components/ui/section-title';
-import { dynamicPosts } from '@/lib/offline-data';
+import { dynamicPosts } from '@/lib/offline_data';
 import { FaTag, FaUserEdit, FaCalendarAlt, FaArrowRight } from 'react-icons/fa';
 
 export const metadata: Metadata = {
