@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-import { DemoAuthProvider } from '@/context/demo-auth-context';
-import { DemoRoleSwitcher } from '@/components/common/demo-role-switcher';
+import { AuthSessionProvider } from '@/context/session-provider';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -34,12 +33,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-white dark:bg-[#0a0a0a] text-[#333] dark:text-white">
-        <DemoAuthProvider>
+        <AuthSessionProvider>
           {children}
-          <DemoRoleSwitcher />
-        </DemoAuthProvider>
+        </AuthSessionProvider>
       </body>
     </html>
   );
 }
-

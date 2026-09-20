@@ -10,6 +10,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 // ----------------------------------------------------------------------------
@@ -153,8 +154,12 @@ enum PostCategory {
 
 model User {
   id            String       @id @default(cuid())
-  email         String       @unique
+  
+  // Auth Emails
+  email         String    @unique              // Personal email (e.g., gmail - used for registration)
+  orgEmail      String?   @unique              // Org email (e.g., 202600123@ndzalama.org.za)
   emailVerified DateTime?
+  
   passwordHash  String?
   role          UserRole     @default(LEARNER)
   isActive      Boolean      @default(true)
@@ -186,6 +191,12 @@ model Profile {
   userId               String              @unique
   user                 User                @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  // Business Identity
+  studentNumber    String?  @unique            // e.g., "202600123"
+  
+  // Statutory Identity (POPIA & NLRD)
+  idNumber         String?  @unique            // SA ID or Passport Number
+ 
   // Primary Demographics (South African NLRD / SETA Spec)
   firstName            String
   lastName             String

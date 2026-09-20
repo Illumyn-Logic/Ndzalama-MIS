@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Container } from '@/components/ui/container';
 import { SectionTitle } from '@/components/ui/section-title';
-import { verifiableCertificates, type VerifiableCertificate } from '@/lib/offline-data';
+import { verifiableCertificates, type VerifiableCertificate } from '@/lib/offline_data';
 import {
   FaShieldAlt,
   FaCheckCircle,

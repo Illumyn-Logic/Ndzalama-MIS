@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useDemoAuth } from '@/context/demo-auth-context';
-import { detailedCourses } from '@/lib/offline-data';
+import { detailedCourses } from '@/lib/offline_data';
 import {
   FaUser,
   FaEnvelope,

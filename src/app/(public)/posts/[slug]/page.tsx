@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Container } from '@/components/ui/container';
-import { dynamicPosts } from '@/lib/offline-data';
+import { dynamicPosts } from '@/lib/offline_data';
 import { FaTag, FaUserEdit, FaCalendarAlt, FaArrowLeft, FaCheckCircle } from 'react-icons/fa';
 
 export async function generateStaticParams() {
