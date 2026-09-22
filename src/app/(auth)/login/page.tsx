@@ -1,24 +1,54 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { signIn } from 'next-auth/react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { signIn, useSession } from 'next-auth/react';
 import { Container } from '@/components/ui/container';
 import {
   FaLock,
   FaEnvelope,
   FaSignInAlt,
   FaShieldAlt,
+  FaCheckCircle,
+  FaArrowLeft,
 } from 'react-icons/fa';
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { data: session, status } = useSession();
+  const registered = searchParams.get('registered');
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (status === 'authenticated' && session?.user) {
+      const role = session.user.role;
+      // Route to appropriate dashboard based on role
+      if (role === 'LEARNER') {
+        router.push('/learn/dashboard');
+      } else {
+        router.push('/dashboard');
+      }
+    }
+  }, [status, session, router]);
+
+  // Show loading while checking auth
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-[#0a0a0a]">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-[#84ba3f] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-slate-600 dark:text-slate-400">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -53,6 +83,17 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-[#0a0a0a] py-12 px-4">
       <Container className="max-w-md w-full">
+        {/* Back Button */}
+        <div className="mb-6">
+          <button
+            onClick={() => router.back()}
+            className="inline-flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+          >
+            <FaArrowLeft aria-hidden="true" />
+            Back
+          </button>
+        </div>
+
         <div className="text-center mb-8">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#84ba3f]/15 text-[#4c7a1f] dark:text-[#84ba3f] text-xs font-bold uppercase tracking-wider mb-2">
             <FaShieldAlt aria-hidden="true" />
@@ -69,6 +110,17 @@ export default function LoginPage() {
         </div>
 
         <div className="bg-white dark:bg-[#16171d] rounded-3xl shadow-xl border border-slate-200 dark:border-[#2e303a] p-8 space-y-5">
+
+          {/* Success message after registration */}
+          {registered === 'true' && (
+            <div
+              role="alert"
+              className="bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 p-4 rounded-xl text-sm font-medium text-center flex items-center justify-center gap-2 border border-emerald-200 dark:border-emerald-800"
+            >
+              <FaCheckCircle aria-hidden="true" />
+              Registration successful! Please sign in to continue.
+            </div>
+          )}
 
           {error && (
             <div

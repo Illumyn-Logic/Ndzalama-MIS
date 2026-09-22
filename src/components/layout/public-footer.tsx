@@ -111,26 +111,22 @@ export function PublicFooter() {
                 ))}
                 <li>
                   <Link
-                    href="/register"
+                    href="/learn"
                     className="flex items-center gap-2 text-sm text-gray-400 hover:text-[#84ba3f] transition-colors group"
                   >
                     <FaArrowRight
                       className="text-xs text-[#84ba3f] opacity-0 group-hover:opacity-100 transition-opacity"
                       aria-hidden="true"
                     />
-                    Book Training
+                    Learn Online
                   </Link>
                 </li>
                 <li>
                   <Link
                     href="/login"
-                    className="flex items-center gap-2 text-sm text-gray-400 hover:text-[#84ba3f] transition-colors group"
+                    className="flex items-center gap-2 text-xs text-gray-500 hover:text-gray-400 transition-colors"
                   >
-                    <FaArrowRight
-                      className="text-xs text-[#84ba3f] opacity-0 group-hover:opacity-100 transition-opacity"
-                      aria-hidden="true"
-                    />
-                    Learner Portal
+                    Staff Portal
                   </Link>
                 </li>
               </ul>
@@ -225,8 +221,8 @@ export function PublicFooter() {
               Terms of Use
             </Link>
             <span className="text-white/20">|</span>
-                    <Link href="/register" className="hover:text-[#84ba3f] transition-colors">
-              Book Training
+            <Link href="/learn" className="hover:text-[#84ba3f] transition-colors">
+              Learn Online
             </Link>
           </div>
         </Container>

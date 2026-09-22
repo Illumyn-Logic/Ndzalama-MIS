@@ -10,8 +10,47 @@ export default auth((req) => {
   // 👀 DEBUG: Watch your terminal to see the middleware intercept requests
   console.log(`[Middleware] Path: ${pathname} | Logged In: ${isLoggedIn} | Role: ${userRole || 'None'}`);
 
-  // 1. Allow public routes
-  const publicRoutes = ["/", "/login", "/register", "/courses", "/posts", "/verify", "/apply", "/about", "/contact"];
+  // 1. Legacy redirects (apply before other checks)
+  if (pathname === '/apply') {
+    console.log(`♻️ [Middleware] Legacy redirect: ${pathname} → /register`);
+    return NextResponse.redirect(new URL('/register', nextUrl));
+  }
+  if (pathname === '/learner' || pathname.startsWith('/learner/')) {
+    console.log(`♻️ [Middleware] Legacy redirect: ${pathname} → /learn/dashboard`);
+    return NextResponse.redirect(new URL('/learn/dashboard', nextUrl));
+  }
+  // Consolidate all login pages to /login
+  if (pathname === '/learn/login') {
+    console.log(`♻️ [Middleware] Consolidating auth: /learn/login → /login`);
+    return NextResponse.redirect(new URL('/login', nextUrl));
+  }
+  if (pathname === '/learn/register') {
+    console.log(`♻️ [Middleware] Consolidating auth: /learn/register → /register`);
+    return NextResponse.redirect(new URL('/register', nextUrl));
+  }
+
+  // 2. Public routes (accessible to everyone)
+  const publicRoutes = [
+    "/",
+    "/courses",
+    "/posts",
+    "/verify",
+    "/about",
+    "/contact",
+    "/schedules",
+    "/qualifications",
+    "/training-courses",
+    "/accreditation-services",
+    "/why-choose-us",
+    "/faq",
+    "/privacy-policy",
+    "/terms-of-use",
+    "/forgot-password",
+    "/learn",           // LMS portal homepage (public landing)
+    "/learn/courses",   // Browse courses (public)
+    "/learn/about",     // About the LMS (public)
+  ];
+  
   const isPublicRoute = 
     publicRoutes.some(route => pathname === route || pathname.startsWith(`${route}/`)) || 
     pathname.startsWith("/api/auth");
@@ -20,12 +59,23 @@ export default auth((req) => {
     return NextResponse.next();
   }
 
-  // 2. Redirect to login if NOT authenticated
+  // 3. Auth pages - redirect if already logged in
+  const authPages = ["/login", "/register"];
+  if (authPages.includes(pathname)) {
+    if (isLoggedIn) {
+      console.log(`♻️ [Middleware] Already logged in, redirecting to dashboard`);
+      return NextResponse.redirect(new URL(getDefaultRoute(userRole), nextUrl));
+    }
+    return NextResponse.next();
+  }
+
+  // 4. Redirect to single login if NOT authenticated
   if (!isLoggedIn) {
+    console.log(`🔒 [Middleware] Unauthenticated, redirecting to /login`);
     return NextResponse.redirect(new URL("/login", nextUrl));
   }
 
-  // 3. ROLE-BASED ACCESS CONTROL (RBAC)
+  // 5. ROLE-BASED ACCESS CONTROL (RBAC)
   const roleRouteMap: Record<string, string[]> = {
     "/admin": ["SUPER_ADMIN", "ADMIN", "REGISTRAR", "FINANCE_OFFICER"],
     "/facilitator": ["SUPER_ADMIN", "ADMIN", "FACILITATOR"],
@@ -33,7 +83,12 @@ export default auth((req) => {
     "/moderator": ["SUPER_ADMIN", "ADMIN", "MODERATOR"],
     "/mentor": ["SUPER_ADMIN", "ADMIN", "SME_MENTOR"],
     "/employer": ["SUPER_ADMIN", "ADMIN", "HOST_EMPLOYER"],
-    "/learner": ["LEARNER"],
+    "/learn/dashboard": ["LEARNER", "SUPER_ADMIN", "ADMIN"], // Learner workspace + admin override
+    "/learn/my-courses": ["LEARNER", "SUPER_ADMIN", "ADMIN"],
+    "/learn/assessments": ["LEARNER", "SUPER_ADMIN", "ADMIN"],
+    "/learn/certificates": ["LEARNER", "SUPER_ADMIN", "ADMIN"],
+    "/learn/profile": ["LEARNER", "SUPER_ADMIN", "ADMIN"],
+    "/learn/support": ["LEARNER", "SUPER_ADMIN", "ADMIN"],
   };
 
   // Check if the requested path matches any restricted prefix
@@ -52,7 +107,7 @@ export default auth((req) => {
     }
   }
 
-  // 4. Fallback for generic /dashboard routing
+  // 6. Fallback for generic /dashboard routing or unmatched authenticated routes
   return NextResponse.next();
 });
 
@@ -76,7 +131,7 @@ function getDefaultRoute(role?: string): string {
     case "HOST_EMPLOYER":
       return "/employer";
     case "LEARNER":
-      return "/learner";
+      return "/learn/dashboard";
     default:
       return "/";
   }
