@@ -115,33 +115,31 @@ export default async function LearnDashboardPage() {
   });
 
   return (
-    <div className="min-h-screen bg-[#f7f8f5] px-4 py-6 dark:bg-[#0a0b0e] sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-360 space-y-8">
+    <div className="min-h-screen bg-[#f7f8f5] px-4 py-4 dark:bg-[#0a0b0e] sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-360 space-y-6">
       <DashboardProfileHeader />
 
-      <section className="flex flex-col justify-between gap-3 border-b border-slate-200 pb-5 dark:border-slate-800 sm:flex-row sm:items-end">
+      <section className="flex flex-col justify-between gap-2 border-b border-slate-200 pb-4 dark:border-slate-800 sm:flex-row sm:items-end">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#84ba3f]">Your learning journey</p>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-950 dark:text-white sm:text-3xl">My courses</h1>
+          <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-950 dark:text-white">My courses</h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Pick up where you left off or review your progress.</p>
         </div>
         <a href="/learn/courses" className="text-sm font-bold text-[#006600] hover:underline dark:text-[#84ba3f]">Explore all courses</a>
       </section>
 
-      <DashboardMetrics
-        enrollments={enrollments}
-        loggedHours={loggedHours}
-        pendingPoE={pendingPoE}
-        approvedPoE={approvedPoE}
-      />
-
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.6fr)_minmax(320px,0.8fr)]">
-        <div className="space-y-6">
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1.6fr)_minmax(320px,0.8fr)]">
+        <div className="space-y-5">
+          <DashboardMetrics
+            enrollments={enrollments}
+            loggedHours={loggedHours}
+            pendingPoE={pendingPoE}
+            approvedPoE={approvedPoE}
+          />
           <ResumeLearningCard enrollments={enrollments} />
-          <ContinueLearningSection />
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-5">
           <UpcomingMilestones enrollments={enrollments} />
           <AssessorFeedbackFeed
             submissions={enrollments.flatMap((e) => e.submissions)}
@@ -153,6 +151,8 @@ export default async function LearnDashboardPage() {
           )}
         </div>
       </div>
+
+      <ContinueLearningSection />
       </div>
     </div>
   );

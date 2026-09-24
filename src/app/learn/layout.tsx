@@ -13,11 +13,11 @@ export default async function LearnLayout({
 
   if (isAuthenticatedLearner) {
     return (
-      <div className="flex h-full min-h-screen bg-slate-50 dark:bg-[#0a0b0e]">
-        <LearnDashboardSidebar />
-        <div className="flex min-w-0 flex-1 flex-col lg:ml-72">
-          <LearnDashboardHeader />
-          <main className="flex-1 overflow-auto">{children}</main>
+      <div className="min-h-screen bg-slate-50 dark:bg-[#0a0b0e]">
+        <LearnDashboardHeader />
+        <div className="flex min-h-[calc(100vh-5rem)]">
+          <LearnDashboardSidebar />
+          <main className="min-w-0 flex-1 overflow-auto lg:ml-16">{children}</main>
         </div>
       </div>
     );

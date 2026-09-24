@@ -3,23 +3,27 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 import {
+  FaAward,
   FaBell,
   FaBook,
   FaChevronDown,
+  FaCompass,
+  FaFileAlt,
+  FaHandshake,
+  FaQuestionCircle,
   FaSearch,
   FaSignOutAlt,
   FaUser,
 } from 'react-icons/fa';
-import { cn } from '@/lib/utils';
 
 export function LearnDashboardHeader() {
   const { data: session } = useSession();
   const router = useRouter();
-  const pathname = usePathname();
   const [profileOpen, setProfileOpen] = useState(false);
+  const [exploreOpen, setExploreOpen] = useState(false);
   const [search, setSearch] = useState('');
 
   const firstName = session?.user?.name?.split(' ')[0] || 'Learner';
@@ -57,9 +61,30 @@ export function LearnDashboardHeader() {
         </Link>
 
         <div className="hidden h-8 w-px bg-slate-200 dark:bg-slate-700 lg:block" />
-        <div className="hidden min-w-0 lg:block">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#84ba3f]">Learning hub</p>
-          <p className="truncate text-sm font-bold text-slate-900 dark:text-white">Learner dashboard</p>
+        <div className="relative hidden lg:block">
+          <button
+            type="button"
+            onClick={() => setExploreOpen((open) => !open)}
+            aria-expanded={exploreOpen}
+            aria-haspopup="menu"
+            className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-100 hover:text-[#006600] dark:text-slate-200 dark:hover:bg-slate-800"
+          >
+            <FaCompass className="text-[#84ba3f]" aria-hidden="true" />
+            Explore
+            <FaChevronDown className="text-[10px] text-slate-400" aria-hidden="true" />
+          </button>
+
+          {exploreOpen && (
+            <>
+              <button type="button" className="fixed inset-0 z-10 h-full w-full cursor-default" onClick={() => setExploreOpen(false)} aria-label="Close explore menu" />
+              <div className="absolute left-0 z-20 mt-2 w-56 overflow-hidden rounded-xl border border-slate-200 bg-white py-1 shadow-xl dark:border-slate-700 dark:bg-[#16171d]" role="menu">
+                <Link href="/learn/about" onClick={() => setExploreOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800" role="menuitem"><FaCompass className="text-xs text-slate-400" aria-hidden="true" /> About Ndzalama</Link>
+                <Link href="/" onClick={() => setExploreOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800" role="menuitem"><FaHandshake className="text-xs text-slate-400" aria-hidden="true" /> Partners</Link>
+                <Link href="/posts" onClick={() => setExploreOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800" role="menuitem"><FaFileAlt className="text-xs text-slate-400" aria-hidden="true" /> Updates</Link>
+                <Link href="/learn/courses" onClick={() => setExploreOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800" role="menuitem"><FaBook className="text-xs text-slate-400" aria-hidden="true" /> Resources</Link>
+              </div>
+            </>
+          )}
         </div>
 
         <form onSubmit={handleSearch} className="ml-auto hidden max-w-md flex-1 md:block">
@@ -77,18 +102,6 @@ export function LearnDashboardHeader() {
         </form>
 
         <nav className="hidden items-center gap-2 md:flex" aria-label="Learner quick links">
-          <Link
-            href="/learn/courses"
-            className={cn(
-              'flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold transition-colors',
-              pathname === '/learn/courses'
-                ? 'bg-[#84ba3f]/10 text-[#006600] dark:text-[#84ba3f]'
-                : 'text-slate-600 hover:bg-slate-100 hover:text-[#006600] dark:text-slate-300 dark:hover:bg-slate-800'
-            )}
-          >
-            <FaBook className="text-xs" aria-hidden="true" />
-            Courses
-          </Link>
           <button
             type="button"
             aria-label="Notifications"
@@ -126,12 +139,15 @@ export function LearnDashboardHeader() {
               />
               <div className="absolute right-0 z-20 mt-2 w-56 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl dark:border-slate-700 dark:bg-[#16171d]" role="menu">
                 <div className="border-b border-slate-100 px-4 py-3 dark:border-slate-700">
-                  <p className="truncate text-sm font-bold text-slate-900 dark:text-white">{session?.user?.name}</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#84ba3f]">Current user</p>
+                  <p className="mt-1 truncate text-sm font-bold text-slate-900 dark:text-white">{session?.user?.name}</p>
                   <p className="truncate text-xs text-slate-500">{session?.user?.email}</p>
                 </div>
+                <Link href="/learn/certificates" onClick={() => setProfileOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800" role="menuitem"><FaAward className="text-xs" aria-hidden="true" /> Certificates &amp; badges</Link>
                 <Link href="/learn/profile" onClick={() => setProfileOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800" role="menuitem">
                   <FaUser className="text-xs" aria-hidden="true" /> My profile
                 </Link>
+                <Link href="/learn/about" onClick={() => setProfileOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800" role="menuitem"><FaQuestionCircle className="text-xs" aria-hidden="true" /> Help</Link>
                 <button type="button" onClick={handleSignOut} className="flex w-full items-center gap-3 border-t border-slate-100 px-4 py-3 text-left text-sm text-red-600 hover:bg-red-50 dark:border-slate-700 dark:text-red-400 dark:hover:bg-red-950/20" role="menuitem">
                   <FaSignOutAlt className="text-xs" aria-hidden="true" /> Sign out
                 </button>
