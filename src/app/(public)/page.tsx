@@ -53,7 +53,7 @@ export default function HomePage() {
           aria-hidden="true"
         />
 
-        <Container className="relative z-10 py-24 md:py-32">
+        <Container className="relative z-10 py-8">
           <div className="max-w-3xl">
             <span className="inline-block mb-4 px-4 py-1.5 rounded-full bg-[#84ba3f]/20 text-[#84ba3f] text-sm font-semibold tracking-wide uppercase">
               SAQA Accredited Training

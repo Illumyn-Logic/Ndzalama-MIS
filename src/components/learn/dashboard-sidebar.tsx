@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { useSession, signOut } from 'next-auth/react';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import {
   FaTachometerAlt,
@@ -11,12 +11,8 @@ import {
   FaClipboardList,
   FaBook,
   FaDumbbell,
-  FaCheckCircle,
   FaProjectDiagram,
-  FaTasks,
   FaCertificate,
-  FaSignOutAlt,
-  FaCog,
 } from 'react-icons/fa';
 
 interface NavItem {
@@ -68,22 +64,12 @@ const learnSection: { title: string; items: NavItem[] } = {
       href: '/learn/dashboard/practice',
       icon: <FaDumbbell />,
     },
-    {
-      label: 'Assessments',
-      href: '/learn/dashboard/assessments',
-      icon: <FaCheckCircle />,
-    },
   ],
 };
 
 const applySection: { title: string; items: NavItem[] } = {
   title: 'Apply',
   items: [
-    {
-      label: 'Projects',
-      href: '/learn/dashboard/projects',
-      icon: <FaTasks />,
-    },
     {
       label: 'Certifications',
       href: '/learn/dashboard/certifications',
@@ -92,86 +78,42 @@ const applySection: { title: string; items: NavItem[] } = {
   ],
 };
 
-function getInitials(name?: string | null) {
-  if (!name) return 'U';
-  return name
-    .split(' ')
-    .map((n) => n[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2);
-}
+export type SidebarExpansionMode = 'always' | 'hover' | 'never';
+
+export const SIDEBAR_EXPANSION_STORAGE_KEY = 'ndzalama-sidebar-expansion';
 
 export function LearnDashboardSidebar() {
   const pathname = usePathname();
-  const router = useRouter();
-  const { data: session } = useSession();
-  const user = session?.user;
-  const initials = getInitials(user?.name);
+  const [expansionMode, setExpansionMode] = useState<SidebarExpansionMode>('hover');
+  const labelClassName = expansionMode === 'always'
+    ? 'max-w-40 opacity-100'
+    : 'max-w-0 overflow-hidden opacity-0 transition-all group-hover:max-w-40 group-hover:opacity-100 group-focus-within:max-w-40 group-focus-within:opacity-100';
 
-  const handleSignOut = async () => {
-    await signOut({ redirect: false });
-    router.push('/learn');
-    router.refresh();
-  };
+  useEffect(() => {
+    const applyStoredMode = () => {
+      const storedMode = window.localStorage.getItem(SIDEBAR_EXPANSION_STORAGE_KEY);
+      if (storedMode === 'always' || storedMode === 'hover' || storedMode === 'never') {
+        setExpansionMode(storedMode);
+      }
+    };
+
+    applyStoredMode();
+    window.addEventListener('ndzalama-sidebar-expansion-change', applyStoredMode);
+    return () => window.removeEventListener('ndzalama-sidebar-expansion-change', applyStoredMode);
+  }, []);
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-30 w-72 bg-white dark:bg-[#16171d] border-r border-slate-200 dark:border-slate-800 hidden lg:flex flex-col">
-      {/* Brand Header */}
-      {/* <div className="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 px-6 py-5">
-        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-[#84ba3f] to-[#006600] text-lg font-extrabold text-white shadow-md">
-          N
-        </div>
-        <div>
-          <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#84ba3f]">
-            Learning Hub
-          </p>
-          <h2 className="text-base font-bold text-slate-900 dark:text-white leading-tight">
-            Ndzalama LMS
-          </h2>
-        </div>
-      </div> */}
-
-      {/* User Profile Card */}
-      {/* <div className="mx-4 mt-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800">
-        <Link
-          href="/learn/dashboard/profile"
-          className="flex items-center gap-3 hover:opacity-80 transition-opacity"
-        >
-          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#84ba3f] to-[#006600] text-white text-sm font-bold flex items-center justify-center shrink-0 shadow">
-            {initials}
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-bold text-slate-900 dark:text-white truncate">
-              {user?.name || 'User'}
-            </p>
-            <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
-              36,900 XP
-            </p>
-          </div>
-        </Link>
-      </div> */}
-
-       {/* Progress Card */}
-      <div className="p-4 border-t border-slate-200 dark:border-slate-800">
-        <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 border border-slate-200 dark:border-slate-700">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">
-              Getting Started
-            </span>
-            <span className="text-xs font-bold text-[#84ba3f]">3/4</span>
-          </div>
-          <div className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-[#006600] to-[#84ba3f] rounded-full transition-all"
-              style={{ width: '75%' }}
-            />
-          </div>
-        </div>
-      </div>
+    <aside className={cn(
+      'group fixed inset-x-auto bottom-0 left-0 top-20 z-30 hidden flex-col border-r border-slate-200 bg-white transition-[width] duration-200 dark:border-slate-800 dark:bg-[#16171d] lg:flex',
+      expansionMode === 'always'
+        ? 'w-52'
+        : expansionMode === 'never'
+          ? 'w-16'
+          : 'w-16 hover:w-52 focus-within:w-52'
+    )}>
 
       {/* Navigation */}
-      <nav className="flex-1 px-4 py-6 overflow-y-auto space-y-6">
+      <nav className="flex-1 space-y-6 overflow-y-auto px-2 py-6">
         {/* Main Navigation */}
         <div className="space-y-1">
           {navigationItems.map((item) => {
@@ -180,14 +122,15 @@ export function LearnDashboardSidebar() {
               <Link
                 key={item.label}
                 href={item.href}
+                title={item.label}
                 className={cn(
-                  'flex items-center justify-between gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all',
+                  'flex items-center justify-between gap-3 rounded-xl px-3 py-3 text-sm font-semibold transition-all',
                   isActive
                     ? 'bg-[#84ba3f]/10 text-[#006600] dark:text-[#84ba3f]'
                     : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50'
                 )}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex min-w-0 items-center gap-3">
                   <span
                     className={cn(
                       'text-base',
@@ -198,7 +141,7 @@ export function LearnDashboardSidebar() {
                   >
                     {item.icon}
                   </span>
-                  <span>{item.label}</span>
+                  <span className={cn('truncate', labelClassName)}>{item.label}</span>
                 </div>
                 {item.badge && (
                   <span className="px-2 py-0.5 rounded-full bg-red-500 text-white text-[10px] font-bold">
@@ -212,7 +155,7 @@ export function LearnDashboardSidebar() {
 
         {/* Learn Section */}
         <div>
-          <h3 className="px-4 text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-600 mb-2">
+            <h3 className={cn('mb-2 truncate px-3 text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-600', labelClassName)}>
             {learnSection.title}
           </h3>
           <div className="space-y-1">
@@ -222,8 +165,9 @@ export function LearnDashboardSidebar() {
                 <Link
                   key={item.label}
                   href={item.href}
+                  title={item.label}
                   className={cn(
-                    'flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-all',
+                    'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all',
                     isActive
                       ? 'bg-[#84ba3f]/10 text-[#006600] dark:text-[#84ba3f]'
                       : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50'
@@ -239,7 +183,7 @@ export function LearnDashboardSidebar() {
                   >
                     {item.icon}
                   </span>
-                  <span>{item.label}</span>
+                  <span className={cn('truncate', labelClassName)}>{item.label}</span>
                 </Link>
               );
             })}
@@ -248,7 +192,7 @@ export function LearnDashboardSidebar() {
 
         {/* Apply Section */}
         <div>
-          <h3 className="px-4 text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-600 mb-2">
+            <h3 className={cn('mb-2 truncate px-3 text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-600', labelClassName)}>
             {applySection.title}
           </h3>
           <div className="space-y-1">
@@ -258,8 +202,9 @@ export function LearnDashboardSidebar() {
                 <Link
                   key={item.label}
                   href={item.href}
+                  title={item.label}
                   className={cn(
-                    'flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-all',
+                    'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all',
                     isActive
                       ? 'bg-[#84ba3f]/10 text-[#006600] dark:text-[#84ba3f]'
                       : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50'
@@ -275,7 +220,7 @@ export function LearnDashboardSidebar() {
                   >
                     {item.icon}
                   </span>
-                  <span>{item.label}</span>
+                  <span className={cn('truncate', labelClassName)}>{item.label}</span>
                 </Link>
               );
             })}
@@ -283,24 +228,6 @@ export function LearnDashboardSidebar() {
         </div>
       </nav>
 
-      {/* Settings & Logout */}
-      <div className="px-4 pb-4 space-y-1">
-        <Link
-          href="/learn/settings"
-          className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-all"
-        >
-          <FaCog className="text-sm text-slate-500" />
-          <span>Settings</span>
-        </Link>
-        
-        <button
-          onClick={handleSignOut}
-          className="w-full flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 transition-all"
-        >
-          <FaSignOutAlt className="text-sm" />
-          <span>Sign Out</span>
-        </button>
-      </div>
     </aside>
   );
 }
