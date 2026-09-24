@@ -381,7 +381,7 @@ export function PublicHeader() {
               {user && isLearner ? (
                 // Logged-in learner on public site
                 <Link
-                  href="/learn"
+                  href="/learn/dashboard"
                   className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                 >
                   <div
@@ -397,7 +397,7 @@ export function PublicHeader() {
               ) : (
                 // Guest user
                 <Link
-                  href="/learn"
+                  href="/register"
                   className="px-5 py-2 text-sm font-semibold rounded-full bg-[#84ba3f] text-white hover:bg-[#6ea032] transition-colors shadow-sm"
                 >
                   Learn Online
@@ -522,7 +522,7 @@ export function PublicHeader() {
                 {user && isLearner ? (
                   // Logged-in learner
                   <Link
-                    href="/learn"
+                    href="/learn/dashboard"
                     className="flex items-center justify-center gap-2 py-2.5 px-3 text-sm font-semibold rounded-full bg-[#84ba3f] text-white hover:bg-[#6ea032] transition-colors"
                   >
                     <div
@@ -536,7 +536,7 @@ export function PublicHeader() {
                 ) : (
                   // Guest
                   <Link
-                    href="/learn"
+                    href="/register"
                     className="block py-2.5 px-3 text-sm font-semibold rounded-full bg-[#84ba3f] text-white text-center hover:bg-[#6ea032] transition-colors"
                   >
                     Learn Online

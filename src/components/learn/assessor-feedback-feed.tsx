@@ -4,6 +4,7 @@ import {
   FaComment,
   FaCheckCircle,
   FaExclamationTriangle,
+  FaUser,
   FaClock,
 } from 'react-icons/fa';
 import {
@@ -37,10 +38,10 @@ export function AssessorFeedbackFeed({
   const feedbackItems = submissions.filter((s) => s.assessorReview);
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-[#16171d]">
-      <div className="mb-3 flex items-center gap-2">
-        <FaComment className="text-sm text-[#84ba3f]" />
-        <h3 className="text-base font-bold text-slate-900 dark:text-white">
+    <div className="bg-white dark:bg-[#16171d] rounded-2xl border border-slate-200 dark:border-slate-800 p-5">
+      <div className="flex items-center gap-2 mb-4">
+        <FaComment className="text-[#84ba3f]" />
+        <h3 className="text-lg font-bold text-slate-900 dark:text-white">
           Assessor Feedback
         </h3>
       </div>
@@ -93,7 +94,7 @@ function FeedbackItem({ submission }: { submission: SubmissionWithReview }) {
   };
 
   return (
-    <div className="rounded-lg border border-slate-100 bg-slate-50 p-3 transition-colors hover:border-[#84ba3f] dark:border-slate-800 dark:bg-slate-900/50">
+    <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 hover:border-[#84ba3f] transition-colors">
       {/* Header */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">

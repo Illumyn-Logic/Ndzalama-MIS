@@ -31,7 +31,7 @@ export default function LoginPage() {
       const role = session.user.role;
       // Route to appropriate dashboard based on role
       if (role === 'LEARNER') {
-        router.push('/learn');
+        router.push('/learn/dashboard');
       } else {
         router.push('/dashboard');
       }

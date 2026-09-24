@@ -7,7 +7,6 @@ import { UpcomingMilestones } from '@/components/learn/upcoming-milestones';
 import { AssessorFeedbackFeed } from '@/components/learn/assessor-feedback-feed';
 import { EmployerReportCard } from '@/components/learn/employer-report-card';
 import { ContinueLearningSection } from '@/components/learn/continue-learning-section';
-import { DashboardProfileHeader } from '@/components/learn/dashboard-profile-header';
 
 export default async function LearnDashboardPage() {
   const session = await auth();
@@ -115,19 +114,8 @@ export default async function LearnDashboardPage() {
   });
 
   return (
-    <div className="min-h-screen bg-[#f7f8f5] px-4 py-6 dark:bg-[#0a0b0e] sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-360 space-y-8">
-      <DashboardProfileHeader />
-
-      <section className="flex flex-col justify-between gap-3 border-b border-slate-200 pb-5 dark:border-slate-800 sm:flex-row sm:items-end">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#84ba3f]">Your learning journey</p>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-950 dark:text-white sm:text-3xl">My courses</h1>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Pick up where you left off or review your progress.</p>
-        </div>
-        <a href="/learn/courses" className="text-sm font-bold text-[#006600] hover:underline dark:text-[#84ba3f]">Explore all courses</a>
-      </section>
-
+    <div className="min-h-screen bg-slate-50 dark:bg-[#0a0b0e] p-6 space-y-6">
+      {/* Top Row: Key Metrics */}
       <DashboardMetrics
         enrollments={enrollments}
         loggedHours={loggedHours}
@@ -135,12 +123,15 @@ export default async function LearnDashboardPage() {
         approvedPoE={approvedPoE}
       />
 
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.6fr)_minmax(320px,0.8fr)]">
-        <div className="space-y-6">
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Column: Resume Learning + Milestones */}
+        <div className="lg:col-span-2 space-y-6">
           <ResumeLearningCard enrollments={enrollments} />
           <ContinueLearningSection />
         </div>
 
+        {/* Right Column: Feedback + Employer Card */}
         <div className="space-y-6">
           <UpcomingMilestones enrollments={enrollments} />
           <AssessorFeedbackFeed
@@ -152,7 +143,6 @@ export default async function LearnDashboardPage() {
             />
           )}
         </div>
-      </div>
       </div>
     </div>
   );

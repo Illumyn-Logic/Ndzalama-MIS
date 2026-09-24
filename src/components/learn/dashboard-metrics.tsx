@@ -59,35 +59,41 @@ export function DashboardMetrics({
   };
 
   return (
-    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {/* Overall Progress */}
       <MetricCard
-        icon={<FaChartLine className="text-base" />}
+        icon={<FaChartLine className="text-2xl" />}
         label="Overall Progress"
         value={`${overallProgress}%`}
         subtext={`${completedLessons} of ${totalLessons} lessons`}
+        color="from-[#84ba3f] to-[#006600]"
         progress={overallProgress}
       />
 
       {/* Logged Learning Hours */}
       <MetricCard
-        icon={<FaClock className="text-base" />}
+        icon={<FaClock className="text-2xl" />}
         label="Logged Hours"
         value={`${loggedHours}`}
         subtext="QCTO audit compliant"
+        color="from-blue-500 to-blue-700"
         badge="hrs"
       />
 
       {/* PoE Audit Status */}
-      <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-[#16171d]">
-        <div className="mb-3 flex items-center justify-between">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
-            <FaFileAlt className="text-sm" />
+      <div className="bg-white dark:bg-[#16171d] rounded-2xl border border-slate-200 dark:border-slate-800 p-5 hover:shadow-md transition-shadow">
+        <div className="flex items-start justify-between mb-4">
+          <div
+            className={`w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white shadow-lg`}
+          >
+            <FaFileAlt className="text-2xl" />
           </div>
           {/* Traffic Light Indicator */}
           <div className="flex items-center gap-1.5">
-            <div className={`h-2 w-2 rounded-full ${statusColors[poeStatus]}`} />
-            <span className="text-[10px] font-semibold uppercase text-slate-500 dark:text-slate-400">
+            <div
+              className={`w-3 h-3 rounded-full ${statusColors[poeStatus]} shadow-md`}
+            />
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">
               {poeStatus === 'green'
                 ? 'Approved'
                 : poeStatus === 'amber'
@@ -96,13 +102,13 @@ export function DashboardMetrics({
             </span>
           </div>
         </div>
-        <h3 className="mb-1 text-xs font-semibold text-slate-500 dark:text-slate-400">
+        <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1">
           PoE Audit Status
         </h3>
-        <p className="text-xl font-bold text-slate-900 dark:text-white">
+        <p className="text-2xl font-bold text-slate-900 dark:text-white">
           {approvedPoE} / {approvedPoE + pendingPoE}
         </p>
-        <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
           {pendingPoE > 0 ? `${pendingPoE} pending review` : 'All approved'}
         </p>
       </div>
@@ -113,6 +119,7 @@ export function DashboardMetrics({
         label="Active Courses"
         value={enrollments.length.toString()}
         subtext="In training"
+        color="from-orange-500 to-orange-700"
       />
     </div>
   );
@@ -123,6 +130,7 @@ interface MetricCardProps {
   label: string;
   value: string;
   subtext: string;
+  color: string;
   progress?: number;
   badge?: string;
 }
@@ -132,36 +140,35 @@ function MetricCard({
   label,
   value,
   subtext,
+  color,
   progress,
   badge,
 }: MetricCardProps) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-[#16171d]">
-      <div className="mb-3 flex items-center justify-items-start gap-1.5">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+    <div className="bg-white dark:bg-[#16171d] rounded-2xl border border-slate-200 dark:border-slate-800 p-5 hover:shadow-md transition-shadow">
+      <div className="flex items-start justify-between mb-4">
+        <div
+          className={`w-12 h-12 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center text-white shadow-lg`}
+        >
           {icon}
         </div>
-        <h3 className="mb-1 text-xs font-semibold text-slate-500 dark:text-slate-400">
-        {label}
-      </h3>
-
         {badge && (
-          <span className="rounded-md bg-slate-100 px-2 py-1 text-[10px] font-bold text-slate-600 dark:bg-slate-800 dark:text-slate-400">
+          <span className="px-2 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-600 dark:text-slate-400">
             {badge}
           </span>
         )}
       </div>
-
-      
-      
-      <p className="text-xl font-bold text-slate-900 dark:text-white">{value}</p>
-      <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{subtext}</p>
+      <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1">
+        {label}
+      </h3>
+      <p className="text-2xl font-bold text-slate-900 dark:text-white">{value}</p>
+      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{subtext}</p>
 
       {progress !== undefined && (
-        <div className="mt-3">
-          <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
+        <div className="mt-4">
+          <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
             <div
-              className="h-full rounded-full bg-[#84ba3f] transition-all duration-500"
+              className={`h-full bg-gradient-to-r ${color} rounded-full transition-all duration-500`}
               style={{ width: `${progress}%` }}
             />
           </div>

@@ -29,7 +29,7 @@ interface NavItem {
 const navigationItems: NavItem[] = [
   {
     label: 'Dashboard',
-    href: '/learn',
+    href: '/learn/dashboard',
     icon: <FaTachometerAlt />,
   },
   {
@@ -175,7 +175,7 @@ export function LearnDashboardSidebar() {
         {/* Main Navigation */}
         <div className="space-y-1">
           {navigationItems.map((item) => {
-            const isActive = pathname === item.href || (item.href === '/learn' && pathname === '/learn/dashboard');
+            const isActive = pathname === item.href;
             return (
               <Link
                 key={item.label}

@@ -64,17 +64,17 @@ export function LearnFooter() {
                 </Link>
               </li>
               <li>
-                <Link href="/learn" className="hover:text-[#84ba3f] transition-colors">
+                <Link href="/learn/dashboard" className="hover:text-[#84ba3f] transition-colors">
                   My Dashboard
                 </Link>
               </li>
               <li>
-                <Link href="/learn/about" className="hover:text-[#84ba3f] transition-colors">
+                <Link href="/about" className="hover:text-[#84ba3f] transition-colors">
                   About Ndzalama
                 </Link>
               </li>
               <li>
-                <Link href="/learn/about" className="hover:text-[#84ba3f] transition-colors">
+                <Link href="/contact" className="hover:text-[#84ba3f] transition-colors">
                   Contact Support
                 </Link>
               </li>
