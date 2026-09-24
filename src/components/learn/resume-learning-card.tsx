@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { FaPlay, FaLock, FaCheckCircle, FaClock } from 'react-icons/fa';
+import { FaPlay, FaLock, FaCheckCircle } from 'react-icons/fa';
 import {
   Enrollment,
   Qualification,
@@ -58,11 +58,11 @@ export function ResumeLearningCard({ enrollments }: ResumeLearningCardProps) {
   const qualification = activeEnrollment.qualification;
 
   // Find next incomplete lesson
-  let nextLesson: (Lesson & { module: CourseModule }) | null = null;
+  let nextLesson: (Lesson & { courseModule: CourseModule }) | null = null;
   let isLocked = false;
 
-  for (const module of qualification.modules) {
-    const incompleteLessons = module.lessons.filter(
+  for (const courseModule of qualification.modules) {
+    const incompleteLessons = courseModule.lessons.filter(
       (lesson) =>
         !activeEnrollment.lessonProgress.some(
           (p) => p.lessonId === lesson.id && p.isCompleted
@@ -70,10 +70,10 @@ export function ResumeLearningCard({ enrollments }: ResumeLearningCardProps) {
     );
 
     if (incompleteLessons.length > 0) {
-      nextLesson = { ...incompleteLessons[0], module };
+      nextLesson = { ...incompleteLessons[0], courseModule };
 
       // Check if previous module's assessment is complete
-      const moduleIndex = qualification.modules.indexOf(module);
+      const moduleIndex = qualification.modules.indexOf(courseModule);
       if (moduleIndex > 0) {
         const prevModule = qualification.modules[moduleIndex - 1];
         const hasPassedPrevAssessment = prevModule.assessmentTasks.some((task) =>
@@ -98,23 +98,23 @@ export function ResumeLearningCard({ enrollments }: ResumeLearningCardProps) {
   const progress = totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0;
 
   return (
-    <div className="bg-gradient-to-br from-[#84ba3f] to-[#006600] rounded-2xl border border-[#84ba3f]/20 p-6 text-white shadow-lg">
-      <div className="flex items-start justify-between mb-4">
+    <div className="rounded-xl border border-[#84ba3f]/30 bg-[#006600] p-5 text-white">
+      <div className="mb-3 flex items-start justify-between gap-3">
         <div>
-          <p className="text-xs font-bold uppercase tracking-wider opacity-90 mb-1">
+          <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.16em] opacity-80">
             Resume Learning
           </p>
-          <h2 className="text-xl font-bold">{qualification.title}</h2>
+          <h2 className="text-lg font-bold">{qualification.title}</h2>
         </div>
-        <div className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-xs font-bold">
+        <div className="rounded-full bg-white/15 px-2.5 py-1 text-[10px] font-bold">
           {Math.round(progress)}% Complete
         </div>
       </div>
 
       {nextLesson ? (
-        <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 mb-4">
+        <div className="mb-3 rounded-lg bg-white/10 p-3">
           <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/15">
               {isLocked ? (
                 <FaLock className="text-white/70" />
               ) : (
@@ -123,7 +123,7 @@ export function ResumeLearningCard({ enrollments }: ResumeLearningCardProps) {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-xs font-semibold opacity-80 mb-0.5">
-                {nextLesson.module.title}
+                {nextLesson.courseModule.title}
               </p>
               <h3 className="text-sm font-bold">{nextLesson.title}</h3>
               {isLocked && (
@@ -135,17 +135,17 @@ export function ResumeLearningCard({ enrollments }: ResumeLearningCardProps) {
           </div>
         </div>
       ) : (
-        <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 mb-4 text-center">
+        <div className="mb-3 rounded-lg bg-white/10 p-3 text-center">
           <FaCheckCircle className="text-3xl mx-auto mb-2 opacity-90" />
           <p className="text-sm font-semibold">All lessons completed!</p>
         </div>
       )}
 
       {/* Progress Bar */}
-      <div className="mb-4">
-        <div className="w-full h-2 bg-white/20 rounded-full overflow-hidden">
+      <div className="mb-3">
+        <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/20">
           <div
-            className="h-full bg-white rounded-full transition-all duration-500"
+            className="h-full rounded-full bg-white transition-all duration-500"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -158,15 +158,15 @@ export function ResumeLearningCard({ enrollments }: ResumeLearningCardProps) {
       {/* Action Button */}
       {nextLesson && !isLocked ? (
         <Link
-          href={`/learn/courses/${qualification.id}/modules/${nextLesson.module.id}/lessons/${nextLesson.id}`}
-          className="block w-full py-3 px-4 rounded-xl bg-white text-[#006600] font-bold text-center hover:shadow-xl transition-shadow"
+          href={`/learn/courses/${qualification.id}/modules/${nextLesson.courseModule.id}/lessons/${nextLesson.id}`}
+          className="block w-full rounded-lg bg-white px-4 py-2.5 text-center text-sm font-bold text-[#006600] transition-shadow hover:shadow-xl"
         >
           Continue Lesson →
         </Link>
       ) : isLocked ? (
         <button
           disabled
-          className="block w-full py-3 px-4 rounded-xl bg-white/30 text-white font-bold text-center cursor-not-allowed"
+          className="block w-full cursor-not-allowed rounded-lg bg-white/20 px-4 py-2.5 text-center text-sm font-bold text-white"
         >
           <FaLock className="inline mr-2" />
           Locked
@@ -174,7 +174,7 @@ export function ResumeLearningCard({ enrollments }: ResumeLearningCardProps) {
       ) : (
         <Link
           href={`/learn/courses/${qualification.id}`}
-          className="block w-full py-3 px-4 rounded-xl bg-white text-[#006600] font-bold text-center hover:shadow-xl transition-shadow"
+          className="block w-full rounded-lg bg-white px-4 py-2.5 text-center text-sm font-bold text-[#006600] transition-shadow hover:shadow-xl"
         >
           View Course Details
         </Link>
