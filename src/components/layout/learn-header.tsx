@@ -10,7 +10,6 @@ import {
   FaHome, 
   FaBook, 
   FaInfoCircle, 
-  FaNewspaper, 
   FaQuestionCircle,
   FaUser,
   FaCog,
@@ -43,8 +42,8 @@ export function LearnHeader() {
 
   // Different nav links for authenticated learners on dashboard
   const dashboardNavLinks = [
-    { href: '/learn/', label: 'Home', icon: FaHome },
-    { href: '/learn/dashboard', label: 'Learn', icon: FaBook },
+    { href: '/learn', label: 'Home', icon: FaHome },
+    { href: '/learn', label: 'Learn', icon: FaBook },
     // { href: '/learn/ai-tutor', label: 'AI Tutor', icon: FaQuestionCircle },
     { href: '/learn/certification', label: 'Certification', icon: FaInfoCircle },
     
@@ -52,10 +51,9 @@ export function LearnHeader() {
 
   const guestNavLinks = [
     { href: '/learn', label: 'Home', icon: FaHome },
-    { href: '/courses', label: 'Courses', icon: FaBook },
-    { href: '/about', label: 'About', icon: FaInfoCircle },
-    { href: '/posts', label: 'Blogs', icon: FaNewspaper },
-    { href: '/contact', label: 'Support', icon: FaQuestionCircle },
+    { href: '/learn/courses', label: 'Courses', icon: FaBook },
+    { href: '/learn/about', label: 'About', icon: FaInfoCircle },
+    { href: '/learn/about', label: 'Support', icon: FaQuestionCircle },
   ];
 
   const navLinks = (isLearner && isDashboardView) ? dashboardNavLinks : guestNavLinks;
@@ -82,7 +80,7 @@ export function LearnHeader() {
               const isActive = pathname === href || (href !== '/learn' && href !== '/learn/dashboard' && pathname.startsWith(href));
               return (
                 <Link
-                  key={href}
+                  key={`${href}-${label}`}
                   href={href}
                   className={cn(
                     'flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-colors',
@@ -177,7 +175,7 @@ export function LearnHeader() {
                         {/* Menu Items */}
                         <div className="py-1">
                           <Link
-                            href="/learn/dashboard"
+                            href="/learn"
                             onClick={() => setDropdownOpen(false)}
                             className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                           >

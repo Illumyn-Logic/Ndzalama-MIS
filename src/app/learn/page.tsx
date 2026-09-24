@@ -1,10 +1,7 @@
-'use client';
-
-import { useEffect } from 'react';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { auth } from '@/auth';
 import Link from 'next/link';
 import Image from 'next/image';
+import LearnDashboardPage from './dashboard/page';
 import { 
   FaGraduationCap, 
   FaChartLine, 
@@ -18,31 +15,13 @@ import {
   FaAward
 } from 'react-icons/fa';
 
-export default function LearnHomePage() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
+export default async function LearnHomePage() {
+  const session = await auth();
 
-  // Redirect authenticated learners to their dashboard
-  useEffect(() => {
-    if (status === 'authenticated' && session?.user?.role === 'LEARNER') {
-      router.push('/learn/dashboard');
-    }
-  }, [status, session, router]);
-
-  // Show loading state while checking auth
-  if (status === 'loading') {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-[#0a0a0a]">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-[#84ba3f] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-slate-600 dark:text-slate-400">Loading...</p>
-        </div>
-      </div>
-    );
+  if (session?.user?.role === 'LEARNER') {
+    return <LearnDashboardPage />;
   }
 
-  // If learner is authenticated, they'll be redirected above
-  // This content is only shown to guests
   const benefits = [
     {
       icon: FaLaptop,

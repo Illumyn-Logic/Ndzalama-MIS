@@ -67,7 +67,7 @@ export default function RegisterPage() {
     if (status === 'authenticated' && session?.user) {
       const role = session.user.role;
       if (role === 'LEARNER') {
-        router.push('/learn/dashboard');
+        router.push('/learn');
       } else {
         router.push('/dashboard');
       }

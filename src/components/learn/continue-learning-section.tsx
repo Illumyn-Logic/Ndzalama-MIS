@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { FaBook, FaClock, FaArrowRight } from 'react-icons/fa';
+import { FaBook, FaClock } from 'react-icons/fa';
 
 interface Course {
   id: string;
@@ -44,43 +44,43 @@ const mockCourses: Course[] = [
 
 export function ContinueLearningSection() {
   return (
-    <section className="space-y-4">
+    <section className="space-y-3">
       {/* Section Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            <FaBook className="text-[#84ba3f]" />
+          <h2 className="flex items-center gap-2 text-base font-bold text-slate-900 dark:text-white">
+            <FaBook className="text-sm text-[#84ba3f]" />
             Pick up where you left off
           </h2>
         </div>
         <Link
           href="/learn/dashboard/activity"
-          className="text-sm font-semibold text-[#006600] dark:text-[#84ba3f] hover:underline"
+          className="text-xs font-semibold text-[#006600] hover:underline dark:text-[#84ba3f]"
         >
           See All in My Activity →
         </Link>
       </div>
 
       {/* Courses Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-4">
         {mockCourses.map((course) => (
           <Link
             key={course.id}
             href={`/learn/dashboard/courses/${course.id}`}
-            className="group bg-white dark:bg-[#16171d] rounded-2xl border border-slate-200 dark:border-slate-800 p-4 hover:shadow-md hover:border-[#84ba3f] transition-all"
+            className="group rounded-xl border border-slate-200 bg-white p-3 transition-colors hover:border-[#84ba3f] dark:border-slate-800 dark:bg-[#16171d]"
           >
             {/* Category Badge */}
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-[10px] font-semibold uppercase text-slate-500 dark:text-slate-400">
                 {course.category}
               </span>
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#84ba3f]/10 to-[#006600]/10 flex items-center justify-center">
-                <FaBook className="text-[#84ba3f]" />
+              <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[#84ba3f]/10">
+                <FaBook className="text-xs text-[#84ba3f]" />
               </div>
             </div>
 
             {/* Course Title */}
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white leading-tight mb-3 line-clamp-2 min-h-[2.5rem]">
+            <h3 className="mb-2 min-h-[2.25rem] text-sm font-bold leading-tight text-slate-900 dark:text-white">
               {course.title}
             </h3>
 
@@ -90,23 +90,23 @@ export function ContinueLearningSection() {
                 <span className="font-semibold text-slate-500">Progress</span>
                 <span className="font-bold text-[#84ba3f]">{course.progress}%</span>
               </div>
-              <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+              <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
                 <div
-                  className="h-full bg-gradient-to-r from-[#006600] to-[#84ba3f] rounded-full transition-all"
+                  className="h-full rounded-full bg-[#84ba3f] transition-all"
                   style={{ width: `${course.progress}%` }}
                 />
               </div>
             </div>
 
             {/* Time Remaining */}
-            <div className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+            <div className="mt-2 flex items-center justify-between border-t border-slate-100 pt-2 dark:border-slate-800">
               <div className="flex items-center gap-1.5 text-xs text-slate-500">
-                <FaClock />
-                <span>{course.timeRemaining}</span>
+                <FaClock className="text-[10px]" />
+                <span className="text-[11px]">{course.timeRemaining}</span>
               </div>
-              <button className="px-3 py-1.5 rounded-lg bg-[#84ba3f] text-white text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+              <span className="text-[11px] font-bold text-[#006600] opacity-0 transition-opacity group-hover:opacity-100 dark:text-[#84ba3f]">
                 Continue
-              </button>
+              </span>
             </div>
           </Link>
         ))}

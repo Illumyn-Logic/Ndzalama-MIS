@@ -2,7 +2,6 @@
 
 import { useSession } from 'next-auth/react';
 import {
-  FaBolt,
   FaFire,
   FaDumbbell,
 } from 'react-icons/fa';
@@ -14,40 +13,40 @@ export function DashboardProfileHeader() {
   const firstName = user?.name?.split(' ')[0] || 'Learner';
 
   return (
-    <div className="bg-white dark:bg-[#16171d] rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+    <div className="border-b border-slate-200 pb-4 dark:border-slate-800">
       <div className="flex items-center justify-between gap-4">
         {/* Left: Profile Info */}
-        <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#84ba3f] to-[#006600] flex items-center justify-center text-white text-xl font-bold shadow-md">
+        <div className="flex items-center gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#006600] text-lg font-bold text-white">
             {firstName[0]}
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
+            <h1 className="text-lg font-bold text-slate-900 dark:text-white">
               Hey, {firstName}!
             </h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
               36,900 XP
             </p>
           </div>
         </div>
 
         {/* Right: Quick Stats */}
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden items-center gap-3 md:flex">
           {/* Review Button */}
-          <button className="relative p-3 rounded-xl bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition-colors group">
-            <FaDumbbell className="text-xl text-slate-600 dark:text-slate-400 group-hover:text-[#84ba3f]" />
-            <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center">
+          <button aria-label="Review items" className="relative rounded-lg border border-slate-200 p-2 text-slate-500 transition-colors hover:border-[#84ba3f] hover:text-[#006600] dark:border-slate-700 dark:bg-slate-900 dark:hover:text-[#84ba3f]">
+            <FaDumbbell className="text-sm" />
+            <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
               3
             </span>
           </button>
 
           {/* Streak */}
-          <button className="flex items-center gap-2 p-3 rounded-xl bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition-colors">
-            <FaFire className="text-xl text-orange-500" />
-            <span className="text-sm font-bold text-slate-900 dark:text-white">
+          <div className="flex items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-300">
+            <FaFire className="text-sm text-orange-500" />
+            <span>
               0 days
             </span>
-          </button>
+          </div>
         </div>
       </div>
     </div>
