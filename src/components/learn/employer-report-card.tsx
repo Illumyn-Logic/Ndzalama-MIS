@@ -11,17 +11,17 @@ export function EmployerReportCard({ employer }: EmployerReportCardProps) {
   if (!employer) return null;
 
   return (
-    <div className="rounded-xl border border-slate-700 bg-slate-900 p-4 text-white dark:border-slate-800 dark:bg-slate-950">
-      <div className="mb-3 flex items-center gap-2">
-        <FaBriefcase className="text-sm text-[#84ba3f]" />
-        <h3 className="text-base font-bold">Sponsor Details</h3>
+    <div className="bg-gradient-to-br from-slate-900 to-slate-800 dark:from-slate-950 dark:to-slate-900 rounded-2xl border border-slate-700 dark:border-slate-800 p-5 text-white">
+      <div className="flex items-center gap-2 mb-4">
+        <FaBriefcase className="text-[#84ba3f]" />
+        <h3 className="text-lg font-bold">Sponsor Details</h3>
       </div>
 
       {/* Company Info */}
-      <div className="mb-3 border-b border-white/10 pb-3">
-        <div className="mb-3 flex items-start gap-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#006600]">
-            <FaBuilding className="text-sm" />
+      <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 mb-4">
+        <div className="flex items-start gap-3 mb-3">
+          <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#84ba3f] to-[#006600] flex items-center justify-center flex-shrink-0">
+            <FaBuilding className="text-xl" />
           </div>
           <div className="flex-1 min-w-0">
             <h4 className="text-sm font-bold mb-0.5">{employer.companyName}</h4>

@@ -189,7 +189,7 @@ export default function LearnCoursesPage() {
                   {/* CTA */}
                   {isAuthenticated ? (
                     <Link
-                      href="/learn"
+                      href={`/learn/dashboard`}
                       className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold text-sm bg-[#84ba3f] text-white hover:bg-[#6ea032] transition-colors"
                     >
                       View in Dashboard
@@ -226,7 +226,7 @@ export default function LearnCoursesPage() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/learn/about"
+              href="/contact"
               className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-base bg-[#84ba3f] text-white hover:bg-[#6ea032] transition-colors shadow-md"
             >
               Contact Us
