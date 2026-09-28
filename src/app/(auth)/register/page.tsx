@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { FaArrowLeft } from 'react-icons/fa';
+import { useSession } from 'next-auth/react';
 import { Container } from '@/components/ui/container';
 
 const inputClass =
@@ -41,6 +43,7 @@ type FormErrors = Partial<Record<keyof FormData, string>>;
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
 
   const [form, setForm] = useState<FormData>({
     full_name: '',
@@ -58,6 +61,30 @@ export default function RegisterPage() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitting, setSubmitting] = useState(false);
   const [apiError, setApiError] = useState('');
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (status === 'authenticated' && session?.user) {
+      const role = session.user.role;
+      if (role === 'LEARNER') {
+        router.push('/learn/dashboard');
+      } else {
+        router.push('/dashboard');
+      }
+    }
+  }, [status, session, router]);
+
+  // Show loading while checking auth
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#0a0a0a]">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-[#84ba3f] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-slate-600 dark:text-slate-400">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   function validate(): boolean {
     const next: FormErrors = {};
@@ -249,6 +276,17 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#0a0a0a] py-12 px-4">
       <Container className="max-w-lg w-full">
+
+        {/* Back Button */}
+        <div className="mb-6">
+          <button
+            onClick={() => router.back()}
+            className="inline-flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+          >
+            <FaArrowLeft aria-hidden="true" />
+            Back
+          </button>
+        </div>
 
         {/* Brand */}
         <div className="text-center mb-8">

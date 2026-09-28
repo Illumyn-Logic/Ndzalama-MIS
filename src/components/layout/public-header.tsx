@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { Container } from '@/components/ui/container';
 import { cn } from '@/lib/utils';
 import { courses, type CourseCategory } from '@/data/courses';
@@ -222,6 +223,17 @@ export function PublicHeader() {
   const [mobileCoursesOpen, setMobileCoursesOpen] = useState(false);
   const [mobileAccreditationOpen, setMobileAccreditationOpen] = useState(false);
   const pathname = usePathname();
+  const { data: session } = useSession();
+  
+  const user = session?.user;
+  const isLearner = user?.role === 'LEARNER';
+  
+  function getInitials(name?: string | null) {
+    if (!name) return 'U';
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  }
+  
+  const initials = getInitials(user?.name);
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -366,18 +378,31 @@ export function PublicHeader() {
 
             {/* CTA group */}
             <div className="flex items-center gap-2 ml-3">
-              <Link
-                href="/apply"
-                className="px-5 py-2 text-sm font-semibold rounded-full bg-[#84ba3f] text-white hover:bg-[#6ea032] transition-colors shadow-sm"
-              >
-                Apply Now
-              </Link>
-              <Link
-                href="/dashboard/learner"
-                className="px-5 py-2 text-sm font-semibold rounded-full border-2 border-[#006600] text-[#006600] hover:bg-[#006600] hover:text-white transition-colors dark:border-[#84ba3f] dark:text-[#84ba3f] dark:hover:bg-[#84ba3f] dark:hover:text-white"
-              >
-                Portals
-              </Link>
+              {user && isLearner ? (
+                // Logged-in learner on public site
+                <Link
+                  href="/learn/dashboard"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                >
+                  <div
+                    className="flex h-8 w-8 items-center justify-center rounded-full bg-[#84ba3f] text-xs font-bold text-white"
+                    aria-hidden="true"
+                  >
+                    {initials}
+                  </div>
+                  <span className="text-xs font-bold text-slate-900 dark:text-white hidden lg:block">
+                    {user.name?.split(' ')[0]}
+                  </span>
+                </Link>
+              ) : (
+                // Guest user
+                <Link
+                  href="/register"
+                  className="px-5 py-2 text-sm font-semibold rounded-full bg-[#84ba3f] text-white hover:bg-[#6ea032] transition-colors shadow-sm"
+                >
+                  Learn Online
+                </Link>
+              )}
             </div>
           </nav>
 
@@ -494,18 +519,29 @@ export function PublicHeader() {
               <Link href="/contact" className="block py-2 px-3 text-sm font-medium rounded hover:bg-[#84ba3f]/10 hover:text-[#84ba3f] transition-colors text-[#333] dark:text-gray-300">Contact</Link>
 
               <div className="flex flex-col gap-2 mt-3 pt-3 border-t border-[#e5e4e7] dark:border-[#2e303a]">
-                <Link
-                  href="/register"
-                  className="block py-2.5 px-3 text-sm font-semibold rounded-full bg-[#84ba3f] text-white text-center hover:bg-[#6ea032] transition-colors"
-                >
-                  Apply Now
-                </Link>
-                <Link
-                  href="/login"
-                  className="block py-2.5 px-3 text-sm font-semibold rounded-full border-2 border-[#6b7280] text-[#6b7280] text-center hover:bg-[#6b7280] hover:text-white transition-colors"
-                >
-                  Student Portal
-                </Link>
+                {user && isLearner ? (
+                  // Logged-in learner
+                  <Link
+                    href="/learn/dashboard"
+                    className="flex items-center justify-center gap-2 py-2.5 px-3 text-sm font-semibold rounded-full bg-[#84ba3f] text-white hover:bg-[#6ea032] transition-colors"
+                  >
+                    <div
+                      className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20 text-xs font-bold"
+                      aria-hidden="true"
+                    >
+                      {initials}
+                    </div>
+                    My Dashboard
+                  </Link>
+                ) : (
+                  // Guest
+                  <Link
+                    href="/register"
+                    className="block py-2.5 px-3 text-sm font-semibold rounded-full bg-[#84ba3f] text-white text-center hover:bg-[#6ea032] transition-colors"
+                  >
+                    Learn Online
+                  </Link>
+                )}
               </div>
             </Container>
           </div>
