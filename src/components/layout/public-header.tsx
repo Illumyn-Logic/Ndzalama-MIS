@@ -174,7 +174,7 @@ function CoursesDropdown({ isActive }: { isActive: boolean }) {
       {open && (
         <div
           role="menu"
-          className="absolute top-full left-0 w-[480px] bg-white dark:bg-[#1f2028] border border-[#e5e4e7] dark:border-[#2e303a] rounded-xl shadow-xl py-4 z-50 animate-in fade-in slide-in-from-top-1 duration-150"
+          className="absolute top-full left-0 w-120 bg-white dark:bg-[#1f2028] border border-[#e5e4e7] dark:border-[#2e303a] rounded-xl shadow-xl py-4 z-50 animate-in fade-in slide-in-from-top-1 duration-150"
         >
           <div className="grid grid-cols-2 gap-x-4 px-4">
             {courseCategories.map((category) => {
@@ -397,10 +397,10 @@ export function PublicHeader() {
               ) : (
                 // Guest user
                 <Link
-                  href="/register"
+                  href="/learn"
                   className="px-5 py-2 text-sm font-semibold rounded-full bg-[#84ba3f] text-white hover:bg-[#6ea032] transition-colors shadow-sm"
                 >
-                  Learn Online
+                  Start Learning
                 </Link>
               )}
             </div>
@@ -536,10 +536,10 @@ export function PublicHeader() {
                 ) : (
                   // Guest
                   <Link
-                    href="/register"
+                    href="/learn"
                     className="block py-2.5 px-3 text-sm font-semibold rounded-full bg-[#84ba3f] text-white text-center hover:bg-[#6ea032] transition-colors"
                   >
-                    Learn Online
+                    Start Learning
                   </Link>
                 )}
               </div>

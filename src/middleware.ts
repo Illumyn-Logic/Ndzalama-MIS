@@ -77,6 +77,8 @@ export default auth((req) => {
 
   // 5. ROLE-BASED ACCESS CONTROL (RBAC)
   const roleRouteMap: Record<string, string[]> = {
+    "/admin/programmes": ["SUPER_ADMIN", "ADMIN", "REGISTRAR"],
+    "/admin/modules": ["SUPER_ADMIN", "ADMIN", "REGISTRAR"],
     "/admin": ["SUPER_ADMIN", "ADMIN", "REGISTRAR", "FINANCE_OFFICER"],
     "/facilitator": ["SUPER_ADMIN", "ADMIN", "FACILITATOR"],
     "/assessor": ["SUPER_ADMIN", "ADMIN", "ASSESSOR"],

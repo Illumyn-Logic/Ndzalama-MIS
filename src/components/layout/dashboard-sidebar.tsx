@@ -90,32 +90,20 @@ const roleNavigations: Record<string, { title: string; subtitle: string; items: 
     title: 'LMIS Operations',
     subtitle: 'Registrar & Admin',
     items: [
-      { label: 'Dashboard Hub', href: '/dashboard/admin?tab=overview', icon: <FaTachometerAlt aria-hidden="true" /> },
-      { label: 'Programs & Quals', href: '/dashboard/admin?tab=programs', icon: <FaGraduationCap aria-hidden="true" /> },
-      { label: 'Courses & Lessons', href: '/dashboard/admin?tab=courses', icon: <FaBook aria-hidden="true" /> },
-      { label: 'Manage Staff', href: '/dashboard/admin?tab=staff', icon: <FaChalkboardTeacher aria-hidden="true" /> },
-      { label: 'Manage Applications', href: '/dashboard/admin?tab=applications', icon: <FaFileSignature aria-hidden="true" /> },
-      { label: 'Assessments & Quizzes', href: '/dashboard/admin?tab=quizzes', icon: <FaTasks aria-hidden="true" /> },
-      { label: 'Learner Progress', href: '/dashboard/admin?tab=progress', icon: <FaChartLine aria-hidden="true" /> },
-      { label: 'Communication', href: '/dashboard/admin?tab=communication', icon: <FaComments aria-hidden="true" /> },
-      { label: 'Reports & Analytics', href: '/dashboard/admin?tab=reports', icon: <FaChartPie aria-hidden="true" /> },
-      { label: 'System Settings', href: '/dashboard/admin?tab=settings', icon: <FaCog aria-hidden="true" /> },
+      { label: 'Dashboard Hub', href: '/admin', icon: <FaTachometerAlt aria-hidden="true" /> },
+      { label: 'Curriculum Builder', href: '/admin/programmes', icon: <FaGraduationCap aria-hidden="true" /> },
+      { label: 'Courses & Lessons', href: '/admin/courses', icon: <FaBook aria-hidden="true" /> },
+      { label: 'Learner Records', href: '/admin/learners', icon: <FaUserGraduate aria-hidden="true" /> },
     ],
   },
   super_admin: {
     title: 'Executive Portal',
     subtitle: 'Director Governance',
     items: [
-      { label: 'Executive Dashboard', href: '/dashboard/admin?tab=overview', icon: <FaTachometerAlt aria-hidden="true" /> },
-      { label: 'Programs & Quals', href: '/dashboard/admin?tab=programs', icon: <FaGraduationCap aria-hidden="true" /> },
-      { label: 'Courses & Lessons', href: '/dashboard/admin?tab=courses', icon: <FaBook aria-hidden="true" /> },
-      { label: 'Manage Staff', href: '/dashboard/admin?tab=staff', icon: <FaChalkboardTeacher aria-hidden="true" /> },
-      { label: 'Manage Applications', href: '/dashboard/admin?tab=applications', icon: <FaFileSignature aria-hidden="true" /> },
-      { label: 'Assessments & Quizzes', href: '/dashboard/admin?tab=quizzes', icon: <FaTasks aria-hidden="true" /> },
-      { label: 'Learner Progress', href: '/dashboard/admin?tab=progress', icon: <FaChartLine aria-hidden="true" /> },
-      { label: 'Communication', href: '/dashboard/admin?tab=communication', icon: <FaComments aria-hidden="true" /> },
-      { label: 'Reports & Analytics', href: '/dashboard/admin?tab=reports', icon: <FaChartPie aria-hidden="true" /> },
-      { label: 'System Settings', href: '/dashboard/admin?tab=settings', icon: <FaCog aria-hidden="true" /> },
+      { label: 'Executive Dashboard', href: '/admin', icon: <FaTachometerAlt aria-hidden="true" /> },
+      { label: 'Curriculum Builder', href: '/admin/programmes', icon: <FaGraduationCap aria-hidden="true" /> },
+      { label: 'Courses & Lessons', href: '/admin/courses', icon: <FaBook aria-hidden="true" /> },
+      { label: 'Learner Records', href: '/admin/learners', icon: <FaUserGraduate aria-hidden="true" /> },
     ],
   },
 };
@@ -143,7 +131,7 @@ export function DashboardSidebar() {
     <aside className="fixed inset-y-0 left-0 z-30 w-72 bg-[#03367A] text-white shadow-2xl hidden lg:flex flex-col">
       {/* Brand Header */}
       <div className="flex items-center gap-3 border-b border-white/10 px-6 py-5">
-        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-[#84ba3f] to-[#006600] text-lg font-extrabold text-white shadow-md">
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-linear-to-br from-[#84ba3f] to-[#006600] text-lg font-extrabold text-white shadow-md">
           N
         </div>
         <div>
@@ -170,8 +158,8 @@ export function DashboardSidebar() {
       {/* Nav List */}
       <nav className="flex-1 space-y-1 px-3 py-4 overflow-y-auto" aria-label="Dashboard navigation">
         {config.items.map((item) => {
-          // usePathname doesn't include query params (?tab=...), so we split the href to match the base path
-          const isActive = pathname === item.href.split('?')[0]; 
+          const routePath = item.href.split('?')[0];
+          const isActive = pathname === routePath || (routePath !== '/admin' && pathname.startsWith(`${routePath}/`));
           return (
             <Link
               key={item.label}

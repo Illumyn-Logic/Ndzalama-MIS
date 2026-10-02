@@ -77,6 +77,18 @@ This architecture is designed to be:
 
 ## 4. Application Domains
 
+### 4.0 Experience and route boundaries
+
+Ndzalama has three distinct user experiences hosted by one Next.js application:
+
+| Experience | Route space | Shell and navigation | Cross-experience navigation |
+| --- | --- | --- | --- |
+| Public website | `/` and public routes such as `/courses` | Public header and footer | Its learner CTA opens `/learn`; a signed-in learner sees their name/profile and enters `/learn/dashboard`. |
+| Learner LMS | `/learn/**` | LMS-specific header and learner dashboard navigation | Course and support browsing stays under `/learn`; shared sign-in/registration may use `/login` and `/register`. The LMS logo/home returns to `/learn`; a deliberate “Back to public home” link may return to `/`. |
+| Admin/operations | `/admin/**` and role workspaces | Authenticated dashboard shell | Admin navigation stays in its workspace. The explicit public-home link is the only normal admin-shell link to `/`. |
+
+Do not use public-site navigation as the LMS header, route LMS course/support links to public pages, or make ordinary LMS navigation jump to `/`. Treat these boundaries as product behavior, not merely visual styling.
+
 ### 4.1 Public web domain
 
 Includes:

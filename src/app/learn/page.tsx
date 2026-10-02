@@ -287,7 +287,7 @@ export default function LearnHomePage() {
             </Link>
             
             <Link
-              href="/courses"
+              href="/learn/courses"
               className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-bold text-base border-2 border-white text-white hover:bg-white/10 transition-colors"
             >
               Browse Courses
