@@ -94,6 +94,19 @@ enum DeliveryMode {
   WORKPLACE_BASED
 }
 
+enum ProgrammeDeliveryMode {
+  FULL_TIME
+  PART_TIME
+  DISTANCE
+  BLENDED
+}
+
+enum DurationUnit {
+  WEEKS
+  MONTHS
+  YEARS
+}
+
 enum ApplicationStatus {
   SUBMITTED
   UNDER_REVIEW
@@ -146,6 +159,32 @@ enum PostCategory {
   INDUSTRY_NEWS
   SUCCESS_STORY
   TRAINING_TIP
+}
+
+enum QualificationStatus {
+  DEVELOPMENT
+  ACTIVE
+  ARCHIVED
+}
+
+enum ModuleType {
+  KNOWLEDGE
+  PRACTICAL
+  WORK_EXPERIENCE
+}
+
+enum ResourceKind {
+  PDF
+  VIDEO
+  SLIDES
+  AUDIO
+  LINK
+}
+
+enum AssessmentKind {
+  FORMATIVE
+  SUMMATIVE
+  FISA
 }
 
 // ----------------------------------------------------------------------------
@@ -313,22 +352,31 @@ model ContactInquiry {
 model Qualification {
   id                String                 @id @default(cuid())
   code              String                 @unique // e.g. "50334", "101321"
-  saqaId            String?
+  saqaId            String?                @unique
   qctoCode          String?
   title             String
   slug              String                 @unique
   framework         QualificationFramework @default(LEGACY_UNIT_STANDARD)
+  accreditation     String?
   nqfLevel          Int                    @default(5)
   credits           Int
   durationMonths    Int                    @default(12)
+  durationValue     Int                    @default(12)
+  durationUnit      DurationUnit            @default(MONTHS)
+  deliveryMode      ProgrammeDeliveryMode   @default(PART_TIME)
   shortDescription  String                 @db.Text
   fullDescription   String                 @db.Text
+  entryRequirements String[]                @default([])
+  targetAudience    String[]                @default([])
+  benefits          String[]                @default([])
   price             Decimal                @db.Decimal(10, 2)
   coverImageUrl     String?
   isActive          Boolean                @default(true)
+  status            QualificationStatus   @default(DEVELOPMENT)
   
   // Breakdown
   modules           CourseModule[]
+  resources         ProgrammeResource[]
   cohorts           Cohort[]
   applications      Application[]
   enrollments       Enrollment[]
@@ -345,6 +393,7 @@ model CourseModule {
   qualification     Qualification   @relation(fields: [qualificationId], references: [id], onDelete: Cascade)
   
   moduleCode        String          // e.g. "KM-01", "US-117871"
+  code              String?         @unique
   title             String
   category          ModuleCategory  @default(UNIT_STANDARD)
   unitStandardId    String?         // SAQA Unit Standard ID if applicable
@@ -353,9 +402,15 @@ model CourseModule {
   individualPrice   Decimal?        @db.Decimal(10, 2)
   summary           String?         @db.Text
   orderIndex        Int             @default(0)
+  type              ModuleType      @default(KNOWLEDGE)
+  notionalHours     Int             @default(0)
 
+  topics            Topic[]
   lessons           Lesson[]
   assessmentTasks   AssessmentTask[]
+  tests             CurriculumTest[]
+  assignments       CurriculumAssignment[]
+  resources         ProgrammeResource[]
 
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
@@ -367,17 +422,76 @@ model Lesson {
   id                String          @id @default(cuid())
   moduleId          String
   module            CourseModule    @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  topicId           String?
+  topic             Topic?          @relation(fields: [topicId], references: [id], onDelete: Cascade)
   title             String
   slug              String
   orderIndex        Int             @default(0)
+  durationMinutes   Int             @default(0)
   contentBody       String?         @db.Text
   resourceUrls      String[]        // PDF links, slides, handouts
   videoEmbedUrl     String?
 
+  resources         LessonResource[]
+  programmeResources ProgrammeResource[]
+  tests             CurriculumTest[]
+  assignments       CurriculumAssignment[]
   progressRecords   LessonProgress[]
 
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
+}
+
+model Topic {
+  id          String       @id @default(cuid())
+  title       String
+  order       Int          @default(0)
+  moduleId    String
+  module      CourseModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  lessons     Lesson[]
+  resources   ProgrammeResource[]
+  tests       CurriculumTest[]
+  assignments CurriculumAssignment[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@unique([moduleId, title])
+  @@index([moduleId, order])
+}
+
+model LessonResource {
+  id        String       @id @default(cuid())
+  kind      ResourceKind
+  url       String
+  label     String
+  lessonId  String
+  lesson    Lesson       @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@index([lessonId])
+}
+
+model ProgrammeResource {
+  id              String        @id @default(cuid())
+  kind            ResourceKind
+  url             String
+  label           String
+  qualificationId String?
+  qualification   Qualification? @relation(fields: [qualificationId], references: [id], onDelete: Cascade)
+  moduleId        String?
+  module          CourseModule?  @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  topicId         String?
+  topic           Topic?         @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  lessonId        String?
+  lesson          Lesson?        @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@index([qualificationId])
+  @@index([moduleId])
+  @@index([topicId])
+  @@index([lessonId])
 }
 
 // ----------------------------------------------------------------------------
@@ -544,7 +658,10 @@ model AssessmentTask {
   moduleId          String
   module            CourseModule           @relation(fields: [moduleId], references: [id], onDelete: Cascade)
   title             String
-  instructions      String                 @db.Text
+  instructions      String?                @db.Text
+  kind              AssessmentKind         @default(FORMATIVE)
+  maxMarks          Int                    @default(100)
+  order             Int                    @default(0)
   totalMarks        Int                    @default(100)
   passPercentage    Int                    @default(50)
   rubricCriteria    Json                   // Structured scoring rubric
@@ -553,6 +670,45 @@ model AssessmentTask {
 
   createdAt         DateTime               @default(now())
   updatedAt         DateTime               @updatedAt
+}
+
+model CurriculumTest {
+  id              String        @id @default(cuid())
+  title           String
+  durationMinutes Int?
+  passMark        Int?
+  order           Int           @default(0)
+  moduleId        String?
+  module          CourseModule? @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  topicId         String?
+  topic           Topic?        @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  lessonId        String?
+  lesson          Lesson?       @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([moduleId])
+  @@index([topicId])
+  @@index([lessonId])
+}
+
+model CurriculumAssignment {
+  id                   String        @id @default(cuid())
+  title                String
+  instructions         String?       @db.Text
+  evidenceRequirements String[]      @default([])
+  moduleId             String?
+  module               CourseModule? @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  topicId              String?
+  topic                Topic?        @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  lessonId             String?
+  lesson               Lesson?       @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+
+  @@index([moduleId])
+  @@index([topicId])
+  @@index([lessonId])
 }
 
 model AssessmentSubmission {
