@@ -85,8 +85,8 @@ function NavDropdown({ label, href, isActive, children }: DropdownProps) {
         <Link
           href={href}
           className={cn(
-            'flex items-center gap-1 px-4 py-2 text-sm font-medium rounded transition-colors hover:text-[#84ba3f]',
-            isActive ? 'text-[#84ba3f]' : 'text-[#333] dark:text-gray-300',
+            'flex items-center gap-1 px-4 py-2 text-sm font-medium rounded transition-colors hover:text-brand-secondary',
+            isActive ? 'text-brand-secondary' : 'text-text-primary dark:text-gray-300',
           )}
           aria-haspopup="true"
           aria-expanded={open}
@@ -102,8 +102,8 @@ function NavDropdown({ label, href, isActive, children }: DropdownProps) {
           type="button"
           onClick={() => setOpen((v) => !v)}
           className={cn(
-            'flex items-center gap-1 px-4 py-2 text-sm font-medium rounded transition-colors hover:text-[#84ba3f]',
-            isActive ? 'text-[#84ba3f]' : 'text-[#333] dark:text-gray-300',
+            'flex items-center gap-1 px-4 py-2 text-sm font-medium rounded transition-colors hover:text-brand-secondary',
+            isActive ? 'text-brand-secondary' : 'text-text-primary dark:text-gray-300',
           )}
           aria-haspopup="true"
           aria-expanded={open}
@@ -133,7 +133,7 @@ function DropdownItem({ href, label }: { href: string; label: string }) {
     <Link
       role="menuitem"
       href={href}
-      className="block px-4 py-2.5 text-sm text-[#333] dark:text-gray-300 hover:bg-[#84ba3f]/10 hover:text-[#84ba3f] transition-colors"
+      className="block px-4 py-2.5 text-sm text-text-primary dark:text-gray-300 hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors"
     >
       {label}
     </Link>
@@ -181,7 +181,7 @@ function CoursesDropdown({ isActive }: { isActive: boolean }) {
               const categoryCourses = courses.filter((c) => c.category === category);
               return (
                 <div key={category} className="mb-3">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#006600] dark:text-[#84ba3f] px-1 mb-1.5">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-brand-primary dark:text-brand-secondary px-1 mb-1.5">
                     {category}
                   </p>
                   {categoryCourses.map((course) => (
@@ -189,9 +189,9 @@ function CoursesDropdown({ isActive }: { isActive: boolean }) {
                       role="menuitem"
                       key={course.slug}
                       href={`/courses/${course.slug}`}
-                      className="flex items-center gap-1.5 px-1 py-1.5 text-sm text-[#333] dark:text-gray-300 hover:text-[#84ba3f] transition-colors rounded group"
+                      className="flex items-center gap-1.5 px-1 py-1.5 text-sm text-text-primary dark:text-gray-300 hover:text-brand-secondary transition-colors rounded group"
                     >
-                      <FaChevronRight className="text-[8px] text-[#84ba3f] opacity-0 group-hover:opacity-100 transition-opacity shrink-0" aria-hidden="true" />
+                      <FaChevronRight className="text-[8px] text-brand-secondary opacity-0 group-hover:opacity-100 transition-opacity shrink-0" aria-hidden="true" />
                       {course.title}
                     </Link>
                   ))}
@@ -203,7 +203,7 @@ function CoursesDropdown({ isActive }: { isActive: boolean }) {
             <Link
               role="menuitem"
               href="/courses"
-              className="flex items-center gap-2 text-sm font-semibold text-[#84ba3f] hover:text-[#6ea032] transition-colors"
+              className="flex items-center gap-2 text-sm font-semibold text-brand-secondary hover:text-brand-secondary-dark transition-colors"
             >
               View All Courses
               <FaArrowRight className="text-xs" aria-hidden="true" />
@@ -253,19 +253,19 @@ export function PublicHeader() {
   return (
     <header className="w-full sticky top-0 z-50">
       {/* ── top bar ── */}
-      <div className="bg-[#006600] text-white text-sm py-2 hidden md:block">
+      <div className="bg-brand-primary text-white text-sm py-2 hidden md:block">
         <Container className="flex items-center justify-between">
           <div className="flex items-center gap-6">
             <a
               href="mailto:headoffice@ndzalama.org.za"
-              className="flex items-center gap-2 hover:text-[#84ba3f] transition-colors"
+              className="flex items-center gap-2 hover:text-brand-secondary transition-colors"
             >
               <FaEnvelope aria-hidden="true" />
               headoffice@ndzalama.org.za
             </a>
             <a
               href="tel:+27155900732"
-              className="flex items-center gap-2 hover:text-[#84ba3f] transition-colors"
+              className="flex items-center gap-2 hover:text-brand-secondary transition-colors"
             >
               <FaPhone aria-hidden="true" />
               +(27) 15-5900-732
@@ -274,7 +274,7 @@ export function PublicHeader() {
               href="https://api.whatsapp.com/send?phone=27664832441"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 hover:text-[#84ba3f] transition-colors"
+              className="flex items-center gap-2 hover:text-brand-secondary transition-colors"
             >
               <FaWhatsapp aria-hidden="true" />
               WhatsApp Us
@@ -293,7 +293,7 @@ export function PublicHeader() {
                 target={href !== '#' ? '_blank' : undefined}
                 rel={href !== '#' ? 'noopener noreferrer' : undefined}
                 aria-label={label}
-                className="hover:text-[#84ba3f] transition-colors"
+                className="hover:text-brand-secondary transition-colors"
               >
                 <Icon aria-hidden="true" />
               </a>
@@ -322,8 +322,8 @@ export function PublicHeader() {
             <Link
               href="/"
               className={cn(
-                'px-4 py-2 text-sm font-medium rounded transition-colors hover:text-[#84ba3f]',
-                pathname === '/' ? 'text-[#84ba3f]' : 'text-[#333] dark:text-gray-300',
+                'px-4 py-2 text-sm font-medium rounded transition-colors hover:text-brand-secondary',
+                pathname === '/' ? 'text-brand-secondary' : 'text-text-primary dark:text-gray-300',
               )}
             >
               Home
@@ -342,8 +342,8 @@ export function PublicHeader() {
             <Link
               href="/posts"
               className={cn(
-                'px-4 py-2 text-sm font-medium rounded transition-colors hover:text-[#84ba3f]',
-                pathname.startsWith('/posts') ? 'text-[#84ba3f]' : 'text-[#333] dark:text-gray-300',
+                'px-4 py-2 text-sm font-medium rounded transition-colors hover:text-brand-secondary',
+                pathname.startsWith('/posts') ? 'text-brand-secondary' : 'text-text-primary dark:text-gray-300',
               )}
             >
               Updates
@@ -352,8 +352,8 @@ export function PublicHeader() {
             <Link
               href="/verify"
               className={cn(
-                'px-4 py-2 text-sm font-medium rounded transition-colors hover:text-[#84ba3f]',
-                pathname === '/verify' ? 'text-[#84ba3f]' : 'text-[#333] dark:text-gray-300',
+                'px-4 py-2 text-sm font-medium rounded transition-colors hover:text-brand-secondary',
+                pathname === '/verify' ? 'text-brand-secondary' : 'text-text-primary dark:text-gray-300',
               )}
             >
               Verify
@@ -369,8 +369,8 @@ export function PublicHeader() {
             <Link
               href="/contact"
               className={cn(
-                'px-4 py-2 text-sm font-medium rounded transition-colors hover:text-[#84ba3f]',
-                pathname === '/contact' ? 'text-[#84ba3f]' : 'text-[#333] dark:text-gray-300',
+                'px-4 py-2 text-sm font-medium rounded transition-colors hover:text-brand-secondary',
+                pathname === '/contact' ? 'text-brand-secondary' : 'text-text-primary dark:text-gray-300',
               )}
             >
               Contact
@@ -385,7 +385,7 @@ export function PublicHeader() {
                   className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                 >
                   <div
-                    className="flex h-8 w-8 items-center justify-center rounded-full bg-[#84ba3f] text-xs font-bold text-white"
+                    className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-secondary text-xs font-bold text-white"
                     aria-hidden="true"
                   >
                     {initials}
@@ -396,12 +396,20 @@ export function PublicHeader() {
                 </Link>
               ) : (
                 // Guest user
-                <Link
-                  href="/learn"
-                  className="px-5 py-2 text-sm font-semibold rounded-full bg-[#84ba3f] text-white hover:bg-[#6ea032] transition-colors shadow-sm"
-                >
-                  Start Learning
-                </Link>
+                <>
+                  <Link
+                    href="/apply"
+                    className="px-5 py-2 text-sm font-semibold rounded-full bg-[#84ba3f] text-white hover:bg-[#6ea032] transition-colors shadow-sm"
+                  >
+                    Apply Now
+                  </Link>
+                  <Link
+                    href="/login"
+                    className="px-5 py-2 text-sm font-semibold rounded-full border-2 border-[#03367A] text-[#03367A] hover:bg-[#03367A] hover:text-white transition-colors dark:border-sky-400 dark:text-sky-400 dark:hover:bg-sky-400 dark:hover:text-white"
+                  >
+                    Student Portal
+                  </Link>
+                </>
               )}
             </div>
           </nav>
@@ -431,22 +439,22 @@ export function PublicHeader() {
             <Container className="py-4 flex flex-col gap-1">
               {/* Contact info strip */}
               <div className="flex flex-col gap-2 pb-3 mb-3 border-b border-[#e5e4e7] dark:border-[#2e303a]">
-                <a href="mailto:headoffice@ndzalama.org.za" className="flex items-center gap-2 text-sm text-[#006600] dark:text-[#84ba3f]">
+                <a href="mailto:headoffice@ndzalama.org.za" className="flex items-center gap-2 text-sm text-brand-primary dark:text-brand-secondary">
                   <FaEnvelope aria-hidden="true" /> headoffice@ndzalama.org.za
                 </a>
-                <a href="tel:+27155900732" className="flex items-center gap-2 text-sm text-[#006600] dark:text-[#84ba3f]">
+                <a href="tel:+27155900732" className="flex items-center gap-2 text-sm text-brand-primary dark:text-brand-secondary">
                   <FaPhone aria-hidden="true" /> +(27) 15-5900-732
                 </a>
               </div>
 
-              <Link href="/" className="block py-2 px-3 text-sm font-medium rounded hover:bg-[#84ba3f]/10 hover:text-[#84ba3f] transition-colors text-[#333] dark:text-gray-300">Home</Link>
+              <Link href="/" className="block py-2 px-3 text-sm font-medium rounded hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300">Home</Link>
 
               {/* About accordion */}
               <div>
                 <button
                   type="button"
                   onClick={() => setMobileAboutOpen((v) => !v)}
-                  className="w-full flex items-center justify-between py-2 px-3 text-sm font-medium rounded hover:bg-[#84ba3f]/10 hover:text-[#84ba3f] transition-colors text-[#333] dark:text-gray-300"
+                  className="w-full flex items-center justify-between py-2 px-3 text-sm font-medium rounded hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300"
                   aria-expanded={mobileAboutOpen}
                 >
                   About
@@ -466,7 +474,7 @@ export function PublicHeader() {
                 <button
                   type="button"
                   onClick={() => setMobileCoursesOpen((v) => !v)}
-                  className="w-full flex items-center justify-between py-2 px-3 text-sm font-medium rounded hover:bg-[#84ba3f]/10 hover:text-[#84ba3f] transition-colors text-[#333] dark:text-gray-300"
+                  className="w-full flex items-center justify-between py-2 px-3 text-sm font-medium rounded hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300"
                   aria-expanded={mobileCoursesOpen}
                 >
                   Courses
@@ -478,18 +486,18 @@ export function PublicHeader() {
                       const categoryCourses = courses.filter((c) => c.category === category);
                       return (
                         <div key={category}>
-                          <p className="text-[10px] font-bold uppercase tracking-widest text-[#006600] dark:text-[#84ba3f] px-3 pt-2 pb-1">
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-brand-primary dark:text-brand-secondary px-3 pt-2 pb-1">
                             {category}
                           </p>
                           {categoryCourses.map((course) => (
-                            <Link key={course.slug} href={`/courses/${course.slug}`} className="block py-1.5 px-3 text-sm text-[#555] dark:text-gray-400 rounded hover:bg-[#84ba3f]/10 hover:text-[#84ba3f] transition-colors">
+                            <Link key={course.slug} href={`/courses/${course.slug}`} className="block py-1.5 px-3 text-sm text-text-secondary dark:text-gray-400 rounded hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors">
                               {course.title}
                             </Link>
                           ))}
                         </div>
                       );
                     })}
-                    <Link href="/courses" className="flex items-center gap-2 py-2 px-3 text-sm font-semibold text-[#84ba3f] hover:underline">
+                    <Link href="/courses" className="flex items-center gap-2 py-2 px-3 text-sm font-semibold text-brand-secondary hover:underline">
                       View All Courses <FaArrowRight className="text-xs" aria-hidden="true" />
                     </Link>
                   </div>
@@ -501,7 +509,7 @@ export function PublicHeader() {
                 <button
                   type="button"
                   onClick={() => setMobileAccreditationOpen((v) => !v)}
-                  className="w-full flex items-center justify-between py-2 px-3 text-sm font-medium rounded hover:bg-[#84ba3f]/10 hover:text-[#84ba3f] transition-colors text-[#333] dark:text-gray-300"
+                  className="w-full flex items-center justify-between py-2 px-3 text-sm font-medium rounded hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300"
                   aria-expanded={mobileAccreditationOpen}
                 >
                   Accreditation
@@ -516,14 +524,14 @@ export function PublicHeader() {
                 )}
               </div>
 
-              <Link href="/contact" className="block py-2 px-3 text-sm font-medium rounded hover:bg-[#84ba3f]/10 hover:text-[#84ba3f] transition-colors text-[#333] dark:text-gray-300">Contact</Link>
+              <Link href="/contact" className="block py-2 px-3 text-sm font-medium rounded hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300">Contact</Link>
 
               <div className="flex flex-col gap-2 mt-3 pt-3 border-t border-[#e5e4e7] dark:border-[#2e303a]">
                 {user && isLearner ? (
                   // Logged-in learner
                   <Link
                     href="/learn/dashboard"
-                    className="flex items-center justify-center gap-2 py-2.5 px-3 text-sm font-semibold rounded-full bg-[#84ba3f] text-white hover:bg-[#6ea032] transition-colors"
+                    className="flex items-center justify-center gap-2 py-2.5 px-3 text-sm font-semibold rounded-full bg-brand-secondary text-white hover:bg-brand-secondary-dark transition-colors"
                   >
                     <div
                       className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20 text-xs font-bold"
@@ -535,12 +543,20 @@ export function PublicHeader() {
                   </Link>
                 ) : (
                   // Guest
-                  <Link
-                    href="/learn"
-                    className="block py-2.5 px-3 text-sm font-semibold rounded-full bg-[#84ba3f] text-white text-center hover:bg-[#6ea032] transition-colors"
-                  >
-                    Start Learning
-                  </Link>
+                  <>
+                    <Link
+                      href="/apply"
+                      className="block py-2.5 px-3 text-sm font-semibold rounded-full bg-[#84ba3f] text-white text-center hover:bg-[#6ea032] transition-colors"
+                    >
+                      Apply Now
+                    </Link>
+                    <Link
+                      href="/login"
+                      className="block py-2.5 px-3 text-sm font-semibold rounded-full border-2 border-[#03367A] text-[#03367A] text-center hover:bg-[#03367A] hover:text-white transition-colors"
+                    >
+                      Student Portal
+                    </Link>
+                  </>
                 )}
               </div>
             </Container>
