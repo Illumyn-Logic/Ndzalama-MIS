@@ -158,8 +158,8 @@ function CoursesDropdown({ isActive }: { isActive: boolean }) {
       <Link
         href="/courses"
         className={cn(
-          'flex items-center gap-1 px-4 py-2 text-sm font-medium rounded transition-colors hover:text-[#84ba3f]',
-          isActive ? 'text-[#84ba3f]' : 'text-[#333] dark:text-gray-300',
+          'flex items-center gap-1 px-4 py-2 text-sm font-medium rounded transition-colors hover:text-brand-secondary',
+          isActive ? 'text-brand-secondary' : 'text-text-primary dark:text-gray-300',
         )}
         aria-haspopup="true"
         aria-expanded={open}
@@ -463,7 +463,7 @@ export function PublicHeader() {
                 {mobileAboutOpen && (
                   <div className="pl-4 mt-1 flex flex-col gap-1">
                     {aboutLinks.map((l) => (
-                      <Link key={l.href} href={l.href} className="block py-2 px-3 text-sm text-[#555] dark:text-gray-400 rounded hover:bg-[#84ba3f]/10 hover:text-[#84ba3f] transition-colors">{l.label}</Link>
+                      <Link key={l.href} href={l.href} className="block py-2 px-3 text-sm text-text-secondary dark:text-gray-400 rounded hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors">{l.label}</Link>
                     ))}
                   </div>
                 )}
@@ -518,7 +518,7 @@ export function PublicHeader() {
                 {mobileAccreditationOpen && (
                   <div className="pl-4 mt-1 flex flex-col gap-1">
                     {accreditationLinks.map((l) => (
-                      <Link key={l.href} href={l.href} className="block py-2 px-3 text-sm text-[#555] dark:text-gray-400 rounded hover:bg-[#84ba3f]/10 hover:text-[#84ba3f] transition-colors">{l.label}</Link>
+                      <Link key={l.href} href={l.href} className="block py-2 px-3 text-sm text-text-secondary dark:text-gray-400 rounded hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors">{l.label}</Link>
                     ))}
                   </div>
                 )}
