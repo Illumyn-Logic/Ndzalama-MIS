@@ -196,6 +196,16 @@ function CoursesDropdown({ isActive }: { isActive: boolean }) {
   }, []);
   useClickOutside(ref, close);
 
+  // Auto-expand first SETA when dropdown opens
+  useEffect(() => {
+    if (open && !expandedSETA) {
+      const firstSETA = Object.keys(coursesBySETA)[0];
+      if (firstSETA) {
+        setExpandedSETA(firstSETA.replace(/\s+/g, '-'));
+      }
+    }
+  }, [open, expandedSETA]);
+
   return (
     <div
       ref={ref}
@@ -222,8 +232,7 @@ function CoursesDropdown({ isActive }: { isActive: boolean }) {
       {open && (
         <div
           role="menu"
-          className="fixed left-0 right-0 top-[calc(100%+1px)] bg-white dark:bg-[#1f2028] border-t-2 border-brand-primary shadow-2xl z-50"
-          style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)' }}
+          className="absolute left-1/2 -translate-x-1/2 top-full mt-0 w-screen max-w-5xl bg-white dark:bg-[#1f2028] border-2 border-brand-primary shadow-2xl z-50"
         >
           <div className="max-w-7xl mx-auto px-8 py-6">
             <div className="grid grid-cols-4 gap-6">
