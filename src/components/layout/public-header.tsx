@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { Container } from '@/components/ui/container';
 import { cn } from '@/lib/utils';
-import { courses, type CourseCategory } from '@/data/courses';
+import { courses, type CourseCategory, type CourseProvider } from '@/data/courses';
 import {
   FaEnvelope,
   FaPhone,
@@ -39,53 +39,17 @@ const accreditationLinks = [
   { label: 'Verify Certificate', href: '/verify' },
 ];
 
-// Organized by SETA
-const coursesBySETA = {
-  'ETDP SETA': {
-    'Occupational Certificates': [
-      { code: 'OC-97154', title: 'Occupational Trainer', href: '/courses/occupational-trainer' },
-      { code: 'OC-101321', title: 'Training and Development Practitioner', href: '/courses/training-development-practitioner' },
-      { code: 'OC-97542', title: 'Early Childhood Development Practitioner', href: '/courses/ecd-practitioner', meta: 'L4 - 131 credits' },
-    ],
-    'Skills Programmes': [
-      { code: 'SP-220319', title: 'Learning and Development Facilitator', href: '/courses/learning-development-facilitator' },
-      { code: 'SP-220320', title: 'Assessment Practitioner', href: '/courses/assessment-practitioner' },
-      { code: 'SP-220321', title: 'Skills Development Facilitation Practitioner', href: '/courses/sdf-practitioner' },
-      { code: 'SP-220322', title: 'Workplace-based Practitioner Programme', href: '/courses/workplace-based-practitioner' },
-      { code: 'SP-211001', title: 'Assistant Life Coach', href: '/courses/assistant-life-coach' },
-    ],
-  },
-  'Services SETA': {
-    'Skills Programmes': [
-      { code: 'SP-201201', title: 'Workplace Preparation', href: '/courses/workplace-preparation' },
-      { code: 'SP-211009', title: 'Workplace Essential Skills', href: '/courses/workplace-essential-skills' },
-      { code: 'SP-211010', title: 'New Venture Creation', href: '/courses/new-venture-creation' },
-    ],
-  },
-  'HWSETA': {
-    'Occupational Certificates': [
-      { code: 'OC-121929', title: 'Occupational Health and Safety Officer', href: '/courses/ohs-officer' },
-      { code: 'OC-121930', title: 'Occupational Health and Safety Assistant', href: '/courses/ohs-assistant' },
-    ],
-    'First Aid Programmes': [
-      { code: 'SP-230801', title: 'Basic Emergency First Aid Responder', href: '/courses/basic-first-aid' },
-      { code: 'SP-230802', title: 'Intermediate Emergency First Aid Responder', href: '/courses/intermediate-first-aid' },
-      { code: 'SP-230803', title: 'Advanced Emergency First Aid Responder', href: '/courses/advanced-first-aid' },
-    ],
-  },
-  'Legacy Qualifications': {
-    'Unit Standards Based': [
-      // Add legacy unit standard courses here
-      { code: 'US-xxxxx', title: 'Example Legacy Course', href: '/courses/legacy-example' },
-    ],
-  },
-  'Short Courses': {
-    'Professional Development': [
-      // Non-accredited short courses
-      { code: 'SC-001', title: 'Example Short Course', href: '/courses/short-course-example' },
-    ],
-  },
-};
+const courseMenuGroups: {
+  title: string;
+  provider: CourseProvider;
+  categories: CourseCategory[];
+}[] = [
+  { title: 'ETDP SETA', provider: 'ETDP SETA', categories: ['Occupational Certificates', 'Skills Programmes'] },
+  { title: 'Services SETA', provider: 'Services SETA', categories: ['Skills Programmes'] },
+  { title: 'HWSETA', provider: 'HWSETA', categories: ['Occupational Certificates', 'First Aid Programmes'] },
+  { title: 'Skill Builder Courses', provider: 'Skill Builder', categories: ['Skill Builder Courses'] },
+  { title: 'Legacy Qualifications', provider: 'Legacy Unit Standards', categories: ['Legacy Qualifications'] },
+];
 
 /* ─── helpers ─────────────────────────────────────────────────────── */
 
@@ -186,35 +150,49 @@ function DropdownItem({ href, label }: { href: string; label: string }) {
 
 function CoursesDropdown({ isActive }: { isActive: boolean }) {
   const [open, setOpen] = useState(false);
-  const [expandedSETA, setExpandedSETA] = useState<string | null>(null);
-  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+  const [selectedProvider, setSelectedProvider] = useState<CourseProvider>('ETDP SETA');
+  const [expandedCategory, setExpandedCategory] = useState<CourseCategory | null>(null);
   const ref = useRef<HTMLDivElement>(null);
+  const closeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const close = useCallback(() => {
+    if (closeTimeout.current) clearTimeout(closeTimeout.current);
     setOpen(false);
-    setExpandedSETA(null);
+    setSelectedProvider('ETDP SETA');
     setExpandedCategory(null);
   }, []);
   useClickOutside(ref, close);
 
-  // Auto-expand first SETA when dropdown opens
-  useEffect(() => {
-    if (open && !expandedSETA) {
-      const firstSETA = Object.keys(coursesBySETA)[0];
-      if (firstSETA) {
-        setExpandedSETA(firstSETA.replace(/\s+/g, '-'));
-      }
-    }
-  }, [open, expandedSETA]);
+  const openMenu = () => {
+    if (closeTimeout.current) clearTimeout(closeTimeout.current);
+    setOpen(true);
+  };
+
+  const scheduleClose = () => {
+    closeTimeout.current = setTimeout(() => setOpen(false), 120);
+  };
+
+  useEffect(() => () => {
+    if (closeTimeout.current) clearTimeout(closeTimeout.current);
+  }, []);
 
   return (
     <div
       ref={ref}
       className="relative"
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
+      onMouseEnter={openMenu}
+      onMouseLeave={scheduleClose}
+      onFocus={openMenu}
+      onBlur={(event) => {
+        if (!ref.current?.contains(event.relatedTarget as Node)) scheduleClose();
+      }}
+      onKeyDown={(event) => {
+        if (event.key === 'Escape') close();
+      }}
     >
-      <Link
-        href="/courses"
+      <button
+        type="button"
+        onClick={openMenu}
         className={cn(
           'flex items-center gap-1 px-4 py-2 text-sm font-medium transition-colors hover:text-brand-secondary',
           isActive ? 'text-brand-secondary' : 'text-text-primary dark:text-gray-300',
@@ -227,87 +205,106 @@ function CoursesDropdown({ isActive }: { isActive: boolean }) {
           className={cn('text-[10px] mt-0.5 transition-transform', open && 'rotate-180')}
           aria-hidden="true"
         />
-      </Link>
+      </button>
 
       {open && (
         <div
-          role="menu"
-          className="absolute left-1/2 -translate-x-1/2 top-full mt-0 w-screen max-w-5xl bg-white dark:bg-[#1f2028] border-2 border-brand-primary shadow-2xl z-50"
+          role="region"
+          aria-label="Browse courses by category"
+          onMouseEnter={openMenu}
+          onMouseLeave={scheduleClose}
+          className="absolute left-1/2 top-full z-50 w-[min(48rem,calc(100vw-2rem))] -translate-x-1/2 border-t-2 border-brand-secondary bg-white shadow-2xl dark:bg-[#1f2028]"
         >
-          <div className="max-w-7xl mx-auto px-8 py-6">
-            <div className="grid grid-cols-4 gap-6">
-              {Object.entries(coursesBySETA).map(([setaName, categories]) => {
-                const setaKey = setaName.replace(/\s+/g, '-');
-                const isExpanded = expandedSETA === setaKey;
-                
-                return (
-                  <div key={setaName} className="border-r border-gray-200 dark:border-gray-700 pr-6 last:border-r-0">
-                    <button
-                      onClick={() => setExpandedSETA(isExpanded ? null : setaKey)}
-                      className="w-full flex items-center justify-between text-left px-3 py-2 bg-brand-neutral/30 hover:bg-brand-neutral transition-colors mb-3"
-                    >
-                      <span className="text-xs font-bold uppercase tracking-wider text-brand-primary dark:text-brand-secondary">
-                        {setaName}
-                      </span>
-                      <FaChevronDown
-                        className={cn('text-[10px] transition-transform', isExpanded && 'rotate-180')}
-                        aria-hidden="true"
-                      />
-                    </button>
-                    
-                    {isExpanded && (
-                      <div className="space-y-3">
-                        {Object.entries(categories).map(([categoryName, programmes]) => {
-                          const catKey = `${setaKey}-${categoryName.replace(/\s+/g, '-')}`;
-                          const isCatExpanded = expandedCategory === catKey;
-                          
-                          return (
-                            <div key={categoryName}>
-                              <button
-                                onClick={() => setExpandedCategory(isCatExpanded ? null : catKey)}
-                                className="w-full flex items-center justify-between text-left px-2 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                              >
-                                <span className="text-[11px] font-semibold text-text-secondary uppercase tracking-wide">
-                                  {categoryName}
-                                </span>
-                                <FaChevronRight
-                                  className={cn('text-[8px] transition-transform', isCatExpanded && 'rotate-90')}
-                                  aria-hidden="true"
-                                />
-                              </button>
-                              
-                              {isCatExpanded && (
-                                <div className="mt-1 space-y-0.5 pl-2">
-                                  {programmes.map((prog) => (
-                                    <Link
-                                      role="menuitem"
-                                      key={prog.code}
-                                      href={prog.href}
-                                      className="block px-2 py-1.5 text-xs text-text-primary dark:text-gray-300 hover:text-brand-secondary hover:bg-brand-neutral/50 transition-colors"
-                                      onClick={close}
-                                    >
-                                      <span className="font-mono text-text-muted">[{prog.code}]</span>
-                                      {' '}
-                                      <span>{prog.title}</span>
-                                    </Link>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
+          <div className="grid grid-cols-[12rem_minmax(0,1fr)]">
+            <div className="border-r border-brand-neutral bg-brand-neutral/40 p-3 dark:border-gray-700 dark:bg-black/10">
+              <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-text-muted">
+                Training areas
+              </p>
+              <div className="space-y-1">
+                {courseMenuGroups.map((group) => (
+                  <button
+                    key={group.provider}
+                    type="button"
+                    onMouseEnter={() => {
+                      setSelectedProvider(group.provider);
+                      setExpandedCategory(null);
+                    }}
+                    onFocus={() => {
+                      setSelectedProvider(group.provider);
+                      setExpandedCategory(null);
+                    }}
+                    onClick={() => {
+                      setSelectedProvider(group.provider);
+                      setExpandedCategory(null);
+                    }}
+                    className={cn(
+                      'flex w-full items-center justify-between gap-2 px-3 py-2.5 text-left text-xs font-semibold transition-colors',
+                      selectedProvider === group.provider
+                        ? 'bg-white text-brand-primary shadow-sm dark:bg-[#1f2028] dark:text-brand-secondary'
+                        : 'text-text-secondary hover:bg-white/70 hover:text-brand-primary dark:text-gray-300 dark:hover:bg-[#1f2028]',
                     )}
-                  </div>
-                );
-              })}
+                    aria-pressed={selectedProvider === group.provider}
+                  >
+                    {group.title}
+                    <FaChevronRight className="shrink-0 text-[9px]" aria-hidden="true" />
+                  </button>
+                ))}
+              </div>
             </div>
-            
-            <div className="border-t border-gray-200 dark:border-gray-700 mt-6 pt-4 text-center">
+
+            {courseMenuGroups.filter((group) => group.provider === selectedProvider).map((group) => (
+              <section key={group.provider} className="p-5">
+                <h2 className="mb-3 text-sm font-bold text-brand-primary dark:text-brand-secondary">
+                  {group.title}
+                </h2>
+                <div className="space-y-1">
+                  {group.categories.map((category) => {
+                    const categoryCourses = courses.filter(
+                      (course) => course.seta === group.provider && course.category === category,
+                    );
+                    const expanded = expandedCategory === category;
+                    const panelId = `course-category-${category.toLowerCase().replace(/\W+/g, '-')}`;
+
+                    return (
+                      <div key={category} className="border-b border-gray-100 last:border-0 dark:border-gray-700">
+                        <button
+                          type="button"
+                          onClick={() => setExpandedCategory(expanded ? null : category)}
+                          className="flex w-full items-center justify-between gap-3 px-3 py-3 text-left text-sm font-semibold text-text-primary transition-colors hover:bg-brand-neutral/50 dark:text-gray-200"
+                          aria-expanded={expanded}
+                          aria-controls={panelId}
+                        >
+                          <span>{category}</span>
+                          <FaChevronDown
+                            className={cn('shrink-0 text-[10px] transition-transform', expanded && 'rotate-180')}
+                            aria-hidden="true"
+                          />
+                        </button>
+                        {expanded && (
+                          <div id={panelId} className="grid grid-cols-2 gap-x-4 gap-y-1 px-3 pb-3">
+                            {categoryCourses.map((course) => (
+                              <Link
+                                key={course.id}
+                                href={`/courses/${course.slug}`}
+                                onClick={close}
+                                className="border-l-2 border-transparent px-2 py-1.5 text-sm leading-snug text-text-secondary transition-colors hover:border-brand-secondary hover:bg-brand-neutral/50 hover:text-brand-primary dark:text-gray-300 dark:hover:text-brand-secondary"
+                              >
+                                {course.title}
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
+            ))}
+
+            <div className="col-span-2 border-t border-gray-200 px-5 py-3 text-right dark:border-gray-700">
               <Link
-                role="menuitem"
                 href="/courses"
-                className="inline-flex items-center gap-2 px-6 py-2 bg-brand-secondary text-white text-sm font-semibold hover:bg-brand-secondary-dark transition-colors"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-brand-primary transition-colors hover:text-brand-secondary dark:text-brand-secondary"
                 onClick={close}
               >
                 View All Courses
@@ -323,12 +320,11 @@ function CoursesDropdown({ isActive }: { isActive: boolean }) {
 
 /* ─── main component ──────────────────────────────────────────────── */
 
-export function PublicHeader() {
+export function PublicHeader({ compactHeader }: { compactHeader: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
   const [mobileAboutOpen, setMobileAboutOpen] = useState(false);
   const [mobileCoursesOpen, setMobileCoursesOpen] = useState(false);
   const [mobileAccreditationOpen, setMobileAccreditationOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const { data: session } = useSession();
   
@@ -341,35 +337,6 @@ export function PublicHeader() {
   }
   
   const initials = getInitials(user?.name);
-
-  // Track scroll position
-  useEffect(() => {
-    let lastScrollY = window.scrollY;
-    
-    function handleScroll() {
-      const currentScrollY = window.scrollY;
-      
-      // Show contact bar when scrolling up or at top
-      // Hide when scrolling down past 100px
-      if (currentScrollY < 50) {
-        setScrolled(false);
-      } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        setScrolled(true);
-      } else if (currentScrollY < lastScrollY) {
-        setScrolled(false);
-      }
-      
-      lastScrollY = currentScrollY;
-    }
-    
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Close mobile menu on route change
-  useEffect(() => {
-    setIsOpen(false);
-  }, [pathname]);
 
   const isAboutActive =
     pathname === '/about' ||
@@ -384,13 +351,13 @@ export function PublicHeader() {
   return (
     <header className="w-full sticky top-0 z-50">
       {/* ── top bar ── */}
-      <div 
+      <div
         className={cn(
-          "bg-brand-primary text-white text-sm py-2 hidden md:block transition-all duration-300",
-          scrolled ? "-translate-y-full opacity-0 h-0 overflow-hidden" : "translate-y-0 opacity-100"
+          'hidden overflow-hidden bg-brand-primary text-sm text-white transition-[max-height,opacity] duration-300 ease-in-out md:block',
+          compactHeader ? 'max-h-0 opacity-0' : 'max-h-10 opacity-100',
         )}
       >
-        <Container className="flex items-center justify-between">
+        <Container className="flex items-center justify-between py-2">
           <div className="flex items-center gap-6">
             <a
               href="mailto:headoffice@ndzalama.org.za"
@@ -503,7 +470,7 @@ export function PublicHeader() {
               Contact
             </Link>
 
-            {/* CTA - Single "Student Portal" button */}
+            {/* Learning CTA */}
             <div className="flex items-center gap-2 ml-3">
               {user && isLearner ? (
                 // Logged-in learner on public site - show profile
@@ -518,7 +485,7 @@ export function PublicHeader() {
                     {initials}
                   </div>
                   <span className="text-xs font-bold text-slate-900 dark:text-white hidden lg:block">
-                    {user.name?.split(' ')[0]}
+                    Continue Learning
                   </span>
                 </Link>
               ) : (
@@ -527,7 +494,7 @@ export function PublicHeader() {
                   href="/learn"
                   className="px-5 py-2 text-sm font-semibold bg-brand-secondary text-white hover:bg-brand-secondary-dark transition-colors shadow-sm flex items-center gap-2"
                 >
-                  Begin Your Journey
+                  Start Learning
                   <FaArrowRight className="text-xs" aria-hidden="true" />
                 </Link>
               )}
@@ -557,17 +524,7 @@ export function PublicHeader() {
             className="lg:hidden border-t border-[#e5e4e7] dark:border-[#2e303a] bg-white dark:bg-[#16171d]"
           >
             <Container className="py-4 flex flex-col gap-1">
-              {/* Contact info strip */}
-              <div className="flex flex-col gap-2 pb-3 mb-3 border-b border-[#e5e4e7] dark:border-[#2e303a]">
-                <a href="mailto:headoffice@ndzalama.org.za" className="flex items-center gap-2 text-sm text-brand-primary dark:text-brand-secondary">
-                  <FaEnvelope aria-hidden="true" /> headoffice@ndzalama.org.za
-                </a>
-                <a href="tel:+27155900732" className="flex items-center gap-2 text-sm text-brand-primary dark:text-brand-secondary">
-                  <FaPhone aria-hidden="true" /> +(27) 15-5900-732
-                </a>
-              </div>
-
-              <Link href="/" className="block py-2 px-3 text-sm font-medium hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300">Home</Link>
+              <Link href="/" onClick={() => setIsOpen(false)} className="block py-2 px-3 text-sm font-medium hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300">Home</Link>
 
               {/* About accordion */}
               <div>
@@ -583,7 +540,7 @@ export function PublicHeader() {
                 {mobileAboutOpen && (
                   <div className="pl-4 mt-1 flex flex-col gap-1">
                     {aboutLinks.map((l) => (
-                      <Link key={l.href} href={l.href} className="block py-2 px-3 text-sm text-text-secondary dark:text-gray-400 rounded hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors">{l.label}</Link>
+                      <Link key={l.href} href={l.href} onClick={() => setIsOpen(false)} className="block py-2 px-3 text-sm text-text-secondary dark:text-gray-400 rounded hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors">{l.label}</Link>
                     ))}
                   </div>
                 )}
@@ -602,37 +559,46 @@ export function PublicHeader() {
                 </button>
                 {mobileCoursesOpen && (
                   <div className="pl-4 mt-1 flex flex-col gap-2">
-                    {Object.entries(coursesBySETA).map(([setaName, categories]) => (
-                      <div key={setaName}>
-                        <p className="text-[10px] font-bold uppercase tracking-widest text-brand-primary dark:text-brand-secondary px-3 pt-2 pb-1">
-                          {setaName}
+                    {courseMenuGroups.map((group) => (
+                      <section key={group.provider}>
+                        <p className="px-3 pb-1 pt-2 text-[10px] font-bold uppercase tracking-widest text-brand-primary dark:text-brand-secondary">
+                          {group.title}
                         </p>
-                        {Object.entries(categories).map(([categoryName, programmes]) => (
-                          <div key={categoryName} className="pl-2">
-                            <p className="text-[9px] font-semibold uppercase tracking-wide text-text-secondary px-3 pt-1.5 pb-0.5">
-                              {categoryName}
-                            </p>
-                            {programmes.map((prog) => (
-                              <Link 
-                                key={prog.code} 
-                                href={prog.href} 
-                                className="block py-1.5 px-3 text-xs text-text-secondary dark:text-gray-400 rounded hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors"
-                              >
-                                {prog.title}
-                              </Link>
-                            ))}
-                          </div>
-                        ))}
-                      </div>
+                        {group.categories.map((category) => {
+                          const categoryCourses = courses.filter(
+                            (course) => course.seta === group.provider && course.category === category,
+                          );
+
+                          return (
+                            <div key={category}>
+                              {group.categories.length > 1 && (
+                                <p className="px-3 pt-1 text-[9px] font-semibold uppercase tracking-wide text-text-secondary">
+                                  {category}
+                                </p>
+                              )}
+                              {categoryCourses.map((course) => (
+                                <Link
+                                  key={course.id}
+                                  href={`/courses/${course.slug}`}
+                                  onClick={() => setIsOpen(false)}
+                                  className="block rounded px-3 py-1.5 text-xs text-text-secondary transition-colors hover:bg-brand-secondary/10 hover:text-brand-secondary dark:text-gray-400"
+                                >
+                                  {course.title}
+                                </Link>
+                              ))}
+                            </div>
+                          );
+                        })}
+                      </section>
                     ))}
-                    <Link href="/courses" className="flex items-center gap-2 py-2 px-3 text-sm font-semibold text-brand-secondary hover:underline">
+                    <Link href="/courses" onClick={() => setIsOpen(false)} className="flex items-center gap-2 py-2 px-3 text-sm font-semibold text-brand-secondary hover:underline">
                       View All Courses <FaArrowRight className="text-xs" aria-hidden="true" />
                     </Link>
                   </div>
                 )}
               </div>
 
-              <Link href="/posts" className="block py-2 px-3 text-sm font-medium hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300">Updates</Link>
+              <Link href="/posts" onClick={() => setIsOpen(false)} className="block py-2 px-3 text-sm font-medium hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300">Updates</Link>
 
               {/* Accreditation accordion (includes Verify) */}
               <div>
@@ -648,19 +614,20 @@ export function PublicHeader() {
                 {mobileAccreditationOpen && (
                   <div className="pl-4 mt-1 flex flex-col gap-1">
                     {accreditationLinks.map((l) => (
-                      <Link key={l.href} href={l.href} className="block py-2 px-3 text-sm text-text-secondary dark:text-gray-400 hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors">{l.label}</Link>
+                      <Link key={l.href} href={l.href} onClick={() => setIsOpen(false)} className="block py-2 px-3 text-sm text-text-secondary dark:text-gray-400 hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors">{l.label}</Link>
                     ))}
                   </div>
                 )}
               </div>
 
-              <Link href="/contact" className="block py-2 px-3 text-sm font-medium hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300">Contact</Link>
+              <Link href="/contact" onClick={() => setIsOpen(false)} className="block py-2 px-3 text-sm font-medium hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300">Contact</Link>
 
               <div className="flex flex-col gap-2 mt-3 pt-3 border-t border-[#e5e4e7] dark:border-[#2e303a]">
                 {user && isLearner ? (
                   // Logged-in learner
                   <Link
                     href="/learn/dashboard"
+                    onClick={() => setIsOpen(false)}
                     className="flex items-center justify-center gap-2 py-2.5 px-3 text-sm font-semibold bg-brand-secondary text-white hover:bg-brand-secondary-dark transition-colors"
                   >
                     <div
@@ -669,15 +636,16 @@ export function PublicHeader() {
                     >
                       {initials}
                     </div>
-                    My Dashboard
+                    Continue Learning
                   </Link>
                 ) : (
                   // Guest - single CTA button
                   <Link
                     href="/learn"
+                    onClick={() => setIsOpen(false)}
                     className="flex items-center justify-center gap-2 py-2.5 px-3 text-sm font-semibold bg-brand-secondary text-white hover:bg-brand-secondary-dark transition-colors"
                   >
-                    Begin Your Journey
+                    Start Learning
                     <FaArrowRight className="text-xs" aria-hidden="true" />
                   </Link>
                 )}
