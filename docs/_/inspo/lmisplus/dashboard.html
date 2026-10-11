@@ -1,0 +1,6980 @@
+<body><br>
+<b>Deprecated</b>:  Function curl_close() is deprecated since 8.5, as it has no effect since PHP 8.0 in <b>/home/thedatz2z4d7/lmisplus.thedatascienceacademy.co.za/includes/auth.php</b> on line <b>576</b><br>
+
+
+
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    
+    
+
+    <title>LMIS Dashboard | NDZALAMA TRAINING</title>
+
+    <!-- General metadata -->
+    <meta name="description" content="NDZALAMA TRAINING Learning Management Information System">
+
+    <meta name="theme-color" content="#81a440">
+
+    <meta name="application-name" content="NDZALAMA TRAINING">
+
+    <meta name="color-scheme" content="light">
+
+    <!-- PWA manifest -->
+    <link rel="manifest" href="https://lmisplus.thedatascienceacademy.co.za/manifest.json">
+<link rel="apple-touch-icon" sizes="180x180" href="https://lmisplus.thedatascienceacademy.co.za/assets/pwa/icons/apple-touch-icon.png">
+    <!-- Standard favicon -->
+    <link rel="icon" type="image/png" href="https://lmisplus.thedatascienceacademy.co.za/uploads/branding/1787928849_6e1b8a92107c.png">
+
+    <link rel="shortcut icon" href="https://lmisplus.thedatascienceacademy.co.za/uploads/branding/1787928849_6e1b8a92107c.png">
+
+    <!-- Apple / iOS PWA -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <meta name="apple-mobile-web-app-title" content="NDZALAMA TRAINING">
+
+    <link rel="apple-touch-icon" sizes="192x192" href="https://lmisplus.thedatascienceacademy.co.za/assets/pwa/icons/icon-192.png">
+
+    <link rel="apple-touch-icon" sizes="512x512" href="https://lmisplus.thedatascienceacademy.co.za/assets/pwa/icons/icon-512.png">
+
+    <!-- Android / desktop PWA -->
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Windows -->
+    <meta name="msapplication-TileColor" content="#81a440">
+
+    <meta name="msapplication-TileImage" content="https://lmisplus.thedatascienceacademy.co.za/assets/pwa/icons/icon-192.png">
+
+  <!-- Brand variables and global loader -->
+<style>
+    :root {
+        --primary: #81a440;
+        --accent: #81a440;
+        --edutrack-primary: #81a440;
+        --edutrack-accent: #81a440;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | EduTrack global loading screen
+    |--------------------------------------------------------------------------
+    */
+
+    .edutrack-loader {
+        position: fixed;
+        inset: 0;
+        z-index: 999999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-height: 100vh;
+        overflow: hidden;
+
+        background:
+            radial-gradient(
+                circle at top right,
+                rgba(255, 255, 255, 0.14),
+                transparent 38%
+            ),
+            radial-gradient(
+                circle at bottom left,
+                rgba(255, 255, 255, 0.08),
+                transparent 34%
+            ),
+            linear-gradient(
+                135deg,
+                var(--edutrack-primary),
+                var(--edutrack-accent)
+            );
+
+        opacity: 1;
+        visibility: visible;
+
+        transition:
+            opacity 0.45s ease,
+            visibility 0.45s ease;
+    }
+
+    .edutrack-loader.is-hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    .edutrack-loader-content {
+        width: min(220px, 70vw);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 26px;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Loader icon
+    |--------------------------------------------------------------------------
+    */
+
+    .edutrack-loader-logo {
+        display: block;
+        width: 120px;
+        height: 120px;
+        object-fit: contain;
+        transform-origin: center;
+
+        filter:
+            drop-shadow(
+                0 0 14px
+                rgba(255, 255, 255, 0.28)
+            )
+            drop-shadow(
+                0 12px 28px
+                rgba(0, 0, 0, 0.18)
+            );
+
+        animation:
+            edutrackLoaderPulse 1.3s ease-in-out infinite,
+            edutrackLoaderRotate 4s linear infinite;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Progress bar
+    |--------------------------------------------------------------------------
+    */
+
+    .edutrack-loader-bar {
+        position: relative;
+        width: 100%;
+        height: 5px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.22);
+        box-shadow:
+            inset 0 1px 2px
+            rgba(0, 0, 0, 0.1);
+    }
+
+    .edutrack-loader-bar span {
+        display: block;
+        width: 38%;
+        height: 100%;
+        border-radius: inherit;
+
+        background:
+            linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0.65),
+                #ffffff,
+                rgba(255, 255, 255, 0.65)
+            );
+
+        box-shadow:
+            0 0 10px
+            rgba(255, 255, 255, 0.45);
+
+        animation:
+            edutrackLoaderProgress
+            1.2s ease-in-out infinite;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Animations
+    |--------------------------------------------------------------------------
+    */
+
+    @keyframes edutrackLoaderPulse {
+        0%,
+        100% {
+            transform: scale(0.96);
+            opacity: 0.82;
+        }
+
+        50% {
+            transform: scale(1.04);
+            opacity: 1;
+        }
+    }
+
+    @keyframes edutrackLoaderRotate {
+        from {
+            rotate: 0deg;
+        }
+
+        to {
+            rotate: 360deg;
+        }
+    }
+
+    @keyframes edutrackLoaderProgress {
+        0% {
+            transform: translateX(-120%);
+        }
+
+        50% {
+            transform: translateX(85%);
+        }
+
+        100% {
+            transform: translateX(270%);
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Accessibility
+    |--------------------------------------------------------------------------
+    */
+
+    @media (prefers-reduced-motion: reduce) {
+        .edutrack-loader-logo,
+        .edutrack-loader-bar span {
+            animation: none;
+        }
+
+        .edutrack-loader {
+            transition: none;
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Mobile
+    |--------------------------------------------------------------------------
+    */
+
+    @media (max-width: 480px) {
+        .edutrack-loader-content {
+            width: min(190px, 68vw);
+            gap: 22px;
+        }
+
+        .edutrack-loader-logo {
+            width: 96px;
+            height: 96px;
+        }
+
+        .edutrack-loader-bar {
+            height: 4px;
+        }
+    }
+</style>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    <!-- PWA service worker registration -->
+    <script>
+        (function () {
+            'use strict';
+
+            if (!('serviceWorker' in navigator)) {
+                return;
+            }
+
+            window.addEventListener(
+                'load',
+                function () {
+                    navigator.serviceWorker
+                        .register(
+                            "https://lmisplus.thedatascienceacademy.co.za/service-worker.js",
+                            {
+                                updateViaCache: 'none'
+                            }
+                        )
+                        .then(function (registration) {
+                            console.log(
+                                'EduTrack LMIS service worker registered:',
+                                registration.scope
+                            );
+
+                            registration.update().catch(
+                                function (updateError) {
+                                    console.warn(
+                                        'Service worker update check failed:',
+                                        updateError
+                                    );
+                                }
+                            );
+                        })
+                        .catch(function (registrationError) {
+                            console.error(
+                                'EduTrack LMIS service worker registration failed:',
+                                registrationError
+                            );
+                        });
+                },
+                {
+                    once: true
+                }
+            );
+        })();
+    </script>
+<!-- Chart.js for gentle visual storytelling -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+/* ----------------------------------------------------------------
+   Design Philosophy: Soft, polished, and deeply human.
+   Every detail is crafted to feel warm, trustworthy, and elegant.
+   ---------------------------------------------------------------- */
+
+:root {
+  --primary: #81a440;
+  --accent: #81a440;
+  --primary-rgb: 129, 164, 64;
+  --accent-rgb: 129, 164, 64;
+  
+  --dark-bg: #0f172a;
+  --dark-card: #1e293b;
+  
+  --success: #10B981;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --purple: #8B5CF6;
+  
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --border: #e2e8f0;
+  
+  --radius: 16px;
+  --shadow: 0 4px 20px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 40px rgba(0,0,0,0.10);
+  
+  --gradient-primary: linear-gradient(135deg, var(--primary), var(--accent));
+  --gradient-success: linear-gradient(135deg, #10B981, #34D399);
+  --gradient-warning: linear-gradient(135deg, #F59E0B, #FBBF24);
+  --gradient-danger: linear-gradient(135deg, #EF4444, #F87171);
+}
+
+/* ---- Reset & Base ---- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #f8fafc;
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.main-content {
+  margin-left: 240px;
+  margin-top: 65px;
+  padding: 30px 35px;
+  transition: margin-left 0.3s ease;
+  min-height: 100vh;
+}
+
+.lmis-sidebar.collapsed ~ .main-content {
+  margin-left: 70px;
+}
+
+/* ---- Header — Gracious & Inviting ---- */
+.dashboard-header {
+  background: var(--gradient-primary);
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 32px 35px;
+  margin-bottom: 35px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-header::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  right: -40px;
+  width: 260px;
+  height: 260px;
+  background: radial-gradient(circle, rgba(255,255,255,0.10) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.dashboard-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dashboard-header span {
+  font-size: 14px;
+  opacity: 0.90;
+  font-weight: 400;
+  display: block;
+}
+
+.view-switch select {
+  border: none;
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 500;
+  font-size: 14px;
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='white' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+}
+
+.view-switch select:hover {
+  background-color: rgba(255,255,255,0.28);
+}
+
+.view-switch select:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.25);
+}
+
+/* ---- Stats Grid — Breathe, don't crowd ---- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 24px 26px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: var(--shadow);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--gradient-primary);
+  border-radius: 0 2px 2px 0;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.stat-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 22px;
+  background: var(--gradient-primary);
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.stat-card:hover .stat-icon {
+  transform: scale(1.04);
+}
+
+.stat-content h3 {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  font-weight: 600;
+}
+
+.stat-content p {
+  margin: 6px 0 0;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+/* Card-specific icon colours */
+.stat-card.learners .stat-icon { background: var(--gradient-primary); }
+.stat-card.programs .stat-icon { background: var(--gradient-success); }
+.stat-card.enrollments .stat-icon { background: var(--gradient-warning); }
+.stat-card.facilitators .stat-icon { background: var(--gradient-danger); }
+.stat-card.assessors .stat-icon { background: var(--gradient-primary); }
+.stat-card.moderators .stat-icon { background: linear-gradient(135deg, var(--purple), #A78BFA); }
+.stat-card.interventions .stat-icon { background: linear-gradient(135deg, #06B6D4, #22D3EE); }
+.stat-card.attendance-card .stat-icon { background: var(--gradient-primary); }
+
+/* ---- Content Sections — Soft & Spacious ---- */
+.dashboard-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.section {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 26px 28px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  transition: all 0.3s ease;
+}
+
+.section:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.section h2 {
+  margin: 0 0 20px 0;
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section h2 i {
+  color: var(--primary);
+  opacity: 0.8;
+}
+
+/* ---- Tables — Clean & Readable ---- */
+.table-responsive {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th, td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+th {
+  background: #f8fafc;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tr:hover td {
+  background: #fafbfc;
+}
+
+/* ---- Charts — Visual Elegance ---- */
+.chart-container {
+  position: relative;
+  height: 280px;
+  width: 100%;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.chart-card {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  transition: all 0.3s ease;
+}
+
+.chart-card:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.chart-card h3 {
+  margin: 0 0 14px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ----------------------------------------------------------------
+   Dark Mode — Calm, not cold
+   ---------------------------------------------------------------- */
+body.dark {
+  background: var(--dark-bg);
+  color: #e2e8f0;
+}
+
+body.dark .stat-card,
+body.dark .section,
+body.dark .chart-card {
+  background: var(--dark-card);
+  color: #e2e8f0;
+  border-color: #334155;
+}
+
+body.dark th {
+  background: #1e293b;
+  color: #94a3b8;
+}
+
+body.dark .stat-content h3 {
+  color: #94a3b8;
+}
+
+body.dark .stat-content p {
+  color: #e2e8f0;
+}
+
+body.dark .dashboard-header {
+  background: linear-gradient(135deg, #1e293b, #334155);
+}
+
+/* ----------------------------------------------------------------
+   Pan-African Theme — Vibrant, celebratory, rooted
+   ---------------------------------------------------------------- */
+body.pan-african {
+  background: linear-gradient(135deg, #14532d 0%, #15803d 30%, #facc15 70%, #dc2626 100%);
+  background-attachment: fixed;
+  color: #fff;
+}
+
+body.pan-african .stat-card,
+body.pan-african .section,
+body.pan-african .chart-card {
+  background: rgba(255, 255, 255, 0.10);
+  color: #fff;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+body.pan-african th {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+body.pan-african .stat-content h3 {
+  color: rgba(255, 255, 255, 0.80);
+}
+
+body.pan-african .stat-content p {
+  color: #fff;
+}
+
+body.pan-african .dashboard-header {
+  background: linear-gradient(135deg, #15803d, #facc15, #dc2626);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+}
+
+/* ----------------------------------------------------------------
+   Futuristic Theme — Inspired by tomorrow, grounded in today
+   ---------------------------------------------------------------- */
+body.futuristic {
+  background: radial-gradient(ellipse at top, #00172e, #000000);
+  color: #cfd9ff;
+  overflow-x: hidden;
+}
+
+body.futuristic::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(0, 183, 255, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+body.futuristic .dashboard-header {
+  background: linear-gradient(135deg, #0ea5e9, #22d3ee, #6366f1);
+  box-shadow: 
+    0 10px 40px rgba(14, 165, 233, 0.25),
+    0 0 40px rgba(99, 102, 241, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+body.futuristic .dashboard-header::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.06), transparent);
+  transform: rotate(45deg);
+  animation: shine 4s infinite;
+}
+
+@keyframes shine {
+  0%   { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+body.futuristic .stat-card,
+body.futuristic .section,
+body.futuristic .chart-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(0, 183, 255, 0.20);
+  color: #e0e7ff;
+  backdrop-filter: blur(12px);
+  box-shadow: 
+    0 8px 32px rgba(0,0,0,0.30),
+    0 0 20px rgba(0, 183, 255, 0.06);
+}
+
+body.futuristic .stat-card:hover,
+body.futuristic .section:hover,
+body.futuristic .chart-card:hover {
+  box-shadow: 
+    0 12px 40px rgba(0,0,0,0.35),
+    0 0 30px rgba(0, 183, 255, 0.10);
+  border-color: rgba(0, 183, 255, 0.35);
+}
+
+body.futuristic th {
+  background: rgba(30, 41, 59, 0.60);
+  color: #e0f2fe;
+}
+
+/* ----------------------------------------------------------------
+   Responsive — Graceful at every size
+   Desktop design is preserved; only tablet/mobile behaviour changes.
+   ---------------------------------------------------------------- */
+
+@media (max-width: 1200px) {
+  .main-content {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .dashboard-content {
+    grid-template-columns: 1fr;
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .main-content,
+  .lmis-sidebar.collapsed ~ .main-content {
+    margin-left: 0;
+    width: 100%;
+    max-width: 100%;
+    padding: 20px 16px 28px;
+  }
+
+  .dashboard-header {
+    gap: 18px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .dashboard-content {
+    gap: 20px;
+  }
+
+  .section {
+    padding: 22px 20px;
+  }
+
+  .chart-card {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 700px) {
+  .main-content,
+  .lmis-sidebar.collapsed ~ .main-content {
+    margin-left: 0;
+    margin-top: 65px;
+    padding: 14px 12px 24px;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: left;
+    gap: 16px;
+    padding: 22px 18px;
+    margin-bottom: 20px;
+    border-radius: 14px;
+  }
+
+  .dashboard-header::before {
+    width: 190px;
+    height: 190px;
+    top: -70px;
+    right: -65px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 21px;
+    line-height: 1.3;
+    gap: 9px;
+  }
+
+  .dashboard-header span {
+    margin-top: 5px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .view-switch {
+    width: 100%;
+    position: relative;
+    z-index: 2;
+  }
+
+  .view-switch select {
+    width: 100%;
+    min-height: 44px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 13px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .stat-card {
+    min-width: 0;
+    padding: 17px 16px;
+    gap: 14px;
+    border-radius: 13px;
+  }
+
+  .stat-card:hover {
+    transform: none;
+  }
+
+  .stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    font-size: 18px;
+  }
+
+  .stat-content {
+    min-width: 0;
+  }
+
+  .stat-content h3 {
+    font-size: 11px;
+    line-height: 1.35;
+  }
+
+  .stat-content p {
+    margin-top: 4px;
+    font-size: 24px;
+  }
+
+  .section {
+    width: 100%;
+    min-width: 0;
+    padding: 18px 14px;
+    margin: 0;
+    border-radius: 13px;
+  }
+
+  .section h2 {
+    margin-bottom: 15px;
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  .charts-grid {
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .chart-card {
+    width: 100%;
+    min-width: 0;
+    padding: 16px 12px;
+    border-radius: 12px;
+  }
+
+  .chart-card:hover {
+    box-shadow: var(--shadow);
+  }
+
+  .chart-card h3 {
+    margin-bottom: 10px;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .chart-container {
+    width: 100%;
+    min-width: 0;
+    height: 245px;
+  }
+
+  .dashboard-content {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-top: 18px;
+  }
+
+  .left-column,
+  .right-column {
+    min-width: 0;
+    width: 100%;
+  }
+
+  /* Recent activity tables become true mobile cards */
+  .table-responsive {
+    width: 100%;
+    overflow: visible;
+  }
+
+  .table-responsive table {
+    min-width: 0;
+    width: 100%;
+    display: block;
+  }
+
+  .table-responsive thead {
+    display: none;
+  }
+
+  .table-responsive tbody {
+    display: block;
+    width: 100%;
+  }
+
+  .table-responsive tbody tr {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+
+  .table-responsive tbody tr:last-child {
+    margin-bottom: 0;
+  }
+
+  .table-responsive tbody td {
+    width: 100%;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: minmax(82px, 32%) minmax(0, 1fr);
+    gap: 10px;
+    align-items: start;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    line-height: 1.45;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  .table-responsive tbody td:last-child {
+    border-bottom: 0;
+  }
+
+  .table-responsive tbody td::before {
+    content: attr(data-label);
+    color: var(--text-secondary);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .45px;
+  }
+
+  .table-responsive tr:hover td {
+    background: inherit;
+  }
+
+  body.dark .table-responsive tbody tr {
+    background: var(--dark-card);
+    border-color: #334155;
+  }
+
+  body.dark .table-responsive tbody td {
+    border-color: #334155;
+  }
+
+  body.dark .table-responsive tbody td::before {
+    color: #94a3b8;
+  }
+
+  body.pan-african .table-responsive tbody tr,
+  body.futuristic .table-responsive tbody tr {
+    background: rgba(255,255,255,.05);
+    border-color: rgba(255,255,255,.18);
+  }
+
+  body.pan-african .table-responsive tbody td,
+  body.futuristic .table-responsive tbody td {
+    border-color: rgba(255,255,255,.14);
+  }
+
+  body.pan-african .table-responsive tbody td::before,
+  body.futuristic .table-responsive tbody td::before {
+    color: rgba(255,255,255,.72);
+  }
+}
+
+@media (max-width: 420px) {
+  .main-content,
+  .lmis-sidebar.collapsed ~ .main-content {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+
+  .dashboard-header {
+    padding: 19px 15px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 19px;
+  }
+
+  .stat-card {
+    padding: 15px 14px;
+  }
+
+  .stat-icon {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+  }
+
+  .stat-content p {
+    font-size: 22px;
+  }
+
+  .section {
+    padding: 16px 11px;
+  }
+
+  .chart-card {
+    padding: 14px 9px;
+  }
+
+  .chart-container {
+    height: 225px;
+  }
+
+  .table-responsive tbody td {
+    grid-template-columns: 76px minmax(0, 1fr);
+    gap: 8px;
+    padding: 9px 10px;
+    font-size: 12px;
+  }
+}
+
+/* ----------------------------------------------------------------
+   Subtle Entrance Animation
+   ---------------------------------------------------------------- */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.stat-card, .section, .chart-card {
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.stat-card:nth-child(2) { animation-delay: 0.08s; }
+.stat-card:nth-child(3) { animation-delay: 0.16s; }
+.stat-card:nth-child(4) { animation-delay: 0.24s; }
+</style>
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js"></script>
+
+<style>
+/* ==========================================
+   LMIS HEADER (2025 CLEAN REVISION)
+   ========================================== */
+
+/* === BASE LAYOUT === */
+header.lmis-header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 250px;
+  width: auto;
+  height: 65px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  background: linear-gradient(135deg, #81a440, #81a440);
+  color: #fff;
+  z-index: 1060;
+  padding: 0 24px;
+  overflow: visible;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: left 0.3s ease, padding 0.3s ease;
+}
+
+header.lmis-header.sidebar-collapsed {
+  left: 70px;
+}
+
+header.lmis-header:not(.sidebar-collapsed) {
+  left: 250px;
+}
+
+/* === LEFT SIDE === */
+.lmis-header-left {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 16px;
+}
+.lmis-site-title {
+  font-weight: 700;
+  font-size: 18px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.lmis-toggle-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  transition: transform .3s ease;
+}
+.lmis-toggle-btn:hover { transform: scale(1.1); }
+
+/* === SEARCH BOX === */
+.lmis-header-center {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+  overflow: visible;
+}
+.lmis-search-box {
+  position: relative;
+  width: min(350px, 100%);
+  max-width: 100%;
+}
+.lmis-search-box input {
+  width: 100%;
+  padding: 8px 12px 8px 32px;
+  border-radius: 6px;
+  border: none;
+  background: #fff;
+  color: #000;
+  font-size: 14px;
+}
+.lmis-search-box input::placeholder { color: #555; }
+.lmis-search-box i {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+}
+
+/* === SEARCH DROPDOWN === */
+.lmis-search-results {
+  position: absolute;
+  top: 42px;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 9999;
+  display: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.lmis-search-results a {
+  display: block;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: #333;
+  font-size: 13px;
+  border-bottom: 1px solid #eee;
+}
+.lmis-search-results a:hover {
+  background: #81a440;
+  color: #fff;
+}
+.lmis-search-results .no-result {
+  padding: 10px;
+  color: #777;
+  font-size: 12px;
+  text-align: center;
+}
+
+/* === RIGHT SIDE === */
+.lmis-header-right {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 9px;
+  min-width: max-content;
+  overflow: visible;
+  white-space: nowrap;
+}
+
+/* === CALENDAR ICON === */
+.lmis-calendar-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  text-decoration: none;
+  transition: opacity .2s ease;
+}
+.lmis-calendar-link:hover { opacity: 0.8; }
+.lmis-calendar-link i { color: #FFD700; }
+
+/* === USER MENU === */
+.lmis-user-dropdown {
+  position: relative;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  padding-right: 2px;
+}
+
+.lmis-user-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.lmis-user-text{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    margin-right:12px;
+    line-height:1.2;
+}
+
+.lmis-user-name{
+    font-size:14px;
+    font-weight:700;
+    color:#fff;
+    white-space:nowrap;
+}
+
+.lmis-user-role{
+    font-size:11px;
+    color:rgba(255,255,255,.8);
+    text-transform:uppercase;
+    letter-spacing:.6px;
+}
+.lmis-user-info:hover { transform: scale(1.05); }
+
+.lmis-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+  display: block;
+  box-shadow: 0 0 4px rgba(0,0,0,0.15);
+}
+
+/* === USER DROPDOWN MENU === */
+.lmis-dropdown-menu {
+  position: absolute;
+  top: 55px;
+  right: -10px; /* shift left slightly to avoid edge cutoff */
+  background: #fff;
+  color: #333;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  display: none;
+  flex-direction: column;
+  min-width: 180px;
+  animation: fadeIn 0.25s ease;
+}
+.lmis-user-dropdown.active .lmis-dropdown-menu {
+  display: flex;
+}
+.lmis-dropdown-menu a {
+  padding: 10px 15px;
+  color: #333;
+  text-decoration: none;
+  display: block;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.lmis-dropdown-menu a:hover {
+  background: #81a440;
+  color: #fff;
+}
+
+/* === TASK CALENDAR MODAL === */
+body.task-modal-open {
+  overflow: hidden;
+}
+
+#taskCalendarModal,
+#taskEditorModal {
+  display: none;
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw;
+  height: 100vh;
+  margin: 0 !important;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+  overflow: auto;
+  isolation: isolate;
+  background: rgba(15, 23, 42, .68);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  transform: none !important;
+}
+
+/*
+ * Keep the task manager above the fixed application header,
+ * sidebars, dropdowns and other page components.
+ */
+#taskCalendarModal {
+  z-index: 2147483000 !important;
+}
+
+#taskEditorModal {
+  z-index: 2147483100 !important;
+}
+
+#taskCalendarModal.active,
+#taskEditorModal.active {
+  display: flex;
+}
+
+.task-calendar-box {
+  position: relative;
+  z-index: 1;
+  width: min(1180px, 97vw);
+  height: min(860px, 94vh);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid rgba(255,255,255,.75);
+  border-radius: 18px;
+  box-shadow: 0 30px 90px rgba(15, 23, 42, .35);
+}
+
+.task-calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 18px 21px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.task-calendar-title {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.task-calendar-title-icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  color: #fff;
+  background: linear-gradient(135deg, #81a440, #81a440);
+  border-radius: 12px;
+}
+
+.task-calendar-title h3 {
+  margin: 0;
+  color: #172033;
+  font-size: 19px;
+}
+
+.task-calendar-title p {
+  margin: 4px 0 0;
+  color: #64748b;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.task-calendar-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.task-primary-btn,
+.task-secondary-btn,
+.task-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 39px;
+  padding: 9px 13px;
+  border-radius: 9px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.task-primary-btn {
+  color: #fff;
+  background: linear-gradient(135deg, #81a440, #81a440);
+  border: 0;
+}
+
+.task-secondary-btn {
+  color: #475569;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+}
+
+.task-icon-btn {
+  width: 39px;
+  padding: 0;
+  color: #475569;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.task-calendar-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 12px 20px 0;
+  background: #fff;
+}
+
+.task-tab {
+  padding: 9px 13px;
+  color: #64748b;
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.task-tab.active {
+  color: #81a440;
+  border-bottom-color: #81a440;
+}
+
+.task-calendar-body {
+  flex: 1;
+  min-height: 0;
+  padding: 17px 20px 20px;
+  overflow: hidden;
+  background: #f8fafc;
+}
+
+.task-panel {
+  display: none;
+  height: 100%;
+}
+
+.task-panel.active {
+  display: block;
+}
+
+#taskCalendar {
+  height: 100%;
+  min-height: 520px;
+  padding: 13px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 13px;
+}
+
+.task-list-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.task-list-search {
+  flex: 1;
+  min-height: 40px;
+  padding: 9px 12px;
+  color: #172033;
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  outline: none;
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.task-list-search:focus {
+  border-color: #81a440;
+  box-shadow: 0 0 0 3px rgba(0, 74, 175, .10);
+}
+
+.task-list {
+  height: calc(100% - 54px);
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.task-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  margin-bottom: 10px;
+  padding: 14px 15px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.task-card.overdue {
+  border-color: #fca5a5;
+  background: #fffafa;
+}
+
+.task-card.completed {
+  opacity: .68;
+}
+
+.task-card h4 {
+  margin: 0;
+  color: #172033;
+  font-size: 13px;
+}
+
+.task-card-description {
+  margin: 6px 0 0;
+  color: #64748b;
+  font-size: 10.5px;
+  line-height: 1.55;
+}
+
+.task-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin-top: 10px;
+  color: #64748b;
+  font-size: 9.5px;
+}
+
+.task-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.task-card-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.task-small-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 7px 9px;
+  color: #475569;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.task-small-btn.complete {
+  color: #166534;
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.task-small-btn.delete {
+  color: #991b1b;
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.task-status,
+.task-priority {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 850;
+}
+
+.task-status {
+  color: #1d4ed8;
+  background: #eff6ff;
+}
+
+.task-priority {
+  color: #92400e;
+  background: #fffbeb;
+}
+
+.task-empty,
+.task-loading {
+  display: grid;
+  place-items: center;
+  min-height: 240px;
+  color: #64748b;
+  background: #fff;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.task-editor-box {
+  position: relative;
+  z-index: 1;
+  width: min(650px, 96vw);
+  max-height: 92vh;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 17px;
+  box-shadow: 0 30px 90px rgba(15, 23, 42, .35);
+}
+
+.task-editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px 22px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.task-editor-header h3 {
+  margin: 0;
+  color: #172033;
+  font-size: 18px;
+}
+
+.task-editor-header p {
+  margin: 4px 0 0;
+  color: #64748b;
+  font-size: 10.5px;
+}
+
+.task-editor-body {
+  padding: 21px 22px;
+}
+
+.task-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.task-field {
+  min-width: 0;
+}
+
+.task-field.full {
+  grid-column: 1 / -1;
+}
+
+.task-field label {
+  display: block;
+  margin-bottom: 6px;
+  color: #334155;
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.task-control {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 11px;
+  color: #172033;
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  outline: none;
+  font: inherit;
+  font-size: 12px;
+}
+
+textarea.task-control {
+  min-height: 92px;
+  resize: vertical;
+}
+
+.task-control:focus {
+  border-color: #81a440;
+  box-shadow: 0 0 0 3px rgba(0, 74, 175, .10);
+}
+
+.task-form-note {
+  margin: 6px 0 0;
+  color: #64748b;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.task-editor-error {
+  display: none;
+  margin-bottom: 14px;
+  padding: 11px 12px;
+  color: #991b1b;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 9px;
+  font-size: 10.5px;
+}
+
+.task-editor-error.visible {
+  display: block;
+}
+
+.task-editor-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  padding: 16px 22px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.task-toast {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 2147483200 !important;
+  display: none;
+  max-width: 360px;
+  padding: 13px 15px;
+  color: #fff;
+  background: #172033;
+  border-radius: 10px;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, .28);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.task-toast.visible {
+  display: block;
+}
+
+.task-toast.error {
+  background: #991b1b;
+}
+
+@media (max-width: 760px) {
+  #taskCalendarModal,
+  #taskEditorModal {
+    padding: 0;
+  }
+
+  .task-calendar-box {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+  }
+
+  .task-calendar-header {
+    padding: 14px 15px;
+  }
+
+  .task-calendar-title p {
+    display: none;
+  }
+
+  .task-primary-btn span {
+    display: none;
+  }
+
+  .task-calendar-tabs {
+    overflow-x: auto;
+    padding-left: 13px;
+    padding-right: 13px;
+  }
+
+  .task-calendar-body {
+    padding: 12px;
+  }
+
+  #taskCalendar {
+    min-height: 500px;
+  }
+
+  .task-card {
+    grid-template-columns: 1fr;
+  }
+
+  .task-card-actions {
+    flex-wrap: wrap;
+  }
+
+  .task-editor-box {
+    width: 100vw;
+    max-height: 100vh;
+    min-height: 100vh;
+    border-radius: 0;
+  }
+
+  .task-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .task-field.full {
+    grid-column: auto;
+  }
+}
+
+/* === ANIMATIONS === */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Keep all original header controls visible on medium screens */
+@media (max-width: 1180px) {
+  .lmis-user-text {
+    display: none;
+  }
+
+  .lmis-search-box {
+    width: 280px;
+  }
+
+  .lmis-header-right {
+    gap: 10px;
+  }
+}
+
+/* === MOBILE RESPONSIVENESS === */
+@media (max-width: 900px) {
+  header.lmis-header {
+    height: 60px;
+    padding: 0 14px;
+    margin-left: 0 !important;
+    width: 100% !important;
+    
+  }
+  .lmis-user-text{
+    display:none;
+}
+  .lmis-site-title {
+    font-size: 15px;
+    text-transform: none;
+  }
+  .lmis-header-center { display: none !important; }
+  .lmis-header-right { gap: 12px; }
+  .lmis-avatar {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+/* =====================================================
+   RESTORED HEADER ACTIONS
+   Calendar, messages, notifications and profile
+===================================================== */
+.lmis-header-icon {
+  position: relative;
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  text-decoration: none;
+  font: inherit;
+  line-height: 1;
+  visibility: visible;
+  opacity: 1;
+  transition:
+    background .2s ease,
+    transform .2s ease,
+    opacity .2s ease;
+}
+
+.lmis-header-icon:hover,
+.lmis-header-icon:focus-visible {
+  color: #ffffff;
+  background: rgba(255,255,255,.16);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.lmis-header-icon i {
+  display: block;
+  color: #ffffff;
+  font-size: 17px;
+  line-height: 1;
+}
+
+#openTaskCalendar i {
+  color: #FFD700;
+}
+
+#openMessages i {
+  color: #ffffff;
+}
+
+#openNotifications i {
+  color: #ffffff;
+}
+
+.header-badge {
+  position: absolute;
+  top: 1px;
+  right: -1px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  background: #ef4444;
+  border: 2px solid #ffffff;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.lmis-user-info {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+#openTaskCalendar,
+#openMessages,
+#openNotifications,
+.lmis-user-dropdown {
+  display: inline-flex;
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Protect actions before reducing the search area */
+@media (max-width: 1220px) {
+  .lmis-user-text {
+    display: none;
+  }
+
+  .lmis-search-box {
+    width: min(250px, 100%);
+  }
+}
+
+@media (max-width: 1040px) {
+  .lmis-header-center {
+    display: none !important;
+  }
+}
+
+@media (max-width: 900px) {
+  header.lmis-header,
+  header.lmis-header.sidebar-collapsed,
+  header.lmis-header:not(.sidebar-collapsed) {
+    left: 0;
+    right: 0;
+    width: auto !important;
+    margin-left: 0 !important;
+    padding: 0 12px;
+  }
+
+  .lmis-header-right {
+    gap: 5px;
+  }
+
+  .lmis-header-icon {
+    flex-basis: 38px;
+    width: 38px;
+    height: 38px;
+  }
+}
+</style>
+
+
+
+<!-- DEBUG ROLE: super administrator | PENDING: 0 -->
+<header class="lmis-header">
+ <div class="lmis-header-left">
+    <button id="lmisToggleSidebar" class="lmis-toggle-btn">
+        <i class="fas fa-bars"></i>
+    </button>
+</div>
+
+<div class="lmis-header-center">
+  <div class="lmis-search-box">
+    <i class="fas fa-search"></i>
+    <input type="text" id="globalSearchInput" placeholder="Search learners, programs, HR, attendance..." autocomplete="off">
+    <div id="globalSearchResults" class="lmis-search-results"></div>
+  </div>
+</div>
+
+<div class="lmis-header-right">
+
+            <!-- Tasks, To-Do List and Calendar -->
+        <button type="button" class="lmis-header-icon" id="openTaskCalendar" title="Tasks, To-Do List and Calendar" aria-label="Open Tasks, To-Do List and Calendar">
+            <i class="fas fa-calendar-check"></i>
+
+                    </button>
+    
+    <!-- Messages remain available to every signed-in user -->
+    <a href="https://lmisplus.thedatascienceacademy.co.za/communication/messages" class="lmis-header-icon" id="openMessages" title="Messages" aria-label="Open Messages">
+        <i class="fas fa-envelope"></i>
+
+            </a>
+
+    <!-- Personal notifications are available to every signed-in user. -->
+    <a href="https://lmisplus.thedatascienceacademy.co.za/communication?view=notifications#notifications" class="lmis-header-icon" id="openUserNotifications" title="My Notifications" aria-label="Open My Notifications">
+        <i class="fas fa-bell"></i>
+
+            </a>
+
+    <!-- Pending-application notification remains administrator-only -->
+            <a href="https://lmisplus.thedatascienceacademy.co.za/applications?status=pending" class="lmis-header-icon" id="openNotifications" title="Pending Applications" aria-label="Open Pending Applications">
+            <i class="fas fa-user-clock"></i>
+
+                    </a>
+    
+    <!-- User menu -->
+    <div class="lmis-user-dropdown">
+        <button type="button" class="lmis-user-info" id="lmisUserDropdownToggle" aria-label="Open User Menu" aria-expanded="false">
+            <span class="lmis-user-text">
+                <span class="lmis-user-name">
+                    KB                </span>
+
+                <span class="lmis-user-role">
+                    Super Administrator                </span>
+            </span>
+
+            <img src="https://lmisplus.thedatascienceacademy.co.za/assets/images/user-avatar.png" alt="KB" class="lmis-avatar">
+        </button>
+
+        <ul class="lmis-dropdown-menu">
+            <li>
+                <a href="https://lmisplus.thedatascienceacademy.co.za/users/edit/154/">
+                    <i class="fas fa-user"></i>
+                    Profile
+                </a>
+            </li>
+
+            <li>
+                <a href="https://lmisplus.thedatascienceacademy.co.za/settings">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </a>
+            </li>
+
+            <li>
+                <a href="https://lmisplus.thedatascienceacademy.co.za/logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+</header>
+
+<!-- ================= TASK CALENDAR MODAL ================= -->
+<div id="taskCalendarModal" aria-hidden="true">
+  <section class="task-calendar-box" role="dialog" aria-modal="true" aria-labelledby="taskCalendarHeading">
+    <header class="task-calendar-header">
+      <div class="task-calendar-title">
+        <span class="task-calendar-title-icon">
+          <i class="fas fa-list-check"></i>
+        </span>
+
+        <div>
+          <h3 id="taskCalendarHeading">
+            Tasks, To-Do List and Calendar
+          </h3>
+
+          <p>
+            Create personal reminders or assign work to active team members.
+            Learner accounts are excluded.
+          </p>
+        </div>
+      </div>
+
+      <div class="task-calendar-actions">
+        <button type="button" class="task-primary-btn" id="createTaskButton">
+          <i class="fas fa-plus"></i>
+          <span>New Task</span>
+        </button>
+
+        <button type="button" class="task-icon-btn" id="closeTaskCalendar" aria-label="Close task manager">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </header>
+
+    <nav class="task-calendar-tabs">
+      <button type="button" class="task-tab active" data-task-tab="calendar">
+        <i class="fas fa-calendar-alt"></i>
+        Calendar
+      </button>
+
+      <button type="button" class="task-tab" data-task-tab="my-tasks">
+        <i class="fas fa-user-check"></i>
+        My Tasks
+      </button>
+
+      <button type="button" class="task-tab" data-task-tab="assigned">
+        <i class="fas fa-user-tag"></i>
+        Assigned by Me
+      </button>
+    </nav>
+
+    <div class="task-calendar-body">
+      <section class="task-panel active" data-task-panel="calendar">
+        <div id="taskCalendar"></div>
+      </section>
+
+      <section class="task-panel" data-task-panel="my-tasks">
+        <div class="task-list-toolbar">
+          <input type="search" class="task-list-search" id="myTaskSearch" placeholder="Search my tasks...">
+        </div>
+
+        <div class="task-list" id="myTaskList">
+          <div class="task-loading">
+            Loading tasks...
+          </div>
+        </div>
+      </section>
+
+      <section class="task-panel" data-task-panel="assigned">
+        <div class="task-list-toolbar">
+          <input type="search" class="task-list-search" id="assignedTaskSearch" placeholder="Search tasks assigned by me...">
+        </div>
+
+        <div class="task-list" id="assignedTaskList">
+          <div class="task-loading">
+            Loading tasks...
+          </div>
+        </div>
+      </section>
+    </div>
+  </section>
+</div>
+
+<!-- ================= TASK EDITOR MODAL ================= -->
+<div id="taskEditorModal" aria-hidden="true">
+  <section class="task-editor-box" role="dialog" aria-modal="true" aria-labelledby="taskEditorHeading">
+    <header class="task-editor-header">
+      <div>
+        <h3 id="taskEditorHeading">
+          Create Task
+        </h3>
+
+        <p id="taskEditorSubheading">
+          Assign the task to yourself or another active team member.
+        </p>
+      </div>
+
+      <button type="button" class="task-icon-btn" id="closeTaskEditor" aria-label="Close task editor">
+        <i class="fas fa-times"></i>
+      </button>
+    </header>
+
+    <form id="taskEditorForm">
+      <div class="task-editor-body">
+        <div class="task-editor-error" id="taskEditorError"></div>
+
+        <input type="hidden" id="taskId" value="">
+
+        <div class="task-form-grid">
+          <div class="task-field full">
+            <label for="taskTitle">
+              Task Title *
+            </label>
+
+            <input type="text" class="task-control" id="taskTitle" maxlength="255" required="">
+          </div>
+
+          <div class="task-field full">
+            <label for="taskDescription">
+              Description
+            </label>
+
+            <textarea class="task-control" id="taskDescription" placeholder="Add clear instructions or notes..."></textarea>
+          </div>
+
+          <div class="task-field">
+            <label for="taskAssignedTo">
+              Assign To *
+            </label>
+
+            <select class="task-control" id="taskAssignedTo" required=""></select>
+
+            <p class="task-form-note">
+              Only active non-learner users are available.
+            </p>
+          </div>
+
+          <div class="task-field">
+            <label for="taskPriority">
+              Priority
+            </label>
+
+            <select class="task-control" id="taskPriority">
+              <option value="Low">Low</option>
+              <option value="Medium" selected="">Medium</option>
+              <option value="High">High</option>
+              <option value="Urgent">Urgent</option>
+            </select>
+          </div>
+
+          <div class="task-field">
+            <label for="taskDueAt">
+              Due Date and Time
+            </label>
+
+            <input type="datetime-local" class="task-control" id="taskDueAt">
+          </div>
+
+          <div class="task-field">
+            <label for="taskReminderAt">
+              Reminder Date and Time
+            </label>
+
+            <input type="datetime-local" class="task-control" id="taskReminderAt">
+
+            <p class="task-form-note">
+              The reminder must be before or equal to the due date.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <footer class="task-editor-footer">
+        <button type="button" class="task-secondary-btn" id="cancelTaskEditor">
+          Cancel
+        </button>
+
+        <button type="submit" class="task-primary-btn" id="saveTaskButton">
+          <i class="fas fa-save"></i>
+          Save Task
+        </button>
+      </footer>
+    </form>
+  </section>
+</div>
+
+<div class="task-toast" id="taskToast"></div>
+
+<script>
+// ================= LIVE SEARCH =================
+const searchInput = document.getElementById("globalSearchInput");
+const searchResults = document.getElementById("globalSearchResults");
+
+if (searchInput) {
+  let timeout = null;
+
+  searchInput.addEventListener("input", function () {
+    const q = this.value.trim();
+    clearTimeout(timeout);
+
+    if (q.length < 2) {
+      searchResults.style.display = "none";
+      return;
+    }
+
+    timeout = setTimeout(() => {
+      fetch(`${window.location.origin}/search/live?q=${encodeURIComponent(q)}`)
+        .then(res => res.text())
+        .then(html => {
+          searchResults.innerHTML = html || '<div class="no-result">No results found</div>';
+          searchResults.style.display = "block";
+        })
+        .catch(() => {
+          searchResults.innerHTML = '<div class="no-result">Search error</div>';
+          searchResults.style.display = "block";
+        });
+    }, 300);
+  });
+
+
+
+  document.addEventListener("click", e => {
+    if (!searchResults.contains(e.target) && e.target !== searchInput) {
+      searchResults.style.display = "none";
+    }
+  });
+}
+
+// ================= PROFILE DROPDOWN =================
+document.addEventListener("DOMContentLoaded", () => {
+  const dropdown = document.querySelector(".lmis-user-dropdown");
+  const toggle = document.getElementById("lmisUserDropdownToggle");
+
+  toggle?.addEventListener("click", e => {
+    e.stopPropagation();
+
+    const isActive =
+      dropdown.classList.toggle(
+        "active"
+      );
+
+    toggle.setAttribute(
+      "aria-expanded",
+      isActive
+        ? "true"
+        : "false"
+    );
+  });
+
+  document.addEventListener("click", e => {
+    if (
+      dropdown
+      && !dropdown.contains(e.target)
+    ) {
+      dropdown.classList.remove(
+        "active"
+      );
+
+      toggle?.setAttribute(
+        "aria-expanded",
+        "false"
+      );
+    }
+  });
+});
+
+// ================= TASK MANAGER =================
+(function () {
+  'use strict';
+
+  /*
+   * Use the public application route rather than exposing
+   * the physical /modules directory. This prevents the
+   * request from being converted into an HTML 404/login page
+   * by the hosting rewrite rules.
+   */
+  const apiUrl =
+    "https://lmisplus.thedatascienceacademy.co.za/calendar/tasks-api";
+
+  const modal =
+    document.getElementById(
+      'taskCalendarModal'
+    );
+
+  const editorModal =
+    document.getElementById(
+      'taskEditorModal'
+    );
+
+  const openButton =
+    document.getElementById(
+      'openTaskCalendar'
+    );
+
+  const closeButton =
+    document.getElementById(
+      'closeTaskCalendar'
+    );
+
+  const createButton =
+    document.getElementById(
+      'createTaskButton'
+    );
+
+  const closeEditorButton =
+    document.getElementById(
+      'closeTaskEditor'
+    );
+
+  const cancelEditorButton =
+    document.getElementById(
+      'cancelTaskEditor'
+    );
+
+  const form =
+    document.getElementById(
+      'taskEditorForm'
+    );
+
+  const saveButton =
+    document.getElementById(
+      'saveTaskButton'
+    );
+
+  const editorError =
+    document.getElementById(
+      'taskEditorError'
+    );
+
+  const toast =
+    document.getElementById(
+      'taskToast'
+    );
+
+  const myTaskList =
+    document.getElementById(
+      'myTaskList'
+    );
+
+  const assignedTaskList =
+    document.getElementById(
+      'assignedTaskList'
+    );
+
+  const myTaskSearch =
+    document.getElementById(
+      'myTaskSearch'
+    );
+
+  const assignedTaskSearch =
+    document.getElementById(
+      'assignedTaskSearch'
+    );
+
+  const reminderBadge =
+    document.getElementById(
+      'taskReminderCount'
+    );
+
+  /*
+   * Move popup elements directly under document.body.
+   * This removes them from any transformed or positioned
+   * parent stacking context created by the header/layout.
+   */
+  [
+    modal,
+    editorModal,
+    toast
+  ].forEach(
+    function (element) {
+      if (
+        element
+        && element.parentElement
+          !== document.body
+      ) {
+        document.body.appendChild(
+          element
+        );
+      }
+    }
+  );
+
+  let taskState = {
+    csrfToken: '',
+    currentUser: null,
+    assignees: [],
+    tasks: []
+  };
+
+  let calendar = null;
+  let calendarReady = false;
+  let toastTimer = null;
+
+  function escapeHtml(value) {
+    const element =
+      document.createElement(
+        'div'
+      );
+
+    element.textContent =
+      value ?? '';
+
+    return element.innerHTML;
+  }
+
+  function showToast(
+    message,
+    type = 'success'
+  ) {
+    if (!toast) {
+      return;
+    }
+
+    toast.textContent = message;
+    toast.className =
+      'task-toast visible'
+      + (
+        type === 'error'
+          ? ' error'
+          : ''
+      );
+
+    clearTimeout(
+      toastTimer
+    );
+
+    toastTimer =
+      setTimeout(
+        function () {
+          toast.className =
+            'task-toast';
+        },
+        4500
+      );
+  }
+
+  function showEditorError(
+    message = ''
+  ) {
+    editorError.textContent =
+      message;
+
+    editorError.classList.toggle(
+      'visible',
+      message !== ''
+    );
+  }
+
+  function formatDateTime(value) {
+    if (!value) {
+      return 'No date set';
+    }
+
+    const date =
+      new Date(
+        value.replace(
+          ' ',
+          'T'
+        )
+      );
+
+    if (
+      Number.isNaN(
+        date.getTime()
+      )
+    ) {
+      return value;
+    }
+
+    return date.toLocaleString(
+      'en-GB',
+      {
+        dateStyle: 'medium',
+        timeStyle: 'short'
+      }
+    );
+  }
+
+  function toLocalInput(value) {
+    if (!value) {
+      return '';
+    }
+
+    return value
+      .replace(
+        ' ',
+        'T'
+      )
+      .slice(
+        0,
+        16
+      );
+  }
+
+  function isOverdue(task) {
+    if (
+      !task.due_at
+      || [
+        'Completed',
+        'Cancelled'
+      ].includes(
+        task.status
+      )
+    ) {
+      return false;
+    }
+
+    return new Date(
+      task.due_at.replace(
+        ' ',
+        'T'
+      )
+    ).getTime() < Date.now();
+  }
+
+  function taskCardHtml(task) {
+    const classes = [
+      'task-card'
+    ];
+
+    if (isOverdue(task)) {
+      classes.push(
+        'overdue'
+      );
+    }
+
+    if (
+      task.status
+      === 'Completed'
+    ) {
+      classes.push(
+        'completed'
+      );
+    }
+
+    let actions = '';
+
+    if (
+      task.can_update_status
+      && task.status
+        !== 'Completed'
+      && task.status
+        !== 'Cancelled'
+    ) {
+      actions += `
+        <button
+          type="button"
+          class="task-small-btn complete"
+          data-task-action="complete"
+          data-task-id="${Number(task.id)}"
+        >
+          <i class="fas fa-check"></i>
+          Complete
+        </button>
+      `;
+    }
+
+    if (task.can_edit) {
+      actions += `
+        <button
+          type="button"
+          class="task-small-btn"
+          data-task-action="edit"
+          data-task-id="${Number(task.id)}"
+        >
+          <i class="fas fa-edit"></i>
+          Edit
+        </button>
+      `;
+    }
+
+    if (task.can_delete) {
+      actions += `
+        <button
+          type="button"
+          class="task-small-btn delete"
+          data-task-action="delete"
+          data-task-id="${Number(task.id)}"
+        >
+          <i class="fas fa-trash-alt"></i>
+          Delete
+        </button>
+      `;
+    }
+
+    return `
+      <article class="${classes.join(' ')}">
+        <div>
+          <h4>${escapeHtml(task.title)}</h4>
+
+          ${
+            task.description
+              ? `
+                <p class="task-card-description">
+                  ${escapeHtml(task.description)}
+                </p>
+              `
+              : ''
+          }
+
+          <div class="task-meta">
+            <span>
+              <i class="fas fa-user"></i>
+              Assigned to:
+              ${escapeHtml(
+                task.assigned_to_name
+                || 'Unknown'
+              )}
+            </span>
+
+            <span>
+              <i class="fas fa-user-pen"></i>
+              By:
+              ${escapeHtml(
+                task.assigned_by_name
+                || 'Unknown'
+              )}
+            </span>
+
+            <span>
+              <i class="fas fa-clock"></i>
+              ${escapeHtml(
+                formatDateTime(
+                  task.due_at
+                )
+              )}
+            </span>
+
+            ${
+              task.reminder_at
+                ? `
+                  <span>
+                    <i class="fas fa-bell"></i>
+                    Reminder:
+                    ${escapeHtml(
+                      formatDateTime(
+                        task.reminder_at
+                      )
+                    )}
+                  </span>
+                `
+                : ''
+            }
+
+            <span class="task-status">
+              ${escapeHtml(task.status)}
+            </span>
+
+            <span class="task-priority">
+              ${escapeHtml(task.priority)}
+            </span>
+          </div>
+        </div>
+
+        <div class="task-card-actions">
+          ${actions}
+        </div>
+      </article>
+    `;
+  }
+
+  function renderTaskList(
+    container,
+    tasks,
+    searchValue
+  ) {
+    const query =
+      (
+        searchValue
+        || ''
+      )
+      .trim()
+      .toLowerCase();
+
+    const filtered =
+      tasks.filter(
+        function (task) {
+          if (!query) {
+            return true;
+          }
+
+          return [
+            task.title,
+            task.description,
+            task.assigned_to_name,
+            task.assigned_by_name,
+            task.status,
+            task.priority
+          ]
+          .join(' ')
+          .toLowerCase()
+          .includes(query);
+        }
+      );
+
+    if (!filtered.length) {
+      container.innerHTML = `
+        <div class="task-empty">
+          <div>
+            <i class="fas fa-clipboard-check fa-2x"></i>
+            <p>No tasks found.</p>
+          </div>
+        </div>
+      `;
+
+      return;
+    }
+
+    container.innerHTML =
+      filtered
+      .map(
+        taskCardHtml
+      )
+      .join('');
+  }
+
+  function renderLists() {
+    if (!taskState.currentUser) {
+      return;
+    }
+
+    const currentUserId =
+      Number(
+        taskState.currentUser.id
+      );
+
+    const myTasks =
+      taskState.tasks.filter(
+        task =>
+          Number(task.assigned_to)
+          === currentUserId
+      );
+
+    const assignedByMe =
+      taskState.tasks.filter(
+        task =>
+          Number(task.assigned_by)
+          === currentUserId
+          && Number(task.assigned_to)
+          !== currentUserId
+      );
+
+    renderTaskList(
+      myTaskList,
+      myTasks,
+      myTaskSearch.value
+    );
+
+    renderTaskList(
+      assignedTaskList,
+      assignedByMe,
+      assignedTaskSearch.value
+    );
+  }
+
+  function renderCalendar() {
+    const calendarElement =
+      document.getElementById(
+        'taskCalendar'
+      );
+
+    const events =
+      taskState.tasks
+      .filter(
+        task =>
+          Boolean(
+            task.due_at
+          )
+      )
+      .map(
+        task => ({
+          id:
+            String(task.id),
+
+          title:
+            task.title,
+
+          start:
+            task.due_at
+              .replace(
+                ' ',
+                'T'
+              ),
+
+          allDay:
+            false,
+
+          extendedProps: {
+            taskId:
+              Number(task.id),
+
+            status:
+              task.status,
+
+            priority:
+              task.priority
+          }
+        })
+      );
+
+    if (!calendarReady) {
+      calendar =
+        new FullCalendar.Calendar(
+          calendarElement,
+          {
+            initialView:
+              'dayGridMonth',
+
+            height:
+              '100%',
+
+            headerToolbar: {
+              left:
+                'prev,next today',
+
+              center:
+                'title',
+
+              right:
+                'dayGridMonth,timeGridWeek,listWeek'
+            },
+
+            events,
+
+            eventClick:
+              function (info) {
+                const task =
+                  taskState.tasks.find(
+                    item =>
+                      Number(item.id)
+                      === Number(
+                        info.event.id
+                      )
+                  );
+
+                if (task) {
+                  openTaskEditor(
+                    task
+                  );
+                }
+              }
+          }
+        );
+
+      calendar.render();
+      calendarReady = true;
+
+      return;
+    }
+
+    calendar.removeAllEvents();
+    calendar.addEventSource(
+      events
+    );
+  }
+
+  function populateAssignees(
+    selectedId
+  ) {
+    const select =
+      document.getElementById(
+        'taskAssignedTo'
+      );
+
+    select.innerHTML =
+      taskState.assignees
+      .map(
+        user => `
+          <option
+            value="${Number(user.id)}"
+            ${
+              Number(user.id)
+              === Number(selectedId)
+                ? 'selected'
+                : ''
+            }
+          >
+            ${escapeHtml(user.name)}
+            — ${escapeHtml(user.role)}
+          </option>
+        `
+      )
+      .join('');
+  }
+
+  function openTaskEditor(
+    task = null
+  ) {
+    showEditorError('');
+
+    const currentUserId =
+      Number(
+        taskState.currentUser
+          ?.id
+        || 0
+      );
+
+    const editing =
+      Boolean(task);
+
+    document.getElementById(
+      'taskEditorHeading'
+    ).textContent =
+      editing
+        ? 'Edit Task'
+        : 'Create Task';
+
+    document.getElementById(
+      'taskEditorSubheading'
+    ).textContent =
+      editing
+        ? 'Update task details, assignment, deadline or reminder.'
+        : 'Assign the task to yourself or another active team member.';
+
+    document.getElementById(
+      'taskId'
+    ).value =
+      editing
+        ? task.id
+        : '';
+
+    document.getElementById(
+      'taskTitle'
+    ).value =
+      editing
+        ? task.title
+        : '';
+
+    document.getElementById(
+      'taskDescription'
+    ).value =
+      editing
+        ? (
+            task.description
+            || ''
+          )
+        : '';
+
+    document.getElementById(
+      'taskPriority'
+    ).value =
+      editing
+        ? task.priority
+        : 'Medium';
+
+    document.getElementById(
+      'taskDueAt'
+    ).value =
+      editing
+        ? toLocalInput(
+            task.due_at
+          )
+        : '';
+
+    document.getElementById(
+      'taskReminderAt'
+    ).value =
+      editing
+        ? toLocalInput(
+            task.reminder_at
+          )
+        : '';
+
+    populateAssignees(
+      editing
+        ? task.assigned_to
+        : currentUserId
+    );
+
+    editorModal.classList.add(
+      'active'
+    );
+
+    editorModal.setAttribute(
+      'aria-hidden',
+      'false'
+    );
+
+    document.body.classList.add(
+      'task-modal-open'
+    );
+
+    setTimeout(
+      () =>
+        document
+        .getElementById(
+          'taskTitle'
+        )
+        .focus(),
+      50
+    );
+  }
+
+  function closeTaskEditor() {
+    editorModal.classList.remove(
+      'active'
+    );
+
+    editorModal.setAttribute(
+      'aria-hidden',
+      'true'
+    );
+
+    if (
+      !modal.classList.contains(
+        'active'
+      )
+    ) {
+      document.body.classList.remove(
+        'task-modal-open'
+      );
+    }
+  }
+
+  function openTaskManager() {
+    modal.classList.add(
+      'active'
+    );
+
+    modal.setAttribute(
+      'aria-hidden',
+      'false'
+    );
+
+    document.body.classList.add(
+      'task-modal-open'
+    );
+
+    loadTasks();
+  }
+
+  function closeTaskManager() {
+    modal.classList.remove(
+      'active'
+    );
+
+    modal.setAttribute(
+      'aria-hidden',
+      'true'
+    );
+
+    document.body.classList.remove(
+      'task-modal-open'
+    );
+  }
+
+  async function apiRequest(
+    action,
+    payload = null
+  ) {
+    const options =
+      payload === null
+        ? {
+            method: 'GET',
+            credentials:
+              'same-origin',
+            headers: {
+              'Accept':
+                'application/json'
+            }
+          }
+        : {
+            method: 'POST',
+            credentials:
+              'same-origin',
+            headers: {
+              'Accept':
+                'application/json',
+              'Content-Type':
+                'application/json'
+            },
+            body:
+              JSON.stringify(
+                payload
+              )
+          };
+
+    let response;
+
+    try {
+      response =
+        await fetch(
+          `${apiUrl}?action=${encodeURIComponent(action)}`,
+          options
+        );
+    } catch (networkError) {
+      throw new Error(
+        'The task service could not be reached. Check your connection and the Task API file path.'
+      );
+    }
+
+    const rawResponse =
+      await response.text();
+
+    let data;
+
+    try {
+      data =
+        JSON.parse(
+          rawResponse
+        );
+    } catch (parseError) {
+      const isHtml =
+        rawResponse
+          .trim()
+          .startsWith('<');
+
+      console.error(
+        'Non-JSON Task API response:',
+        rawResponse
+      );
+
+      throw new Error(
+        isHtml
+          ? 'The Task API route returned an HTML page instead of JSON. Confirm that the /calendar/tasks-api rewrite rule is above the main catch-all rule in .htaccess.'
+          : 'The Task API returned an invalid response.'
+      );
+    }
+
+    if (
+      response.status === 401
+    ) {
+      throw new Error(
+        data.message
+        || 'Your session has expired. Sign in again.'
+      );
+    }
+
+    if (
+      !response.ok
+      || !data.success
+    ) {
+      throw new Error(
+        data.message
+        || 'Task request failed.'
+      );
+    }
+
+    return data;
+  }
+
+  async function loadTasks() {
+    try {
+      const data =
+        await apiRequest(
+          'bootstrap'
+        );
+
+      taskState = {
+        csrfToken:
+          data.csrf_token,
+
+        currentUser:
+          data.current_user,
+
+        assignees:
+          data.assignees
+          || [],
+
+        tasks:
+          data.tasks
+          || []
+      };
+
+      renderLists();
+      renderCalendar();
+
+      const reminders =
+        Number(
+          data.counts
+            ?.reminders
+          || 0
+        );
+
+      if (reminders > 0) {
+        if (reminderBadge) {
+          reminderBadge.textContent =
+            reminders;
+
+          reminderBadge.style.display =
+            'flex';
+        } else if (openButton) {
+          const badge =
+            document.createElement(
+              'span'
+            );
+
+          badge.className =
+            'header-badge';
+
+          badge.id =
+            'taskReminderCount';
+
+          badge.textContent =
+            reminders;
+
+          openButton.appendChild(
+            badge
+          );
+        }
+      } else {
+        document
+          .getElementById(
+            'taskReminderCount'
+          )
+          ?.remove();
+      }
+
+    } catch (error) {
+      myTaskList.innerHTML = `
+        <div class="task-empty">
+          ${escapeHtml(error.message)}
+        </div>
+      `;
+
+      assignedTaskList.innerHTML =
+        myTaskList.innerHTML;
+
+      showToast(
+        error.message,
+        'error'
+      );
+    }
+  }
+
+  async function saveTask(
+    event
+  ) {
+    event.preventDefault();
+
+    showEditorError('');
+
+    const payload = {
+      csrf_token:
+        taskState.csrfToken,
+
+      id:
+        document.getElementById(
+          'taskId'
+        ).value,
+
+      title:
+        document.getElementById(
+          'taskTitle'
+        ).value.trim(),
+
+      description:
+        document.getElementById(
+          'taskDescription'
+        ).value.trim(),
+
+      assigned_to:
+        document.getElementById(
+          'taskAssignedTo'
+        ).value,
+
+      priority:
+        document.getElementById(
+          'taskPriority'
+        ).value,
+
+      due_at:
+        document.getElementById(
+          'taskDueAt'
+        ).value,
+
+      reminder_at:
+        document.getElementById(
+          'taskReminderAt'
+        ).value
+    };
+
+    saveButton.disabled = true;
+    saveButton.innerHTML =
+      '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+    try {
+      const data =
+        await apiRequest(
+          'save',
+          payload
+        );
+
+      closeTaskEditor();
+      showToast(
+        data.message
+      );
+
+      await loadTasks();
+
+    } catch (error) {
+      showEditorError(
+        error.message
+      );
+
+    } finally {
+      saveButton.disabled = false;
+      saveButton.innerHTML =
+        '<i class="fas fa-save"></i> Save Task';
+    }
+  }
+
+  async function updateStatus(
+    taskId,
+    status
+  ) {
+    try {
+      const data =
+        await apiRequest(
+          'status',
+          {
+            csrf_token:
+              taskState.csrfToken,
+
+            id:
+              taskId,
+
+            status
+          }
+        );
+
+      showToast(
+        data.message
+      );
+
+      await loadTasks();
+
+    } catch (error) {
+      showToast(
+        error.message,
+        'error'
+      );
+    }
+  }
+
+  async function deleteTask(
+    taskId
+  ) {
+    if (
+      !window.confirm(
+        'Delete this task permanently?'
+      )
+    ) {
+      return;
+    }
+
+    try {
+      const data =
+        await apiRequest(
+          'delete',
+          {
+            csrf_token:
+              taskState.csrfToken,
+
+            id:
+              taskId
+          }
+        );
+
+      showToast(
+        data.message
+      );
+
+      await loadTasks();
+
+    } catch (error) {
+      showToast(
+        error.message,
+        'error'
+      );
+    }
+  }
+
+  function handleTaskAction(
+    event
+  ) {
+    const button =
+      event.target.closest(
+        '[data-task-action]'
+      );
+
+    if (!button) {
+      return;
+    }
+
+    const taskId =
+      Number(
+        button.dataset.taskId
+      );
+
+    const action =
+      button.dataset.taskAction;
+
+    const task =
+      taskState.tasks.find(
+        item =>
+          Number(item.id)
+          === taskId
+      );
+
+    if (
+      action === 'edit'
+      && task
+    ) {
+      openTaskEditor(task);
+      return;
+    }
+
+    if (
+      action === 'complete'
+    ) {
+      updateStatus(
+        taskId,
+        'Completed'
+      );
+
+      return;
+    }
+
+    if (
+      action === 'delete'
+    ) {
+      deleteTask(
+        taskId
+      );
+    }
+  }
+
+  document
+    .querySelectorAll(
+      '[data-task-tab]'
+    )
+    .forEach(
+      button => {
+        button.addEventListener(
+          'click',
+          function () {
+            const tab =
+              this.dataset
+                .taskTab;
+
+            document
+              .querySelectorAll(
+                '[data-task-tab]'
+              )
+              .forEach(
+                item =>
+                  item.classList
+                    .toggle(
+                      'active',
+                      item === this
+                    )
+              );
+
+            document
+              .querySelectorAll(
+                '[data-task-panel]'
+              )
+              .forEach(
+                panel =>
+                  panel.classList
+                    .toggle(
+                      'active',
+                      panel.dataset
+                        .taskPanel
+                      === tab
+                    )
+              );
+
+            if (
+              tab === 'calendar'
+              && calendar
+            ) {
+              setTimeout(
+                () =>
+                  calendar
+                    .updateSize(),
+                50
+              );
+            }
+          }
+        );
+      }
+    );
+
+  openButton?.addEventListener(
+    'click',
+    openTaskManager
+  );
+
+  openButton?.addEventListener(
+    'keydown',
+    function (event) {
+      if (
+        event.key === 'Enter'
+        || event.key === ' '
+      ) {
+        event.preventDefault();
+        openTaskManager();
+      }
+    }
+  );
+
+  closeButton?.addEventListener(
+    'click',
+    closeTaskManager
+  );
+
+  createButton?.addEventListener(
+    'click',
+    () =>
+      openTaskEditor()
+  );
+
+  closeEditorButton
+    ?.addEventListener(
+      'click',
+      closeTaskEditor
+    );
+
+  cancelEditorButton
+    ?.addEventListener(
+      'click',
+      closeTaskEditor
+    );
+
+  form?.addEventListener(
+    'submit',
+    saveTask
+  );
+
+  myTaskList?.addEventListener(
+    'click',
+    handleTaskAction
+  );
+
+  assignedTaskList
+    ?.addEventListener(
+      'click',
+      handleTaskAction
+    );
+
+  myTaskSearch?.addEventListener(
+    'input',
+    renderLists
+  );
+
+  assignedTaskSearch
+    ?.addEventListener(
+      'input',
+      renderLists
+    );
+
+  modal?.addEventListener(
+    'click',
+    function (event) {
+      if (event.target === modal) {
+        closeTaskManager();
+      }
+    }
+  );
+
+  editorModal?.addEventListener(
+    'click',
+    function (event) {
+      if (
+        event.target
+        === editorModal
+      ) {
+        closeTaskEditor();
+      }
+    }
+  );
+
+  document.addEventListener(
+    'keydown',
+    function (event) {
+      if (event.key !== 'Escape') {
+        return;
+      }
+
+      if (
+        editorModal.classList
+          .contains(
+            'active'
+          )
+      ) {
+        closeTaskEditor();
+        return;
+      }
+
+      if (
+        modal.classList
+          .contains(
+            'active'
+          )
+      ) {
+        closeTaskManager();
+      }
+    }
+  );
+})();
+</script>
+
+
+
+<aside id="lmisSidebar" class="lmis-sidebar" data-user-role="super administrator" style="
+        --sidebar-primary:
+            #81a440;
+
+        --sidebar-accent:
+            #81a440;
+
+        --sidebar-bg:
+            #81a440;
+
+        --sidebar-text:
+            #f9fafb;
+
+        --sidebar-muted:
+            #f9fafb;
+    ">
+    <div class="sidebar-header">
+                    <img src="/uploads/branding/1787928849_7cd852bd0816.png" alt="Organisation Logo" class="sidebar-logo">
+            </div>
+
+    <nav class="lmis-menu">
+        <ul>
+
+        
+                    <li class="active">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/dashboard" title="Dashboard">
+                <i class="fas fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+                <li class="lmis-section">
+            Administration        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/enquiries" title="Enquiries">
+                <i class="fas fa-question-circle"></i>
+                <span>Enquiries</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/applications" title="Applications">
+                <i class="fas fa-file-alt"></i>
+                <span>Applications</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/clients" title="Companies">
+                <i class="fas fa-building"></i>
+                <span>Companies</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/enrollments" title="Enrollments">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Enrollments</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/learners" title="Learners">
+                <i class="fas fa-user-graduate"></i>
+                <span>Learners</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/programs" title="Programmes">
+                <i class="fas fa-book"></i>
+                <span>Programmes</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/interventions" title="Interventions">
+                <i class="fas fa-chalkboard-teacher"></i>
+                <span>Interventions</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/interventions/verifier-assignments" title="Verifier Assignments">
+                <i class="fas fa-user-shield"></i>
+                <span>Verifier Assignments</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/personal" title="SME Management">
+                <i class="fas fa-users"></i>
+                <span>SME Management</span>
+            </a>
+        </li>
+                <li class="lmis-section">
+            Academics        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/program-modules" title="Modules">
+                <i class="fas fa-layer-group"></i>
+                <span>Modules</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/topics" title="Topics">
+                <i class="fas fa-layer-group"></i>
+                <span>Topics</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/lesson-plans" title="Lessons">
+                <i class="fas fa-file-alt"></i>
+                <span>Lessons</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/zoom-sessions" title="Sessions">
+                <i class="fas fa-video"></i>
+                <span>Sessions</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/attendance" title="Attendance">
+                <i class="fas fa-calendar-check"></i>
+                <span>Attendance</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/logbook" title="Logbooks">
+                <i class="fas fa-book"></i>
+                <span>Logbooks</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/assignments" title="Assignments">
+                <i class="fas fa-upload"></i>
+                <span>Assignments</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/quizzes" title="Assessments">
+                <i class="fas fa-question-circle"></i>
+                <span>Assessments</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/quizzes/submissions" title="Assessment Submissions">
+                <i class="fas fa-clipboard-check"></i>
+                <span>Assessment Submissions</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/poe" title="POE">
+                <i class="fas fa-folder-open"></i>
+                <span>POE</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/system/learner-induction" title="Learner Induction">
+                <i class="fas fa-circle-play"></i>
+                <span>Learner Induction</span>
+            </a>
+        </li>
+                <li class="lmis-section">
+            Compliance        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/fisa" title="FISA">
+                <i class="fas fa-file-alt"></i>
+                <span>FISA</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/eisa" title="EISA">
+                <i class="fas fa-clipboard-check"></i>
+                <span>EISA</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/certifications" title="Certification">
+                <i class="fas fa-award"></i>
+                <span>Certification</span>
+            </a>
+        </li>
+                <li class="lmis-section">
+            Dispatch        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/dispatch" title="Dispatch Management">
+                <i class="fas fa-truck-fast"></i>
+                <span>Dispatch Management</span>
+            </a>
+        </li>
+                <li class="lmis-section">
+            Communication        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/communication" title="Hub">
+                <i class="fas fa-comments"></i>
+                <span>Hub</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/communication/announcements" title="Announcements">
+                <i class="fas fa-bullhorn"></i>
+                <span>Announcements</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/communication/messages" title="Messages">
+                <i class="fas fa-envelope"></i>
+                <span>Messages</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/communication/email" title="Email">
+                <i class="fas fa-paper-plane"></i>
+                <span>Email</span>
+            </a>
+        </li>
+                <li class="lmis-section">
+            Finance        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/quotations" title="Quotations">
+                <i class="fas fa-file-alt"></i>
+                <span>Quotations</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/invoices" title="Invoices">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>Invoices</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/items" title="Items">
+                <i class="fas fa-box-open"></i>
+                <span>Items</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/payments" title="Payments">
+                <i class="fas fa-credit-card"></i>
+                <span>Payments</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/recurring-billing" title="Recurring Billing">
+                <i class="fas fa-arrows-rotate"></i>
+                <span>Recurring Billing</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/stipends" title="Stipend Payments">
+                <i class="fas fa-hand-holding-dollar"></i>
+                <span>Stipend Payments</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/accounts/learners" title="Learner Accounts">
+                <i class="fas fa-user-lock"></i>
+                <span>Learner Accounts</span>
+            </a>
+        </li>
+                <li class="lmis-section">
+            System        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/reports" title="Reports">
+                <i class="fas fa-chart-bar"></i>
+                <span>Reports</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/users" title="Users">
+                <i class="fas fa-users-cog"></i>
+                <span>Users</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/documents" title="Documents">
+                <i class="fas fa-folder-open"></i>
+                <span>Documents</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/audit" title="Audit Logs">
+                <i class="fas fa-history"></i>
+                <span>Audit Logs</span>
+            </a>
+        </li>
+                <li class="">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/settings" title="Settings">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </li>
+                <li class="lmis-logout">
+            <a href="https://lmisplus.thedatascienceacademy.co.za/logout" title="Logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </li>
+        
+        
+        </ul>
+    </nav>
+</aside>
+
+<div id="mobile-overlay"></div>
+
+<style>
+:root {
+    --sidebar-hover:
+        rgba(255, 255, 255, .08);
+}
+
+.sidebar-logo {
+    max-width: 150px;
+    max-height: 55px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+    transition: all .25s ease;
+}
+
+.lmis-sidebar.collapsed .sidebar-logo {
+    max-width: 36px;
+    max-height: 36px;
+}
+
+.lmis-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1050;
+    width: 250px;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: var(--sidebar-bg);
+    color: var(--sidebar-text);
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 14px;
+    box-shadow:
+        4px 0 12px
+        rgba(0, 0, 0, .3);
+    transition:
+        left .35s ease,
+        width .3s ease;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 72px;
+    padding: 14px 20px;
+    border-bottom:
+        1px solid
+        rgba(255, 255, 255, .1);
+    background: var(--sidebar-primary);
+}
+
+.sidebar-icon i {
+    color: var(--sidebar-accent);
+    font-size: 22px;
+}
+
+.lmis-menu {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 25px;
+    scroll-behavior: smooth;
+}
+
+.lmis-menu::-webkit-scrollbar {
+    width: 6px;
+}
+
+.lmis-menu::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background:
+        rgba(255, 255, 255, .1);
+}
+
+.lmis-menu ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.lmis-menu li a {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 10px 22px;
+    color: var(--sidebar-text);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all .2s ease;
+}
+
+.lmis-menu li a:hover {
+    background: var(--sidebar-hover);
+}
+
+.lmis-menu li a span {
+    min-width: 0;
+    display: inline-block;
+}
+
+/* ============================================================
+   ACCOUNTS SIDEBAR ALIGNMENT
+   Keeps longer finance/account labels neat without changing
+   the layout for Administrator, Learner or Academic roles.
+   ============================================================ */
+.lmis-sidebar[data-user-role="accounts user"]:not(.collapsed)
+.lmis-menu > ul > li:not(.lmis-section) {
+    margin: 0 !important;
+    padding: 0 !important;
+    min-height: 0 !important;
+}
+
+.lmis-sidebar[data-user-role="accounts user"]:not(.collapsed)
+.lmis-menu > ul > li:not(.lmis-section) > a {
+    box-sizing: border-box !important;
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+
+    /* Match the compact sidebar shown on the Invoices page */
+    height: 42px !important;
+    min-height: 42px !important;
+    max-height: 42px !important;
+
+    margin: 0 !important;
+    padding: 0 20px !important;
+    gap: 10px !important;
+
+    line-height: 1.2 !important;
+}
+
+.lmis-sidebar[data-user-role="accounts user"]:not(.collapsed)
+.lmis-menu > ul > li:not(.lmis-section) > a > i {
+    width: 22px !important;
+    min-width: 22px !important;
+    flex: 0 0 22px !important;
+    margin: 0 !important;
+
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+}
+
+.lmis-sidebar[data-user-role="accounts user"]:not(.collapsed)
+.lmis-menu > ul > li:not(.lmis-section) > a > span {
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1.2 !important;
+}
+
+/*
+ * Keep section headings compact too.
+ * This matches OVERVIEW / FINANCE / SYSTEM / ACCOUNT spacing
+ * on the normal Invoices sidebar.
+ */
+.lmis-sidebar[data-user-role="accounts user"]:not(.collapsed)
+.lmis-menu > ul > li.lmis-section {
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 15px 18px 5px !important;
+    line-height: 1.2 !important;
+}
+
+/* Do not let Logout introduce an oversized row. */
+.lmis-sidebar[data-user-role="accounts user"]:not(.collapsed)
+.lmis-menu > ul > li.lmis-logout {
+    margin-top: 6px !important;
+}
+
+.lmis-menu li.active a {
+    background: var(--sidebar-primary);
+    color: #fff;
+    box-shadow:
+        inset 3px 0 0
+        var(--sidebar-accent);
+}
+
+.lmis-menu li a i {
+    width: 22px;
+    min-width: 22px;
+    flex: 0 0 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--sidebar-muted);
+    font-size: 15px;
+    line-height: 1;
+    transition: color .2s ease;
+}
+
+.lmis-menu li a:hover i,
+.lmis-menu li.active a i {
+    color: var(--sidebar-accent);
+}
+
+.lmis-section {
+    padding: 20px 22px 5px;
+    color: var(--sidebar-muted);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.lmis-logout {
+    margin-top: 8px;
+}
+
+.lmis-logout a {
+    border-top:
+        1px solid
+        rgba(255, 255, 255, .08);
+    color: var(--sidebar-muted);
+}
+
+.lmis-logout a:hover {
+    background: var(--sidebar-hover);
+    color: var(--sidebar-text);
+}
+
+.lmis-sidebar.collapsed {
+    width: 70px;
+}
+
+.lmis-sidebar.collapsed .lmis-section,
+.lmis-sidebar.collapsed .lmis-menu li a span {
+    display: none;
+}
+
+.lmis-sidebar.collapsed .lmis-menu li a {
+    justify-content: center;
+    gap: 0;
+    padding: 14px 0;
+}
+
+#mobile-overlay {
+    display: none;
+}
+
+html,
+body {
+    width: 100%;
+    overflow-x: hidden !important;
+}
+
+header.lmis-header {
+    z-index: 9999 !important;
+    box-sizing: border-box;
+    max-width: 100vw !important;
+    overflow: visible !important;
+    padding-right: 40px !important;
+}
+
+.lmis-user-dropdown,
+.lmis-dropdown-menu {
+    z-index: 10000 !important;
+}
+
+@media (max-width: 900px) {
+    .lmis-sidebar {
+        left: -270px;
+        width: 250px !important;
+    }
+
+    .lmis-sidebar.open {
+        left: 0;
+        box-shadow:
+            6px 0 25px
+            rgba(0, 0, 0, .5);
+    }
+
+    #mobile-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 1040;
+        display: block;
+        pointer-events: none;
+        opacity: 0;
+        background:
+            rgba(0, 0, 0, .5);
+        transition: opacity .3s ease;
+    }
+
+    #mobile-overlay.visible {
+        pointer-events: all;
+        opacity: 1;
+    }
+}
+</style>
+
+<script>
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
+        'use strict';
+
+        const sidebar =
+            document.getElementById('lmisSidebar');
+
+        const overlay =
+            document.getElementById('mobile-overlay');
+
+        const toggleButton =
+            document.getElementById(
+                'lmisToggleSidebar'
+            );
+
+        const header =
+            document.querySelector(
+                '.lmis-header'
+            );
+
+        const menu =
+            document.querySelector(
+                '.lmis-menu'
+            );
+
+        if (!sidebar || !menu) {
+            return;
+        }
+
+        const role =
+            sidebar.dataset.userRole
+            || 'unknown';
+
+        const collapsedKey =
+            'sidebarCollapsed';
+
+        const scrollKey =
+            'sidebarScroll:' + role;
+
+        const isMobile = function () {
+            return window
+                .matchMedia(
+                    '(max-width: 900px)'
+                )
+                .matches;
+        };
+
+        const toggleSidebar = function () {
+            if (isMobile()) {
+                sidebar.classList.toggle(
+                    'open'
+                );
+
+                overlay?.classList.toggle(
+                    'visible'
+                );
+
+                document.body.style.overflowY =
+                    sidebar.classList.contains(
+                        'open'
+                    )
+                        ? 'hidden'
+                        : '';
+
+                return;
+            }
+
+            sidebar.classList.toggle(
+                'collapsed'
+            );
+
+            header?.classList.toggle(
+                'sidebar-collapsed'
+            );
+
+            localStorage.setItem(
+                collapsedKey,
+                sidebar.classList.contains(
+                    'collapsed'
+                )
+                    ? 'true'
+                    : 'false'
+            );
+        };
+
+        toggleButton?.addEventListener(
+            'click',
+            toggleSidebar
+        );
+
+        overlay?.addEventListener(
+            'click',
+            toggleSidebar
+        );
+
+        const restoreState = function () {
+            if (isMobile()) {
+                sidebar.classList.remove(
+                    'collapsed',
+                    'open'
+                );
+
+                overlay?.classList.remove(
+                    'visible'
+                );
+
+                header?.classList.remove(
+                    'sidebar-collapsed'
+                );
+
+                document.body.style.overflowY =
+                    '';
+
+                return;
+            }
+
+            const collapsed =
+                localStorage.getItem(
+                    collapsedKey
+                ) === 'true';
+
+            sidebar.classList.toggle(
+                'collapsed',
+                collapsed
+            );
+
+            header?.classList.toggle(
+                'sidebar-collapsed',
+                collapsed
+            );
+        };
+
+        restoreState();
+
+        window.addEventListener(
+            'resize',
+            restoreState
+        );
+
+        const savedScroll = Number.parseInt(
+            localStorage.getItem(
+                scrollKey
+            ) || '0',
+            10
+        );
+
+        menu.scrollTop = Number.isFinite(
+            savedScroll
+        )
+            ? savedScroll
+            : 0;
+
+        const saveScroll = function () {
+            localStorage.setItem(
+                scrollKey,
+                String(menu.scrollTop)
+            );
+        };
+
+        window.addEventListener(
+            'beforeunload',
+            saveScroll
+        );
+
+        document.addEventListener(
+            'visibilitychange',
+            function () {
+                if (document.hidden) {
+                    saveScroll();
+                }
+            }
+        );
+    }
+);
+</script>
+
+<!-- ============================================================
+     MAIN DASHBOARD
+     ============================================================ -->
+<div class="main-content">
+
+  <!-- ---- Header ---- -->
+  <div class="dashboard-header">
+    <div>
+      <h1><i class="fa-solid fa-gauge-high"></i> NDZALAMA TRAINING Dashboard</h1>
+      <span>To Redefine Global Learning Experiences &nbsp;·&nbsp; Thursday, October 1, 2026</span>
+    </div>
+    <div class="view-switch">
+      <select id="themeMode">
+        <option value="default">Classic Mode</option>
+        <option value="dark">Dark Mode</option>
+        <option value="pan-african">Pan-African</option>
+        <option value="futuristic">Futuristic</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- ---- Core Metrics ---- -->
+  <div class="stats-grid">
+    <div class="stat-card learners">
+      <div class="stat-icon"><i class="fas fa-user-graduate"></i></div>
+      <div class="stat-content">
+        <h3>Total Learners</h3>
+        <p>1</p>
+      </div>
+    </div>
+    
+    <div class="stat-card programs">
+      <div class="stat-icon"><i class="fas fa-book-open"></i></div>
+      <div class="stat-content">
+        <h3>Active Programs</h3>
+        <p>7</p>
+      </div>
+    </div>
+    
+    <div class="stat-card enrollments">
+      <div class="stat-icon"><i class="fas fa-clipboard-list"></i></div>
+      <div class="stat-content">
+        <h3>Current Enrollments</h3>
+        <p>3</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---- Attendance Insights ---- -->
+  <div class="stats-grid">
+    <div class="stat-card attendance-card">
+      <div class="stat-icon"><i class="fas fa-calendar-day"></i></div>
+      <div class="stat-content">
+        <h3>Today's Attendance</h3>
+        <p>0%</p>
+      </div>
+    </div>
+    
+    <div class="stat-card attendance-card">
+      <div class="stat-icon"><i class="fas fa-signal"></i></div>
+      <div class="stat-content">
+        <h3>Online Now</h3>
+        <p>1</p>
+      </div>
+    </div>
+    
+    <div class="stat-card attendance-card">
+      <div class="stat-icon"><i class="fas fa-calendar-week"></i></div>
+      <div class="stat-content">
+        <h3>Weekly Attendance</h3>
+        <p>0%</p>
+      </div>
+    </div>
+    
+    <div class="stat-card attendance-card">
+      <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
+      <div class="stat-content">
+        <h3>Monthly Attendance</h3>
+        <p>0%</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---- Analytics: Enrollment Story ---- -->
+  <div class="section">
+    <h2><i class="fas fa-chart-line"></i> Enrollment Analytics — 2026</h2>
+    
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3><i class="fas fa-chart-bar"></i> Monthly Enrollments</h3>
+        <div class="chart-container">
+          <canvas id="monthlyEnrollmentsChart" width="557" height="224" style="display: block; box-sizing: border-box; height: 280px; width: 696.7px;"></canvas>
+        </div>
+      </div>
+      
+      <div class="chart-card">
+        <h3><i class="fas fa-chart-pie"></i> Program Distribution</h3>
+        <div class="chart-container">
+          <canvas id="programDistributionChart" width="557" height="224" style="display: block; box-sizing: border-box; height: 280px; width: 696.7px;"></canvas>
+        </div>
+      </div>
+    </div>
+    
+    <div class="chart-card">
+      <h3><i class="fas fa-trend-up"></i> Enrollment Trend — Last 6 Months</h3>
+      <div class="chart-container">
+        <canvas id="enrollmentTrendChart" width="1015" height="224" style="display: block; box-sizing: border-box; height: 280px; width: 1269.8px;"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---- Recent Activity ---- -->
+  <div class="dashboard-content">
+    <!-- Left: Recent Enrollments -->
+    <div class="left-column">
+      <div class="section">
+        <h2><i class="fas fa-users"></i> Recent Enrollments</h2>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Learner</th>
+                <th>Program</th>
+              </tr>
+            </thead>
+            <tbody>
+                            <tr>
+                <td data-label="Date">Nov 30, -0001</td>
+                <td data-label="Learner">Innocent Mabunda</td>
+                <td data-label="Program">Occupational Certificate: Early Childhood Development Practitioner</td>
+              </tr>
+                            <tr>
+                <td data-label="Date">Nov 30, -0001</td>
+                <td data-label="Learner">Innocent Mabunda</td>
+                <td data-label="Program">Occupational Certificate: Training and Development Practitioner</td>
+              </tr>
+                            <tr>
+                <td data-label="Date">Nov 30, -0001</td>
+                <td data-label="Learner">Innocent Mabunda</td>
+                <td data-label="Program">Occupational Trainer</td>
+              </tr>
+                          </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: New Learners + Quick Stats -->
+    <div class="right-column">
+      <div class="section">
+        <h2><i class="fas fa-user-plus"></i> New Learners</h2>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+              </tr>
+            </thead>
+            <tbody>
+                            <tr>
+                <td data-label="Name">Innocent Mabunda</td>
+                <td data-label="Email">innocent@ndzalama.org.za</td>
+              </tr>
+                          </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <div class="section">
+        <h2><i class="fas fa-chart-pie"></i> Quick Stats</h2>
+        <div class="stats-grid" style="grid-template-columns: 1fr; gap: 14px; margin-top: 0;">
+          <div class="stat-card facilitators" style="padding: 14px 18px;">
+            <div class="stat-icon" style="width: 44px; height: 44px; font-size: 17px;">
+              <i class="fas fa-chalkboard-teacher"></i>
+            </div>
+            <div class="stat-content">
+              <h3>Facilitators</h3>
+              <p>2</p>
+            </div>
+          </div>
+          
+          <div class="stat-card assessors" style="padding: 14px 18px;">
+            <div class="stat-icon" style="width: 44px; height: 44px; font-size: 17px;">
+              <i class="fas fa-tasks"></i>
+            </div>
+            <div class="stat-content">
+              <h3>Assessors</h3>
+              <p>2</p>
+            </div>
+          </div>
+          
+          <div class="stat-card interventions" style="padding: 14px 18px;">
+            <div class="stat-icon" style="width: 44px; height: 44px; font-size: 17px;">
+              <i class="fas fa-hands-helping"></i>
+            </div>
+            <div class="stat-content">
+              <h3>Interventions</h3>
+              <p>3</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<footer class="lmis-footer" role="contentinfo">
+    <div class="lmis-footer-inner">
+        <div class="lmis-footer-primary">
+            <span>© 2026</span>
+            <span class="lmis-footer-org">
+                NDZALAMA TRAINING            </span>
+            <span class="lmis-footer-divider" aria-hidden="true">•</span>
+            <span>
+                Learner Management Information System
+            </span>
+        </div>
+
+        <div class="lmis-footer-secondary">
+            Powered by Long Haul Technologies        </div>
+    </div>
+</footer>
+
+<div class="edutract-ai" id="lmisAiAssistant" style="
+        --ai-primary: #81a440;
+        --ai-accent: #81a440;
+    " data-endpoint="/ai-assistant/chat" data-fallback-endpoint="/modules/system/ai-assistant-chat.php" data-csrf="be8162ae7b7b440851815d66147d8a4f996bbf14ee761c34cd078bba988b5329" data-user-id="154" data-user-name="KB" data-first-name="KB" data-context-key="d9486e50c48bab6b" data-welcome="How can I assist you in LMIS Plus with system administration and operations today?" data-user-photo="" data-user-initials="K" data-ready="1">
+    <button type="button" class="edutract-ai-launcher" id="lmisAiLauncher" aria-label="Open EduTract AI Helper" aria-controls="lmisAiPanel" aria-expanded="false">
+        <span class="edutract-ai-launcher-icon">
+            <i class="fas fa-robot"></i>
+        </span>
+
+        <span class="edutract-ai-launcher-copy">
+            <strong>EduTract AI Helper</strong>
+            <small>LMIS Plus assistant</small>
+        </span>
+
+        <span class="edutract-ai-status-dot" aria-hidden="true"></span>
+    </button>
+
+    <section class="edutract-ai-panel" id="lmisAiPanel" aria-label="EduTract AI Helper chat" aria-hidden="true">
+        <header class="edutract-ai-header">
+            <div class="edutract-ai-brand">
+                <div class="edutract-ai-bot-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+
+                <div>
+                    <strong>EduTract AI Helper</strong>
+                    <span>
+                        <i class="fas fa-circle" aria-hidden="true"></i>
+                        Your LMIS Plus assistant
+                    </span>
+                </div>
+            </div>
+
+            <div class="edutract-ai-header-actions">
+                <button type="button" id="lmisAiClear" aria-label="Start a new conversation" title="New conversation">
+                    <i class="fas fa-rotate-right"></i>
+                </button>
+
+                <button type="button" id="lmisAiClose" aria-label="Close EduTract AI Helper" title="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </header>
+
+        <div class="edutract-ai-messages" id="lmisAiMessages" role="log" aria-live="polite" aria-relevant="additions"><div class="edutract-ai-message"><span class="edutract-ai-message-avatar"><i class="fas fa-robot" aria-hidden="true"></i></span><div class="edutract-ai-bubble">Good evening, KB. How can I assist you in LMIS Plus with system administration and operations today?</div></div></div>
+
+        <div class="edutract-ai-quick-actions" id="lmisAiQuickActions">
+                            <button type="button" class="edutract-ai-quick-btn" data-ai-prompt="Where can I manage learners and enrolments?">
+                    <span>Where can I manage learners and enrolments?</span>
+                    <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                </button>
+                            <button type="button" class="edutract-ai-quick-btn" data-ai-prompt="Where are assessment submissions?">
+                    <span>Where are assessment submissions?</span>
+                    <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                </button>
+                            <button type="button" class="edutract-ai-quick-btn" data-ai-prompt="How do I open the Finance section?">
+                    <span>How do I open the Finance section?</span>
+                    <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                </button>
+                    </div>
+
+        <form class="edutract-ai-composer" id="lmisAiForm" autocomplete="off">
+            <label class="edutract-ai-sr-only" for="lmisAiInput">
+                Ask EduTract AI Helper
+            </label>
+
+            <div class="edutract-ai-input-wrap">
+                <textarea id="lmisAiInput" rows="1" maxlength="2000" placeholder="Type your message..." style="height: 0px;"></textarea>
+
+                <button type="submit" id="lmisAiSend" aria-label="Send message" title="Send">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+
+            <div class="edutract-ai-disclaimer">
+                EduTract AI Helper can make mistakes. Verify important academic,
+                financial and compliance information.
+            </div>
+        </form>
+    </section>
+</div>
+
+<style>
+/* ============================================================
+   GLOBAL FOOTER
+   ============================================================ */
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+}
+
+.main-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.main-wrapper > .main-content,
+.main-content {
+    flex: 1 0 auto;
+    min-width: 0;
+}
+
+.lmis-footer {
+    width:
+        calc(
+            100%
+            - var(--sidebar-width, 240px)
+        );
+    margin-left:
+        var(--sidebar-width, 240px);
+    margin-top: auto;
+    padding: 13px 20px;
+    background: #f8fafc;
+    color: #64748b;
+    border-top: 1px solid #e2e8f0;
+    font-family:
+        'Poppins',
+        'Inter',
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        sans-serif;
+    font-size: 12px;
+    line-height: 1.45;
+    text-align: center;
+    position: relative;
+    z-index: 5;
+    transition:
+        margin-left .3s ease,
+        width .3s ease;
+}
+
+.lmis-sidebar.collapsed ~ .lmis-footer,
+.lmis-sidebar.collapsed ~ .main-wrapper .lmis-footer {
+    width:
+        calc(
+            100%
+            - var(--sidebar-collapsed, 70px)
+        );
+    margin-left:
+        var(--sidebar-collapsed, 70px);
+}
+
+.main-wrapper.footer-contained .lmis-footer {
+    width: 100%;
+    margin-left: 0;
+}
+
+.lmis-footer-inner {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+}
+
+.lmis-footer-primary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 5px;
+    width: 100%;
+    font-weight: 500;
+}
+
+.lmis-footer-org {
+    color: #334155;
+    font-weight: 700;
+}
+
+.lmis-footer-divider {
+    color: #94a3b8;
+}
+
+.lmis-footer-secondary {
+    color: #94a3b8;
+    font-size: 10.5px;
+    font-weight: 500;
+}
+
+body.dark-mode .lmis-footer,
+body.dark .lmis-footer {
+    background: #111827;
+    color: #9ca3af;
+    border-color: #1f2937;
+}
+
+body.dark-mode .lmis-footer-org,
+body.dark .lmis-footer-org {
+    color: #e5e7eb;
+}
+
+/* ============================================================
+   EDUTRACT AI HELPER
+   ============================================================ */
+.edutract-ai,
+.edutract-ai * {
+    box-sizing: border-box;
+}
+
+.edutract-ai {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    z-index: 12000;
+    font-family:
+        'Inter',
+        'Poppins',
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        sans-serif;
+}
+
+.edutract-ai-launcher {
+    min-height: 58px;
+    max-width: min(330px, calc(100vw - 32px));
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+    padding: 8px 14px 8px 9px;
+    border: 0;
+    border-radius: 999px;
+    background:
+        linear-gradient(
+            135deg,
+            var(--ai-primary),
+            var(--ai-accent)
+        );
+    color: #fff;
+    box-shadow:
+        0 14px 32px rgba(15, 23, 42, .24),
+        0 3px 8px rgba(15, 23, 42, .14);
+    cursor: pointer;
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        opacity .18s ease,
+        visibility .18s ease;
+}
+
+.edutract-ai-launcher:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 18px 38px rgba(15, 23, 42, .28),
+        0 4px 10px rgba(15, 23, 42, .16);
+}
+
+.edutract-ai-launcher-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 42px;
+    background: rgba(255, 255, 255, .18);
+    border: 1px solid rgba(255, 255, 255, .28);
+    font-size: 17px;
+}
+
+.edutract-ai-launcher-copy {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.15;
+}
+
+.edutract-ai-launcher-copy strong {
+    font-size: 13px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.edutract-ai-launcher-copy small {
+    margin-top: 3px;
+    font-size: 10.5px;
+    color: rgba(255, 255, 255, .82);
+    white-space: nowrap;
+}
+
+.edutract-ai-status-dot {
+    width: 9px;
+    height: 9px;
+    flex: 0 0 9px;
+    border-radius: 50%;
+    background: #4ade80;
+    box-shadow: 0 0 0 3px rgba(74, 222, 128, .20);
+}
+
+.edutract-ai-panel {
+    position: absolute;
+    right: 0;
+    bottom: 72px;
+    width: min(410px, calc(100vw - 32px));
+    height: min(680px, calc(100vh - 110px));
+    min-height: 480px;
+    display: none;
+    grid-template-rows: auto minmax(0, 1fr) auto auto;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    border-radius: 22px;
+    background: #fff;
+    box-shadow:
+        0 28px 70px rgba(15, 23, 42, .24),
+        0 8px 24px rgba(15, 23, 42, .12);
+}
+
+.edutract-ai.is-open .edutract-ai-panel {
+    display: grid;
+    animation: edutractAiOpen .18s ease-out;
+}
+
+.edutract-ai.is-open .edutract-ai-launcher {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(8px) scale(.96);
+}
+
+@keyframes edutractAiOpen {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(.985);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.edutract-ai-header {
+    min-height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    color: #fff;
+    background:
+        linear-gradient(
+            135deg,
+            var(--ai-primary),
+            var(--ai-accent)
+        );
+}
+
+.edutract-ai-brand {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.edutract-ai-bot-avatar {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    border-radius: 13px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, .17);
+    border: 1px solid rgba(255, 255, 255, .24);
+    font-size: 16px;
+}
+
+.edutract-ai-brand > div:last-child {
+    min-width: 0;
+}
+
+.edutract-ai-brand strong {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.edutract-ai-brand span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 3px;
+    color: rgba(255, 255, 255, .84);
+    font-size: 10.5px;
+}
+
+.edutract-ai-brand span i {
+    color: #4ade80;
+    font-size: 6px;
+}
+
+.edutract-ai-header-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.edutract-ai-header-actions button {
+    width: 34px;
+    height: 34px;
+    border: 0;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, .13);
+    color: #fff;
+    cursor: pointer;
+}
+
+.edutract-ai-header-actions button:hover {
+    background: rgba(255, 255, 255, .22);
+}
+
+
+.edutract-ai-messages {
+    min-height: 0;
+    overflow-y: auto;
+    padding: 16px 14px 10px;
+    background:
+        radial-gradient(
+            circle at top right,
+            color-mix(
+                in srgb,
+                var(--ai-accent) 7%,
+                transparent
+            ),
+            transparent 36%
+        ),
+        #fff;
+    scrollbar-width: thin;
+}
+
+.edutract-ai-message {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.edutract-ai-message.is-user {
+    flex-direction: row-reverse;
+}
+
+.edutract-ai-message-avatar.is-user {
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+    background:
+        linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--ai-primary) 88%, white),
+            color-mix(in srgb, var(--ai-accent) 82%, white)
+        );
+    color: #fff;
+    font-weight: 800;
+}
+
+.edutract-ai-message-avatar.is-user.has-photo {
+    background: #eef2f7;
+}
+
+.edutract-ai-message-avatar.is-user > span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.edutract-ai-message-avatar {
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background:
+        linear-gradient(
+            135deg,
+            var(--ai-primary),
+            var(--ai-accent)
+        );
+    color: #fff;
+    font-size: 12px;
+}
+
+.edutract-ai-message-avatar.is-user {
+    border-radius: 50%;
+    font-size: 9px;
+}
+
+.edutract-ai-message-avatar img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border: 0;
+    filter: none;
+}
+
+.edutract-ai-bubble {
+    max-width: 80%;
+    padding: 10px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px 14px 14px 4px;
+    background: #f8fafc;
+    color: #1e293b;
+    font-size: 12.5px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.edutract-ai-message.is-user .edutract-ai-bubble {
+    border-color: transparent;
+    border-radius: 14px 14px 4px 14px;
+    background: var(--ai-primary);
+    color: #fff;
+}
+
+.edutract-ai-message.is-error .edutract-ai-bubble {
+    border-color: #fecaca;
+    background: #fff1f2;
+    color: #be123c;
+}
+
+.edutract-ai-typing {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+    min-height: 14px;
+}
+
+.edutract-ai-typing span {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #94a3b8;
+    animation: edutractTyping 1.1s infinite ease-in-out;
+}
+
+.edutract-ai-typing span:nth-child(2) {
+    animation-delay: .15s;
+}
+
+.edutract-ai-typing span:nth-child(3) {
+    animation-delay: .3s;
+}
+
+@keyframes edutractTyping {
+    0%,
+    60%,
+    100% {
+        transform: translateY(0);
+        opacity: .45;
+    }
+    30% {
+        transform: translateY(-3px);
+        opacity: 1;
+    }
+}
+
+.edutract-ai-quick-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+    gap: 7px;
+    width: 100%;
+    min-width: 0;
+    max-height: none;
+    padding: 9px 14px 10px;
+    margin: 0;
+    overflow: visible;
+    border-top: 1px solid #f1f5f9;
+    background: #fff;
+    box-sizing: border-box;
+}
+
+.edutract-ai-quick-actions[hidden] {
+    display: none !important;
+}
+
+/*
+ * Strongly scoped rules prevent global LMIS button styles from turning
+ * suggestion buttons into circles or oversized tiles.
+ */
+.edutract-ai-quick-actions .edutract-ai-quick-btn {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    min-height: 38px !important;
+    height: auto !important;
+    max-height: none !important;
+    aspect-ratio: auto !important;
+    margin: 0 !important;
+    padding: 9px 11px !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    background: #fff !important;
+    color: #334155 !important;
+    box-shadow: none !important;
+    font-family: inherit !important;
+    font-size: 11px !important;
+    font-weight: 650 !important;
+    line-height: 1.35 !important;
+    text-align: left !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    cursor: pointer !important;
+    transition:
+        border-color .18s ease,
+        background-color .18s ease,
+        color .18s ease,
+        transform .18s ease !important;
+}
+
+.edutract-ai-quick-actions .edutract-ai-quick-btn span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.edutract-ai-quick-actions .edutract-ai-quick-btn i {
+    flex: 0 0 auto;
+    color: var(--ai-primary);
+    font-size: 10px;
+    opacity: .72;
+}
+
+.edutract-ai-quick-actions .edutract-ai-quick-btn:hover {
+    border-color: color-mix(in srgb, var(--ai-primary) 38%, #e2e8f0) !important;
+    background: color-mix(in srgb, var(--ai-primary) 4%, white) !important;
+    color: #0f172a !important;
+    transform: translateY(-1px);
+}
+
+.edutract-ai-quick-actions .edutract-ai-quick-btn:focus-visible {
+    outline: 0 !important;
+    border-color: var(--ai-accent) !important;
+    box-shadow:
+        0 0 0 3px
+        color-mix(in srgb, var(--ai-accent) 15%, transparent) !important;
+}
+
+.edutract-ai-composer {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 10px 12px 11px;
+    border-top: 1px solid #e2e8f0;
+    background: #fff;
+    box-sizing: border-box;
+}
+
+.edutract-ai-composer,
+.edutract-ai-composer * {
+    box-sizing: border-box;
+}
+
+.edutract-ai-input-wrap {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 40px !important;
+    align-items: end !important;
+    gap: 8px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 50px !important;
+    margin: 0 !important;
+    padding: 5px 5px 5px 13px !important;
+    border: 1px solid #d7e0ea !important;
+    border-radius: 14px !important;
+    background: #fff !important;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, .03) !important;
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease !important;
+}
+
+.edutract-ai-input-wrap:focus-within {
+    border-color: var(--ai-accent) !important;
+    box-shadow:
+        0 0 0 3px
+        color-mix(in srgb, var(--ai-accent) 13%, transparent) !important;
+}
+
+#lmisAiInput {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    max-height: 120px !important;
+    margin: 0 !important;
+    padding: 10px 0 !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    resize: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    outline: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #0f172a !important;
+    caret-color: var(--ai-primary) !important;
+    font-family:
+        'Inter',
+        'Poppins',
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 450 !important;
+    line-height: 20px !important;
+    letter-spacing: 0 !important;
+}
+
+#lmisAiInput::placeholder {
+    color: #7c8b9d !important;
+    opacity: 1 !important;
+    font-size: 13px !important;
+    font-weight: 450 !important;
+}
+
+#lmisAiInput:disabled {
+    opacity: .72 !important;
+    cursor: wait !important;
+}
+
+#lmisAiSend {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    box-sizing: border-box !important;
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    max-width: 40px !important;
+    max-height: 40px !important;
+    aspect-ratio: 1 / 1 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 11px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    align-self: end !important;
+    background:
+        linear-gradient(
+            135deg,
+            var(--ai-primary),
+            var(--ai-accent)
+        ) !important;
+    color: #fff !important;
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--ai-primary) 24%, transparent) !important;
+    cursor: pointer !important;
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        opacity .18s ease !important;
+}
+
+#lmisAiSend:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px color-mix(in srgb, var(--ai-primary) 30%, transparent) !important;
+}
+
+#lmisAiSend:focus-visible {
+    outline: 0 !important;
+    box-shadow:
+        0 0 0 3px
+        color-mix(in srgb, var(--ai-accent) 18%, transparent),
+        0 4px 12px color-mix(in srgb, var(--ai-primary) 24%, transparent) !important;
+}
+
+#lmisAiSend:disabled {
+    cursor: not-allowed !important;
+    opacity: .58 !important;
+    transform: none !important;
+}
+
+.edutract-ai-disclaimer {
+    margin: 6px 4px 0;
+    color: #94a3b8;
+    font-size: 9px;
+    font-weight: 500;
+    line-height: 1.35;
+    text-align: center;
+}
+
+.edutract-ai-sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+/* ============================================================
+   DARK MODE
+   ============================================================ */
+body.dark-mode .edutract-ai-panel,
+body.dark .edutract-ai-panel {
+    border-color: #273449;
+    background: #111827;
+}
+
+
+body.dark-mode .edutract-ai-messages,
+body.dark .edutract-ai-messages {
+    background: #111827;
+}
+
+body.dark-mode .edutract-ai-bubble,
+body.dark .edutract-ai-bubble {
+    border-color: #334155;
+    background: #1e293b;
+    color: #e5e7eb;
+}
+
+body.dark-mode .edutract-ai-quick-actions,
+body.dark .edutract-ai-quick-actions,
+body.dark-mode .edutract-ai-composer,
+body.dark .edutract-ai-composer {
+    border-color: #253247;
+    background: #111827;
+}
+
+body.dark-mode .edutract-ai-quick-actions button,
+body.dark .edutract-ai-quick-actions button,
+body.dark-mode .edutract-ai-input-wrap,
+body.dark .edutract-ai-input-wrap {
+    border-color: #334155;
+    background: #172033;
+    color: #e2e8f0;
+}
+
+body.dark-mode #lmisAiInput,
+body.dark #lmisAiInput {
+    color: #f8fafc;
+}
+
+body.dark-mode #lmisAiInput::placeholder,
+body.dark #lmisAiInput::placeholder {
+    color: #94a3b8 !important;
+}
+
+body.dark-mode .edutract-ai-quick-actions .edutract-ai-quick-btn i,
+body.dark .edutract-ai-quick-actions .edutract-ai-quick-btn i {
+    color: #c4b5fd;
+}
+
+/* ============================================================
+   TABLET / MOBILE
+   ============================================================ */
+@media (max-width: 900px) {
+    .lmis-footer,
+    .lmis-sidebar.collapsed ~ .lmis-footer,
+    .lmis-sidebar.collapsed ~ .main-wrapper .lmis-footer {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .lmis-footer {
+        padding:
+            12px
+            max(12px, env(safe-area-inset-right))
+            calc(12px + env(safe-area-inset-bottom))
+            max(12px, env(safe-area-inset-left));
+        font-size: 11.5px;
+    }
+}
+
+@media (max-width: 520px) {
+    .lmis-footer-primary {
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .lmis-footer-divider {
+        display: none;
+    }
+
+    .edutract-ai {
+        inset: 0;
+        right: auto;
+        bottom: auto;
+        z-index: 12000;
+        pointer-events: none;
+    }
+
+    .edutract-ai-launcher {
+        position: fixed;
+        right: max(14px, env(safe-area-inset-right));
+        bottom:
+            calc(
+                14px
+                + env(safe-area-inset-bottom)
+            );
+        min-height: 54px;
+        pointer-events: auto;
+    }
+
+    .edutract-ai-launcher-copy small {
+        display: none;
+    }
+
+    .edutract-ai-panel {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height:
+            min(
+                82svh,
+                720px
+            );
+        min-height: 0;
+        border: 0;
+        border-radius: 22px 22px 0 0;
+        padding-bottom: env(safe-area-inset-bottom);
+        pointer-events: auto;
+        box-shadow:
+            0 -18px 60px
+            rgba(15, 23, 42, .28);
+    }
+
+    .edutract-ai.is-open {
+        background: rgba(15, 23, 42, .40);
+        pointer-events: auto;
+    }
+
+    .edutract-ai.is-open .edutract-ai-launcher {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .edutract-ai-messages {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .edutract-ai-bubble {
+        max-width: 82%;
+        font-size: 12px;
+    }
+
+    .edutract-ai-quick-actions {
+        padding: 8px 12px 9px;
+        gap: 6px;
+    }
+
+    .edutract-ai-quick-actions .edutract-ai-quick-btn {
+        min-height: 40px !important;
+        padding: 9px 11px !important;
+        font-size: 11px !important;
+    }
+
+    .edutract-ai-composer {
+        padding: 9px 10px 10px;
+    }
+
+    .edutract-ai-input-wrap {
+        min-height: 52px !important;
+    }
+
+    #lmisAiInput {
+        height: 42px !important;
+        min-height: 42px !important;
+        padding: 11px 0 !important;
+        font-size: 14px !important;
+    }
+
+    #lmisAiInput::placeholder {
+        font-size: 14px !important;
+    }
+}
+
+@media (max-width: 360px) {
+    .edutract-ai-launcher-copy strong {
+        font-size: 12px;
+    }
+
+    .edutract-ai-panel {
+        height: 86svh;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .edutract-ai-panel,
+    .edutract-ai-launcher,
+    .edutract-ai-typing span {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+</style>
+
+<script>
+(function () {
+    'use strict';
+
+    const pageLoader =
+        document.getElementById('pageLoader');
+
+    if (!pageLoader) {
+        return;
+    }
+
+    if (
+        pageLoader.dataset
+            .lmisFooterLoaderReady
+        === '1'
+    ) {
+        return;
+    }
+
+    pageLoader.dataset
+        .lmisFooterLoaderReady = '1';
+
+    let removed = false;
+    const startedAt = Date.now();
+    const minimumTime = 1500;
+
+    function hideLoader() {
+        if (removed) {
+            return;
+        }
+
+        const delay =
+            Math.max(
+                minimumTime
+                - (Date.now() - startedAt),
+                0
+            );
+
+        window.setTimeout(
+            function () {
+                if (removed) {
+                    return;
+                }
+
+                removed = true;
+                pageLoader.classList.add('is-hidden');
+
+                window.setTimeout(
+                    function () {
+                        pageLoader.remove();
+                    },
+                    500
+                );
+            },
+            delay
+        );
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener(
+            'DOMContentLoaded',
+            hideLoader,
+            { once: true }
+        );
+    } else {
+        hideLoader();
+    }
+
+    window.addEventListener(
+        'load',
+        hideLoader,
+        { once: true }
+    );
+
+    window.setTimeout(
+        hideLoader,
+        5000
+    );
+})();
+</script>
+
+<script>
+(function () {
+    'use strict';
+
+    const root =
+        document.getElementById('lmisAiAssistant');
+
+    if (!root || root.dataset.ready === '1') {
+        return;
+    }
+
+    root.dataset.ready = '1';
+
+    const launcher =
+        document.getElementById('lmisAiLauncher');
+    const panel =
+        document.getElementById('lmisAiPanel');
+    const closeButton =
+        document.getElementById('lmisAiClose');
+    const clearButton =
+        document.getElementById('lmisAiClear');
+    const messagesEl =
+        document.getElementById('lmisAiMessages');
+    const quickActions =
+        document.getElementById('lmisAiQuickActions');
+    const form =
+        document.getElementById('lmisAiForm');
+    const input =
+        document.getElementById('lmisAiInput');
+    const sendButton =
+        document.getElementById('lmisAiSend');
+
+    if (
+        !launcher
+        || !panel
+        || !closeButton
+        || !clearButton
+        || !messagesEl
+        || !quickActions
+        || !form
+        || !input
+        || !sendButton
+    ) {
+        return;
+    }
+
+    const endpoint =
+        root.dataset.endpoint
+        || '/ai-assistant/chat';
+
+    const fallbackEndpoint =
+        root.dataset.fallbackEndpoint
+        || '/modules/system/ai-assistant-chat.php';
+
+    const csrf =
+        root.dataset.csrf
+        || '';
+
+    const userId =
+        root.dataset.userId
+        || '0';
+
+    const userName =
+        root.dataset.userName
+        || 'User';
+
+    const firstName =
+        root.dataset.firstName
+        || 'there';
+    const contextKey =
+        root.dataset.contextKey
+        || String(userId || 'user');
+
+    const welcome =
+        root.dataset.welcome
+        || 'How can I assist you in LMIS Plus today?';
+
+    const userPhoto =
+        root.dataset.userPhoto
+        || '';
+
+    const userInitials =
+        root.dataset.userInitials
+        || 'U';
+
+    /*
+     * User ID + role prevents one user's saved chat from appearing
+     * for another user who logs in on the same browser.
+     */
+    const storageKey =
+        'edutractAiHistory:v3:'
+        + userId
+        + ':'
+        + contextKey;
+
+    const maxHistoryItems = 16;
+
+    let isSending = false;
+    let conversation = [];
+
+    function greetingForNow() {
+        const hour =
+            new Date().getHours();
+
+        if (hour < 12) {
+            return 'Good morning';
+        }
+
+        if (hour < 18) {
+            return 'Good afternoon';
+        }
+
+        return 'Good evening';
+    }
+
+    function safeConversation(value) {
+        if (!Array.isArray(value)) {
+            return [];
+        }
+
+        return value
+            .filter(function (item) {
+                return item
+                    && (
+                        item.role === 'user'
+                        || item.role === 'assistant'
+                    )
+                    && typeof item.content === 'string';
+            })
+            .map(function (item) {
+                return {
+                    role: item.role,
+                    content:
+                        item.content.slice(0, 3000)
+                };
+            })
+            .slice(-maxHistoryItems);
+    }
+
+    function saveConversation() {
+        try {
+            sessionStorage.setItem(
+                storageKey,
+                JSON.stringify(
+                    conversation.slice(
+                        -maxHistoryItems
+                    )
+                )
+            );
+        } catch (error) {
+            /* Chat continues if browser storage is unavailable. */
+        }
+    }
+
+    function loadConversation() {
+        try {
+            const stored =
+                sessionStorage.getItem(storageKey);
+
+            conversation =
+                stored
+                    ? safeConversation(
+                        JSON.parse(stored)
+                    )
+                    : [];
+        } catch (error) {
+            conversation = [];
+        }
+    }
+
+    function scrollToBottom() {
+        window.requestAnimationFrame(
+            function () {
+                messagesEl.scrollTop =
+                    messagesEl.scrollHeight;
+            }
+        );
+    }
+
+    function createAvatar(roleName) {
+        const avatar =
+            document.createElement('span');
+
+        avatar.className =
+            'edutract-ai-message-avatar';
+        if (roleName === 'user') {
+            avatar.classList.add('is-user');
+
+            const showInitialsPlaceholder = function () {
+                avatar.classList.remove('has-photo');
+                avatar.textContent = '';
+
+                const initials =
+                    document.createElement('span');
+
+                initials.textContent =
+                    userInitials;
+
+                initials.setAttribute(
+                    'aria-label',
+                    userName
+                );
+
+                avatar.appendChild(initials);
+            };
+
+            if (userPhoto) {
+                avatar.classList.add('has-photo');
+
+                const image =
+                    document.createElement('img');
+
+                image.src = userPhoto;
+                image.alt = userName;
+                image.loading = 'lazy';
+                image.decoding = 'async';
+
+                image.addEventListener(
+                    'error',
+                    showInitialsPlaceholder,
+                    { once: true }
+                );
+
+                avatar.appendChild(image);
+            } else {
+                showInitialsPlaceholder();
+            }
+
+            return avatar;
+        }
+
+        const icon =
+            document.createElement('i');
+
+        icon.className =
+            'fas fa-robot';
+
+        icon.setAttribute(
+            'aria-hidden',
+            'true'
+        );
+
+        avatar.appendChild(icon);
+
+        return avatar;
+    }
+
+    function appendMessage(
+        roleName,
+        content,
+        options
+    ) {
+        const settings =
+            options || {};
+
+        const row =
+            document.createElement('div');
+
+        row.className =
+            'edutract-ai-message';
+
+        if (roleName === 'user') {
+            row.classList.add('is-user');
+        }
+
+        if (settings.error) {
+            row.classList.add('is-error');
+        }
+
+        row.appendChild(
+            createAvatar(roleName)
+        );
+
+        const bubble =
+            document.createElement('div');
+
+        bubble.className =
+            'edutract-ai-bubble';
+
+        bubble.textContent =
+            String(content || '');
+
+        row.appendChild(bubble);
+        messagesEl.appendChild(row);
+        scrollToBottom();
+
+        return row;
+    }
+
+    function appendTyping() {
+        const row =
+            document.createElement('div');
+
+        row.className =
+            'edutract-ai-message';
+
+        row.dataset.typing = '1';
+
+        row.appendChild(
+            createAvatar('assistant')
+        );
+
+        const bubble =
+            document.createElement('div');
+
+        bubble.className =
+            'edutract-ai-bubble';
+
+        const typing =
+            document.createElement('span');
+
+        typing.className =
+            'edutract-ai-typing';
+
+        typing.setAttribute(
+            'aria-label',
+            'EduTract AI Helper is typing'
+        );
+
+        for (let i = 0; i < 3; i += 1) {
+            typing.appendChild(
+                document.createElement('span')
+            );
+        }
+
+        bubble.appendChild(typing);
+        row.appendChild(bubble);
+        messagesEl.appendChild(row);
+        scrollToBottom();
+    }
+
+    function removeTyping() {
+        messagesEl
+            .querySelector(
+                '[data-typing="1"]'
+            )
+            ?.remove();
+    }
+
+    function setSending(sending) {
+        isSending = sending;
+        sendButton.disabled = sending;
+        input.disabled = sending;
+
+        sendButton.innerHTML =
+            sending
+                ? '<i class="fas fa-spinner fa-spin"></i>'
+                : '<i class="fas fa-paper-plane"></i>';
+    }
+
+    function resizeInput() {
+        input.style.height = 'auto';
+        input.style.height =
+            Math.min(
+                input.scrollHeight,
+                110
+            )
+            + 'px';
+    }
+
+    function welcomeMessage() {
+        return (
+            greetingForNow()
+            + ', '
+            + firstName
+            + '. '
+            + welcome
+        );
+    }
+
+    function renderConversation() {
+        messagesEl.textContent = '';
+
+        if (conversation.length === 0) {
+            appendMessage(
+                'assistant',
+                welcomeMessage()
+            );
+
+            quickActions.hidden = false;
+            return;
+        }
+
+        conversation.forEach(
+            function (item) {
+                appendMessage(
+                    item.role,
+                    item.content
+                );
+            }
+        );
+
+        quickActions.hidden =
+            conversation.some(
+                function (item) {
+                    return item.role === 'user';
+                }
+            );
+    }
+
+    function openAssistant() {
+        root.classList.add('is-open');
+        panel.setAttribute(
+            'aria-hidden',
+            'false'
+        );
+        launcher.setAttribute(
+            'aria-expanded',
+            'true'
+        );
+
+        window.setTimeout(
+            function () {
+                input.focus({
+                    preventScroll: true
+                });
+
+                scrollToBottom();
+            },
+            100
+        );
+    }
+
+    function closeAssistant() {
+        root.classList.remove('is-open');
+        panel.setAttribute(
+            'aria-hidden',
+            'true'
+        );
+        launcher.setAttribute(
+            'aria-expanded',
+            'false'
+        );
+
+        launcher.focus({
+            preventScroll: true
+        });
+    }
+
+    function clearConversation() {
+        conversation = [];
+        saveConversation();
+        renderConversation();
+        input.value = '';
+        resizeInput();
+        input.focus();
+    }
+
+    async function requestEndpoint(
+        url,
+        requestBody
+    ) {
+        const response =
+            await fetch(
+                url,
+                {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    redirect: 'follow',
+                    headers: {
+                        'Content-Type':
+                            'application/json',
+                        'Accept':
+                            'application/json',
+                        'X-Requested-With':
+                            'XMLHttpRequest'
+                    },
+                    body: requestBody
+                }
+            );
+
+        const rawText =
+            await response.text();
+
+        let data = null;
+
+        if (rawText.trim() !== '') {
+            try {
+                data =
+                    JSON.parse(rawText);
+            } catch (error) {
+                data = null;
+            }
+        }
+
+        return {
+            response: response,
+            data: data,
+            rawText: rawText
+        };
+    }
+
+    function serverPreview(rawText) {
+        if (
+            typeof rawText !== 'string'
+            || rawText.trim() === ''
+        ) {
+            return 'empty response';
+        }
+
+        const temporary =
+            document.createElement('div');
+
+        temporary.innerHTML = rawText;
+
+        const plain =
+            (
+                temporary.textContent
+                || temporary.innerText
+                || ''
+            )
+                .replace(/\s+/g, ' ')
+                .trim();
+
+        return (
+            plain
+            || rawText
+                .replace(/\s+/g, ' ')
+                .trim()
+        ).slice(0, 180);
+    }
+
+    async function sendMessage(rawMessage) {
+        const message =
+            String(rawMessage || '')
+                .trim();
+
+        if (!message || isSending) {
+            return;
+        }
+
+        quickActions.hidden = true;
+
+        appendMessage(
+            'user',
+            message
+        );
+
+        conversation.push({
+            role: 'user',
+            content: message
+        });
+
+        conversation =
+            conversation.slice(
+                -maxHistoryItems
+            );
+
+        saveConversation();
+
+        input.value = '';
+        resizeInput();
+        setSending(true);
+        appendTyping();
+
+        const historyForServer =
+            conversation
+                .slice(0, -1)
+                .slice(-10);
+
+        const requestBody =
+            JSON.stringify({
+                message: message,
+                history: historyForServer,
+                page_url:
+                    window.location.pathname
+                    + window.location.search,
+                csrf_token: csrf
+            });
+
+        try {
+            let result = null;
+            let usedFallback = false;
+
+            try {
+                result =
+                    await requestEndpoint(
+                        endpoint,
+                        requestBody
+                    );
+            } catch (primaryError) {
+                if (
+                    fallbackEndpoint
+                    && fallbackEndpoint
+                        !== endpoint
+                ) {
+                    result =
+                        await requestEndpoint(
+                            fallbackEndpoint,
+                            requestBody
+                        );
+
+                    usedFallback = true;
+                } else {
+                    throw primaryError;
+                }
+            }
+
+            if (
+                result
+                && !result.data
+                && !usedFallback
+                && fallbackEndpoint
+                && fallbackEndpoint !== endpoint
+            ) {
+                result =
+                    await requestEndpoint(
+                        fallbackEndpoint,
+                        requestBody
+                    );
+
+                usedFallback = true;
+            }
+
+            if (
+                !result
+                || !result.response
+            ) {
+                throw new Error(
+                    'EduTract AI Helper endpoint could not be reached.'
+                );
+            }
+
+            const response =
+                result.response;
+
+            const data =
+                result.data;
+
+            if (
+                !data
+                || typeof data !== 'object'
+            ) {
+                throw new Error(
+                    'EduTract AI Helper server error (HTTP '
+                    + response.status
+                    + '). The endpoint returned '
+                    + serverPreview(
+                        result.rawText
+                    )
+                    + '.'
+                );
+            }
+
+            if (!response.ok) {
+                throw new Error(
+                    typeof data.error === 'string'
+                    && data.error.trim() !== ''
+                        ? data.error.trim()
+                        : 'EduTract AI Helper is currently unavailable.'
+                );
+            }
+
+            const reply =
+                typeof data.reply === 'string'
+                    ? data.reply.trim()
+                    : '';
+
+            if (!reply) {
+                throw new Error(
+                    'EduTract AI Helper returned an empty response.'
+                );
+            }
+
+            removeTyping();
+
+            appendMessage(
+                'assistant',
+                reply
+            );
+
+            conversation.push({
+                role: 'assistant',
+                content: reply
+            });
+
+            conversation =
+                conversation.slice(
+                    -maxHistoryItems
+                );
+
+            saveConversation();
+        } catch (error) {
+            removeTyping();
+
+            let messageText =
+                error instanceof Error
+                    ? error.message
+                    : 'EduTract AI Helper is currently unavailable.';
+
+            if (
+                messageText === 'Failed to fetch'
+                || messageText
+                    .toLowerCase()
+                    .includes('networkerror')
+                || messageText
+                    .toLowerCase()
+                    .includes('load failed')
+            ) {
+                messageText =
+                    'LMIS could not reach EduTract AI Helper. '
+                    + 'Refresh the page. If it continues, check the AI endpoint installation.';
+            }
+
+            appendMessage(
+                'assistant',
+                messageText,
+                { error: true }
+            );
+        } finally {
+            setSending(false);
+
+            input.focus({
+                preventScroll: true
+            });
+        }
+    }
+
+    launcher.addEventListener(
+        'click',
+        openAssistant
+    );
+
+    closeButton.addEventListener(
+        'click',
+        closeAssistant
+    );
+
+    clearButton.addEventListener(
+        'click',
+        clearConversation
+    );
+
+    quickActions.addEventListener(
+        'click',
+        function (event) {
+            const button =
+                event.target.closest(
+                    '[data-ai-prompt]'
+                );
+
+            if (!button) {
+                return;
+            }
+
+            sendMessage(
+                button.dataset.aiPrompt
+                || ''
+            );
+        }
+    );
+
+    form.addEventListener(
+        'submit',
+        function (event) {
+            event.preventDefault();
+            sendMessage(input.value);
+        }
+    );
+
+    input.addEventListener(
+        'input',
+        resizeInput
+    );
+
+    input.addEventListener(
+        'keydown',
+        function (event) {
+            if (
+                event.key === 'Enter'
+                && !event.shiftKey
+                && !event.isComposing
+            ) {
+                event.preventDefault();
+                form.requestSubmit();
+            }
+        }
+    );
+
+    document.addEventListener(
+        'keydown',
+        function (event) {
+            if (
+                event.key === 'Escape'
+                && root.classList
+                    .contains('is-open')
+            ) {
+                closeAssistant();
+            }
+        }
+    );
+
+    document.addEventListener(
+        'click',
+        function (event) {
+            if (
+                window
+                    .matchMedia(
+                        '(max-width: 520px)'
+                    )
+                    .matches
+                && root.classList
+                    .contains('is-open')
+                && event.target === root
+            ) {
+                closeAssistant();
+            }
+        }
+    );
+
+    loadConversation();
+    renderConversation();
+    resizeInput();
+})();
+</script>
+
+<!-- ============================================================
+     JAVASCRIPT — Interactive & Adaptive
+     ============================================================ -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  // ---- Theme Selector ----
+  const select = document.getElementById("themeMode");
+  const saved = localStorage.getItem("dashboardMode") || "default";
+  
+  if (saved !== "default") {
+    document.body.classList.add(saved);
+  }
+  select.value = saved;
+
+  select.addEventListener("change", () => {
+    const mode = select.value;
+    document.body.classList.remove("dark", "pan-african", "futuristic");
+    
+    if (mode !== "default") {
+      document.body.classList.add(mode);
+    }
+    
+    localStorage.setItem("dashboardMode", mode);
+    // Refresh chart colours after a brief moment
+    setTimeout(updateChartColors, 80);
+  });
+
+  // ---- Chart Colour Helper ----
+  const getChartColors = () => {
+    if (document.body.classList.contains('dark')) {
+      return {
+        primary: '#3b82f6',
+        success: '#10b981',
+        warning: '#f59e0b',
+        danger: '#ef4444',
+        background: 'rgba(30, 41, 59, 0.6)',
+        border: '#475569'
+      };
+    } else if (document.body.classList.contains('pan-african')) {
+      return {
+        primary: '#facc15',
+        success: '#22c55e',
+        warning: '#eab308',
+        danger: '#dc2626',
+        background: 'rgba(255, 255, 255, 0.08)',
+        border: 'rgba(255, 255, 255, 0.25)'
+      };
+    } else if (document.body.classList.contains('futuristic')) {
+      return {
+        primary: '#00b7ff',
+        success: '#00d4aa',
+        warning: '#f59e0b',
+        danger: '#ef4444',
+        background: 'rgba(0, 183, 255, 0.08)',
+        border: 'rgba(0, 183, 255, 0.25)'
+      };
+    } else {
+      return {
+        primary: '#81a440',
+        success: '#10b981',
+        warning: '#f59e0b',
+        danger: '#ef4444',
+        background: 'rgba(129, 164, 64, 0.08)',
+        border: '#e2e8f0'
+      };
+    }
+  };
+
+  // ---- Chart Instances ----
+  const colors = getChartColors();
+  
+  // Monthly Enrollments (Bar)
+  const monthlyCtx = document.getElementById('monthlyEnrollmentsChart').getContext('2d');
+  const monthlyEnrollmentsChart = new Chart(monthlyCtx, {
+    type: 'bar',
+    data: {
+      labels: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+      datasets: [{
+        label: 'Enrollments',
+        data: [0,0,0,0,0,0,0,0,0,0,0,0],
+        backgroundColor: colors.primary,
+        borderColor: colors.primary,
+        borderWidth: 2,
+        borderRadius: 6,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: colors.background,
+          titleColor: '#fff',
+          bodyColor: '#fff',
+          borderColor: colors.border,
+          borderWidth: 1,
+          cornerRadius: 8,
+          padding: 12
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          grid: { color: colors.border },
+          ticks: { color: colors.primary }
+        },
+        x: {
+          grid: { display: false },
+          ticks: { color: colors.primary }
+        }
+      }
+    }
+  });
+
+  // Program Distribution (Doughnut)
+  const programCtx = document.getElementById('programDistributionChart').getContext('2d');
+  const programDistributionChart = new Chart(programCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ["Occupational Certificate: Early Childhood Development Practitioner","Occupational Certificate: Training and Development Practitioner","Occupational Trainer","SP-201201-Workplace Preparation","Basic Emergency First Aid Responder","Intermediate Emergency First Aid Responder","Advanced Emergency First Aid Responder"],
+      datasets: [{
+        data: ["0","0","0","0","0","0","0"],
+        backgroundColor: [
+          colors.primary,
+          colors.success,
+          colors.warning,
+          colors.danger,
+          '#8b5cf6',
+          '#06b6d4',
+          '#84cc16',
+          '#f97316'
+        ],
+        borderWidth: 2,
+        borderColor: colors.background
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: window.innerWidth <= 700 ? 'bottom' : 'right',
+          labels: {
+            color: colors.primary,
+            usePointStyle: true,
+            padding: 18,
+            font: { size: window.innerWidth <= 420 ? 10 : 12 }
+          }
+        }
+      },
+      cutout: '62%'
+    }
+  });
+
+  // Enrollment Trend (Line)
+  const trendCtx = document.getElementById('enrollmentTrendChart').getContext('2d');
+  const enrollmentTrendChart = new Chart(trendCtx, {
+    type: 'line',
+    data: {
+      labels: ["May 2026","Jun 2026","Jul 2026","Aug 2026","Sep 2026","Oct 2026"],
+      datasets: [{
+        label: 'Enrollments',
+        data: [0,0,0,0,0,0],
+        borderColor: colors.primary,
+        backgroundColor: colors.background,
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: colors.primary,
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 5,
+        pointHoverRadius: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: colors.background,
+          titleColor: '#fff',
+          bodyColor: '#fff',
+          borderColor: colors.border,
+          borderWidth: 1,
+          cornerRadius: 8,
+          padding: 12
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          grid: { color: colors.border },
+          ticks: { color: colors.primary }
+        },
+        x: {
+          grid: { display: false },
+          ticks: { color: colors.primary }
+        }
+      }
+    }
+  });
+
+  // ---- Update Chart Colours on Theme Change ----
+  function updateChartColors() {
+    const newColors = getChartColors();
+    
+    monthlyEnrollmentsChart.data.datasets[0].backgroundColor = newColors.primary;
+    monthlyEnrollmentsChart.data.datasets[0].borderColor = newColors.primary;
+    monthlyEnrollmentsChart.options.scales.y.ticks.color = newColors.primary;
+    monthlyEnrollmentsChart.options.scales.x.ticks.color = newColors.primary;
+    monthlyEnrollmentsChart.update();
+    
+    enrollmentTrendChart.data.datasets[0].borderColor = newColors.primary;
+    enrollmentTrendChart.data.datasets[0].backgroundColor = newColors.background;
+    enrollmentTrendChart.data.datasets[0].pointBackgroundColor = newColors.primary;
+    enrollmentTrendChart.options.scales.y.ticks.color = newColors.primary;
+    enrollmentTrendChart.options.scales.x.ticks.color = newColors.primary;
+    enrollmentTrendChart.update();
+    
+    // Doughnut chart: update legend colour
+    programDistributionChart.options.plugins.legend.labels.color = newColors.primary;
+    programDistributionChart.update();
+  }
+
+  // Listen for theme changes from the select
+  select.addEventListener('change', () => {
+    setTimeout(updateChartColors, 100);
+  });
+
+  // Keep charts readable when switching between desktop/tablet/mobile.
+  let dashboardResizeTimer = null;
+
+  window.addEventListener('resize', () => {
+    clearTimeout(dashboardResizeTimer);
+
+    dashboardResizeTimer = setTimeout(() => {
+      const mobile = window.innerWidth <= 700;
+
+      programDistributionChart.options.plugins.legend.position =
+        mobile ? 'bottom' : 'right';
+
+      programDistributionChart.options.plugins.legend.labels.font.size =
+        window.innerWidth <= 420 ? 10 : 12;
+
+      monthlyEnrollmentsChart.resize();
+      programDistributionChart.resize();
+      enrollmentTrendChart.resize();
+
+      programDistributionChart.update('none');
+    }, 160);
+  });
+
+});
+</script>
+
+</body>
