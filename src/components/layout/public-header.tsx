@@ -125,7 +125,7 @@ function NavDropdown({ label, href, isActive, children }: DropdownProps) {
       {open && (
         <div
           role="menu"
-          className="absolute top-full left-0 min-w-56 bg-white dark:bg-[#1f2028] border border-[#e5e4e7] dark:border-[#2e303a] shadow-xl py-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150"
+          className="absolute top-full left-0 min-w-56 bg-white dark:bg-[#183018] border border-[#e5e4e7] dark:border-brand-primary-light/40 shadow-xl py-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150"
         >
           {children}
         </div>
@@ -213,7 +213,7 @@ function CoursesDropdown({ isActive }: { isActive: boolean }) {
           aria-label="Browse courses by category"
           onMouseEnter={openMenu}
           onMouseLeave={scheduleClose}
-          className="absolute left-1/2 top-full z-50 w-[min(48rem,calc(100vw-2rem))] -translate-x-1/2 border-t-2 border-brand-secondary bg-white shadow-2xl dark:bg-[#1f2028]"
+          className="absolute left-1/2 top-full z-50 w-[min(48rem,calc(100vw-2rem))] -translate-x-1/2 border-t-2 border-brand-secondary bg-white shadow-2xl dark:bg-[#183018]"
         >
           <div className="grid grid-cols-[12rem_minmax(0,1fr)]">
             <div className="border-r border-brand-neutral bg-brand-neutral/40 p-3 dark:border-gray-700 dark:bg-black/10">
@@ -240,8 +240,8 @@ function CoursesDropdown({ isActive }: { isActive: boolean }) {
                     className={cn(
                       'flex w-full items-center justify-between gap-2 px-3 py-2.5 text-left text-xs font-semibold transition-colors',
                       selectedProvider === group.provider
-                        ? 'bg-white text-brand-primary shadow-sm dark:bg-[#1f2028] dark:text-brand-secondary'
-                        : 'text-text-secondary hover:bg-white/70 hover:text-brand-primary dark:text-gray-300 dark:hover:bg-[#1f2028]',
+                        ? 'bg-white text-brand-primary shadow-sm dark:bg-[#234523] dark:text-brand-secondary'
+                        : 'text-text-secondary hover:bg-white/70 hover:text-brand-primary dark:text-gray-300 dark:hover:bg-[#234523]',
                     )}
                     aria-pressed={selectedProvider === group.provider}
                   >
@@ -384,20 +384,23 @@ export function PublicHeader({ compactHeader }: { compactHeader: boolean }) {
             </a>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="inline-flex items-center gap-0 overflow-hidden border border-white/25 shadow-xs">
             {[
-              { href: 'https://www.facebook.com/ndzalamatraining.co.za', label: 'Facebook', Icon: FaFacebookF },
-              { href: '#', label: 'Instagram', Icon: FaInstagram },
-              { href: '#', label: 'Twitter', Icon: FaTwitter },
-              { href: '#', label: 'LinkedIn', Icon: FaLinkedinIn },
-            ].map(({ href, label, Icon }) => (
+              { href: 'https://www.facebook.com/ndzalamatraining.co.za', label: 'Facebook', Icon: FaFacebookF, bg: 'bg-[#efa936] hover:bg-[#df9926]' },
+              { href: '#', label: 'Instagram', Icon: FaInstagram, bg: 'bg-[#249c9b] hover:bg-[#1e8887]' },
+              { href: '#', label: 'Twitter', Icon: FaTwitter, bg: 'bg-[#ed704c] hover:bg-[#d85e3a]' },
+              { href: '#', label: 'LinkedIn', Icon: FaLinkedinIn, bg: 'bg-[#6b6570] hover:bg-[#58535d]' },
+            ].map(({ href, label, Icon, bg }) => (
               <a
                 key={label}
                 href={href}
                 target={href !== '#' ? '_blank' : undefined}
                 rel={href !== '#' ? 'noopener noreferrer' : undefined}
                 aria-label={label}
-                className="hover:text-brand-secondary transition-colors"
+                className={cn(
+                  'flex h-6 w-6 items-center justify-center text-white text-[11px] transition-colors hover:brightness-110',
+                  bg,
+                )}
               >
                 <Icon aria-hidden="true" />
               </a>
@@ -407,7 +410,7 @@ export function PublicHeader({ compactHeader }: { compactHeader: boolean }) {
       </div>
 
       {/* ── main nav ── */}
-      <div className="bg-white dark:bg-[#16171d] border-b border-[#e5e4e7] dark:border-[#2e303a] shadow-sm">
+      <div className="bg-white dark:bg-[#071407] border-b border-[#e5e4e7] dark:border-brand-primary-light/40 shadow-sm">
         <Container className="py-4 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 shrink-0">
@@ -489,13 +492,13 @@ export function PublicHeader({ compactHeader }: { compactHeader: boolean }) {
                   </span>
                 </Link>
               ) : (
-                // Guest user - single CTA button
+                // Guest user - Grey Block CTA
                 <Link
                   href="/learn"
-                  className="px-5 py-2 text-sm font-semibold bg-brand-secondary text-white hover:bg-brand-secondary-dark transition-colors shadow-sm flex items-center gap-2"
+                  className="group flex items-center gap-2 border border-white/25 bg-[#4b5157] px-5 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:border-white hover:bg-[#383d42] dark:bg-[#323940] dark:hover:bg-[#252b31]"
                 >
-                  Start Learning
-                  <FaArrowRight className="text-xs" aria-hidden="true" />
+                  <span>Start Learning</span>
+                  <FaArrowRight className="text-xs transition-transform group-hover:translate-x-1" aria-hidden="true" />
                 </Link>
               )}
             </div>
@@ -521,7 +524,7 @@ export function PublicHeader({ compactHeader }: { compactHeader: boolean }) {
         {isOpen && (
           <div
             id="mobile-menu"
-            className="lg:hidden border-t border-[#e5e4e7] dark:border-[#2e303a] bg-white dark:bg-[#16171d]"
+            className="lg:hidden border-t border-[#e5e4e7] dark:border-brand-primary-light/40 bg-white dark:bg-[#071407]"
           >
             <Container className="py-4 flex flex-col gap-1">
               <Link href="/" onClick={() => setIsOpen(false)} className="block py-2 px-3 text-sm font-medium hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300">Home</Link>
@@ -639,14 +642,14 @@ export function PublicHeader({ compactHeader }: { compactHeader: boolean }) {
                     Continue Learning
                   </Link>
                 ) : (
-                  // Guest - single CTA button
+                  // Guest - Grey Block CTA
                   <Link
                     href="/learn"
                     onClick={() => setIsOpen(false)}
-                    className="flex items-center justify-center gap-2 py-2.5 px-3 text-sm font-semibold bg-brand-secondary text-white hover:bg-brand-secondary-dark transition-colors"
+                    className="group flex items-center justify-center gap-2 border border-white/20 bg-[#4b5157] py-2.5 px-3 text-sm font-semibold text-white transition-colors hover:border-white hover:bg-[#383d42] dark:bg-[#323940]"
                   >
-                    Start Learning
-                    <FaArrowRight className="text-xs" aria-hidden="true" />
+                    <span>Start Learning</span>
+                    <FaArrowRight className="text-xs transition-transform group-hover:translate-x-1" aria-hidden="true" />
                   </Link>
                 )}
               </div>

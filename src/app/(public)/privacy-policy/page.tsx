@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Container } from '@/components/ui/container';
-import { SectionTitle } from '@/components/ui/section-title';
+import { PublicPageHero } from '@/components/common/public-page-hero';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy | Ndzalama Training',
@@ -40,12 +40,14 @@ const policySections = [
 
 export default function PrivacyPolicyPage() {
   return (
-    <section className="py-16">
-      <Container className="max-w-4xl">
-        <SectionTitle
-          title="Privacy Policy"
-          subtitle="How we collect, use and protect your information"
-        />
+    <>
+      <PublicPageHero
+        eyebrow="Policies & Governance"
+        title="Privacy Policy"
+        description="How we collect, use and protect your information."
+      />
+      <section className="bg-slate-50 py-16 dark:bg-[#0b1a0b]">
+        <Container className="max-w-4xl">
 
         <div className="mt-10 space-y-8 rounded-3xl border border-[#e5e4e7] bg-white p-6 shadow-sm dark:border-[#2e303a] dark:bg-[#171b22] md:p-10">
           <p className="text-base leading-8 text-[#4a4f57] dark:text-gray-300">
@@ -70,7 +72,7 @@ export default function PrivacyPolicyPage() {
               <ul className="mt-4 space-y-3">
                 {section.items.map((item) => (
                   <li key={item} className="flex items-start gap-3 text-[#4a4f57] dark:text-gray-300">
-                    <span className="mt-2 h-2.5 w-2.5 rounded-full bg-[#84ba3f]" aria-hidden="true" />
+                    <span className="mt-2 h-2.5 w-2.5 rounded-full bg-brand-primary dark:bg-brand-secondary" aria-hidden="true" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -98,7 +100,7 @@ export default function PrivacyPolicyPage() {
               For privacy questions, requests, concerns or complaints, please contact us at{' '}
               <a
                 href="mailto:headoffice@ndzalama.org.za"
-                className="font-medium text-[#006600] underline decoration-[#84ba3f] underline-offset-4 hover:text-[#4d8b00] dark:text-[#84ba3f]"
+                className="font-medium text-brand-primary underline decoration-brand-secondary underline-offset-4 hover:text-brand-primary-light dark:text-brand-secondary"
               >
                 headoffice@ndzalama.org.za
               </a>
@@ -115,19 +117,20 @@ export default function PrivacyPolicyPage() {
           <div className="flex flex-wrap gap-4 pt-2">
             <Link
               href="/terms-of-use"
-              className="inline-flex items-center rounded-full border border-[#84ba3f] px-5 py-3 font-medium text-[#006600] transition-colors hover:bg-[#84ba3f] hover:text-white dark:text-[#84ba3f]"
+              className="inline-flex items-center rounded-full border border-brand-primary px-5 py-3 font-medium text-brand-primary transition-colors hover:bg-brand-primary hover:text-white dark:border-brand-secondary dark:text-brand-secondary dark:hover:bg-brand-secondary dark:hover:text-[#0b1a0b]"
             >
               Read our terms of use
             </Link>
             <Link
               href="/contact"
-              className="inline-flex items-center rounded-full bg-[#84ba3f] px-5 py-3 font-medium text-white transition-colors hover:bg-[#6ea032]"
+              className="inline-flex items-center rounded-full bg-brand-primary px-5 py-3 font-medium text-white transition-colors hover:bg-brand-primary-light"
             >
               Contact us
             </Link>
           </div>
         </div>
-      </Container>
-    </section>
+        </Container>
+      </section>
+    </>
   );
 }

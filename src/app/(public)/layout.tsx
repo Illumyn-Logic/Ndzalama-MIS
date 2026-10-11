@@ -30,11 +30,11 @@ export default function PublicLayout({
   }, []);
 
   return (
-    <>
+    <div className="public-experience flex min-h-full flex-1 flex-col">
       <PublicHeader compactHeader={compactHeader} />
       <main className="flex-1">{children}</main>
       <PublicFooter />
       <ContactBubble key={compactHeader ? 'visible' : 'hidden'} show={compactHeader} />
-    </>
+    </div>
   );
 }

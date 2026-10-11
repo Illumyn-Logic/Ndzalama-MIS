@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Container } from '@/components/ui/container';
 import { SectionTitle } from '@/components/ui/section-title';
-import { FaArrowRight, FaCheckCircle, FaLinkedinIn, FaEnvelope } from 'react-icons/fa';
+import { FaArrowRight, FaCheckCircle } from 'react-icons/fa';
 
 export const metadata: Metadata = {
   title: 'Why Choose Ndzalama | Ndzalama Training',
@@ -62,7 +62,7 @@ export default function WhyChooseUsPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-[#03367A] text-white">
+      <section className="relative overflow-hidden bg-brand-primary text-white">
         <div className="absolute inset-0 z-0">
           <Image
             src="/images/backgrounds/hero-02.jpg"
@@ -72,19 +72,26 @@ export default function WhyChooseUsPage() {
             priority
             aria-hidden="true"
           />
-          <div className="absolute inset-0 bg-[#03367A]/75" aria-hidden="true" />
+          <div className="absolute inset-0 bg-linear-to-r from-[#102e14]/90 via-[#163f1b]/75 to-[#0c2210]/55 dark:from-[#061408]/95 dark:via-[#091f0c]/85 dark:to-[#040e05]/70" aria-hidden="true" />
         </div>
         <Container className="relative z-10 py-20 md:py-28">
           <div className="max-w-3xl">
-            <span className="inline-block rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-[#cfe8a7]">
+            <div className="inline-flex items-center gap-2 border border-white/20 bg-black/25 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.22em] text-white/95 backdrop-blur-xs">
+              <span className="h-2 w-2 rounded-full bg-[#efa936]" aria-hidden="true" />
               Why choose us
-            </span>
+            </div>
             <h1 className="mt-6 text-4xl font-bold tracking-tight md:text-5xl">
               People-centred learning, credible outcomes and genuine support.
             </h1>
           </div>
         </Container>
       </section>
+      <div className="grid h-2.5 grid-cols-4" aria-hidden="true">
+        <span className="bg-[#efa936]" />
+        <span className="bg-[#249c9b]" />
+        <span className="bg-[#ed704c]" />
+        <span className="bg-[#6b6570]" />
+      </div>
 
       {/* Reasons grid */}
       <section className="py-16">
@@ -100,7 +107,7 @@ export default function WhyChooseUsPage() {
                 key={reason}
                 className="flex items-start gap-3 rounded-2xl border border-[#e5e4e7] bg-white p-5 shadow-sm dark:border-[#2e303a] dark:bg-[#171b22]"
               >
-                <FaCheckCircle className="mt-1 shrink-0 text-[#84ba3f]" aria-hidden="true" />
+                <FaCheckCircle className="mt-1 shrink-0 text-brand-primary dark:text-brand-secondary" aria-hidden="true" />
                 <p className="text-[#4a4f57] dark:text-gray-300">{reason}</p>
               </div>
             ))}
@@ -121,7 +128,7 @@ export default function WhyChooseUsPage() {
                 key={member.name}
                 className="group rounded-2xl border border-[#e5e4e7] bg-white p-5 text-center shadow-sm transition-transform hover:-translate-y-1 dark:border-[#2e303a] dark:bg-[#171b22]"
               >
-                <div className="relative mx-auto h-28 w-28 overflow-hidden rounded-full border-4 border-[#84ba3f]/30">
+                <div className="relative mx-auto h-28 w-28 overflow-hidden rounded-full border-4 border-brand-primary/30 dark:border-brand-secondary/40">
                   <Image
                     src={member.image}
                     alt={member.name}
@@ -133,7 +140,7 @@ export default function WhyChooseUsPage() {
                 <h4 className="mt-4 text-base font-semibold text-[#17171d] dark:text-white">
                   {member.name}
                 </h4>
-                <p className="mt-1 text-sm text-[#84ba3f]">{member.role}</p>
+                <p className="mt-1 text-sm text-brand-primary dark:text-brand-secondary">{member.role}</p>
               </div>
             ))}
           </div>
@@ -143,7 +150,7 @@ export default function WhyChooseUsPage() {
       {/* CTA block */}
       <section className="py-16">
         <Container className="max-w-5xl">
-          <div className="rounded-3xl bg-[#03367A] p-8 text-white">
+          <div className="rounded-3xl bg-brand-primary p-8 text-white border border-white/20 shadow-xl dark:bg-[#152e15]">
             <h3 className="text-3xl font-bold">A learning partner built for real growth</h3>
             <p className="mt-4 max-w-2xl text-white/85">
               We care about every learner, every employer and every intervention we support.
@@ -153,14 +160,14 @@ export default function WhyChooseUsPage() {
             <div className="mt-6 flex flex-wrap gap-4">
               <Link
                 href="/about"
-                className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 font-semibold text-[#03367A] transition-colors hover:bg-[#eef6df]"
+                className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 font-semibold text-brand-primary transition-colors hover:bg-[#edf5ec]"
               >
                 Read our story
                 <FaArrowRight aria-hidden="true" />
               </Link>
               <Link
                 href="/register"
-                className="inline-flex items-center rounded-full border border-white/30 px-5 py-3 font-semibold text-white transition-colors hover:bg-white/10"
+                className="inline-flex items-center rounded-full bg-[#4b5157] hover:bg-[#383d42] border border-white/30 hover:border-white px-5 py-3 font-semibold text-white transition-colors"
               >
                 Book training
               </Link>

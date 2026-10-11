@@ -32,7 +32,7 @@ const courseCategories = [
 
 export function PublicFooter() {
   return (
-    <footer className="bg-[#111] text-gray-300 mt-auto">
+    <footer className="mt-auto bg-[#111] text-gray-300 dark:bg-[#071407] dark:text-[#d3dfd0]">
       {/* Main footer content */}
       <div className="border-b border-white/10 py-14">
         <Container>
@@ -53,37 +53,24 @@ export function PublicFooter() {
                 A SAQA-accredited institution delivering quality education, training
                 and development across South Africa.
               </p>
-              <div className="flex items-center gap-3">
-                <a
-                  href="https://www.facebook.com/ndzalamatraining.co.za"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Facebook"
-                  className="w-9 h-9 bg-white/10 flex items-center justify-center hover:bg-brand-secondary transition-colors"
-                >
-                  <FaFacebookF className="text-sm" aria-hidden="true" />
-                </a>
-                <a
-                  href="#"
-                  aria-label="Instagram"
-                  className="w-9 h-9 bg-white/10 flex items-center justify-center hover:bg-brand-secondary transition-colors"
-                >
-                  <FaInstagram className="text-sm" aria-hidden="true" />
-                </a>
-                <a
-                  href="#"
-                  aria-label="Twitter"
-                  className="w-9 h-9 bg-white/10 flex items-center justify-center hover:bg-brand-secondary transition-colors"
-                >
-                  <FaTwitter className="text-sm" aria-hidden="true" />
-                </a>
-                <a
-                  href="#"
-                  aria-label="LinkedIn"
-                  className="w-9 h-9 bg-white/10 flex items-center justify-center hover:bg-brand-secondary transition-colors"
-                >
-                  <FaLinkedinIn className="text-sm" aria-hidden="true" />
-                </a>
+              <div className="inline-flex items-center gap-0 overflow-hidden border border-white/20 shadow-xs">
+                {[
+                  { href: 'https://www.facebook.com/ndzalamatraining.co.za', label: 'Facebook', Icon: FaFacebookF, bg: 'bg-[#efa936] hover:bg-[#df9926]' },
+                  { href: '#', label: 'Instagram', Icon: FaInstagram, bg: 'bg-[#249c9b] hover:bg-[#1e8887]' },
+                  { href: '#', label: 'Twitter', Icon: FaTwitter, bg: 'bg-[#ed704c] hover:bg-[#d85e3a]' },
+                  { href: '#', label: 'LinkedIn', Icon: FaLinkedinIn, bg: 'bg-[#6b6570] hover:bg-[#58535d]' },
+                ].map(({ href, label, Icon, bg }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target={href !== '#' ? '_blank' : undefined}
+                    rel={href !== '#' ? 'noopener noreferrer' : undefined}
+                    aria-label={label}
+                    className={`flex h-9 w-9 items-center justify-center text-white text-sm transition-colors hover:brightness-110 ${bg}`}
+                  >
+                    <Icon aria-hidden="true" />
+                  </a>
+                ))}
               </div>
             </div>
 

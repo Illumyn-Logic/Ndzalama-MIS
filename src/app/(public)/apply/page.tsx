@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Container } from '@/components/ui/container';
-import { SectionTitle } from '@/components/ui/section-title';
+import { PublicPageHero } from '@/components/common/public-page-hero';
 import { ApplyForm } from './apply-form';
 
 export const metadata: Metadata = {
@@ -10,14 +10,17 @@ export const metadata: Metadata = {
 
 export default function ApplyPage() {
   return (
-    <section className="py-16">
-      <Container>
-        <SectionTitle
-          title="Course Application Form"
-          subtitle="Complete all required sections and submit — we'll be in touch to confirm your enrolment."
-        />
-        <ApplyForm />
-      </Container>
-    </section>
+    <>
+      <PublicPageHero
+        eyebrow="Learner Registration"
+        title="Course Application Form"
+        description="Complete the required details and our team will be in touch to confirm your enrolment."
+      />
+      <section className="bg-slate-50 py-16 dark:bg-[#0b1a0b]">
+        <Container>
+          <ApplyForm />
+        </Container>
+      </section>
+    </>
   );
 }

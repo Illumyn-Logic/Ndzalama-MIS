@@ -12,7 +12,11 @@ export function SectionTitle({ title, subtitle }: SectionTitleProps) {
       {subtitle && (
         <p className="mt-2 text-lg text-[#666] dark:text-gray-300">{subtitle}</p>
       )}
-      <div className="w-24 h-1 bg-[#84ba3f] mx-auto mt-4 rounded-full" />
+      <div className="flex items-center justify-center gap-2 mt-4" aria-hidden="true">
+        <span className="w-12 h-0.5 bg-brand-secondary" />
+        <span className="w-1.5 h-1.5 bg-[#efa936] rotate-45" />
+        <span className="w-12 h-0.5 bg-slate-300 dark:bg-white/20" />
+      </div>
     </div>
   );
 }

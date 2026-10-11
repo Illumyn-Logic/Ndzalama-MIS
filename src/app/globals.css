@@ -11,6 +11,12 @@
   --brand-neutral: #E8F0E8;
   --brand-neutral-light: #F5F9F5;
   --brand-neutral-dark: #D0E0D0;
+
+  /* 4-Block Palette (from Brand Cover Guides) */
+  --brand-block-ochre: #EFA936;
+  --brand-block-teal: #249C9B;
+  --brand-block-coral: #ED704C;
+  --brand-block-grey: #6B6570;
   
   /* Semantic Colors */
   --text-primary: #222222;
@@ -50,6 +56,23 @@
     --foreground: #ededed;
     --brand-primary: #2D5D2D;
     --brand-secondary: #9DD857;
+  }
+
+  .public-experience {
+    --background: #0b1a0b;
+    --foreground: #f4f7f0;
+    --brand-primary: #1B3B1B;
+    --brand-primary-light: #2D5D2D;
+    --brand-primary-dark: #071407;
+    --brand-secondary: #9DD857;
+    --brand-neutral: #183018;
+    --brand-neutral-light: #203a20;
+    --brand-neutral-dark: #2D5D2D;
+    --text-primary: #f4f7f0;
+    --text-secondary: #d3dfd0;
+    --text-muted: #a8b7a4;
+    background: var(--background);
+    color: var(--foreground);
   }
 }
 

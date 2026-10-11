@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { courses } from '@/data/courses';
 import { detailedCourses, cohortSchedules } from '@/lib/offline_data';
 import { Container } from '@/components/ui/container';
+import { PublicPageHero } from '@/components/common/public-page-hero';
 import {
   FaCheckCircle,
   FaCalendarAlt,
@@ -40,7 +41,13 @@ export default async function CourseDetailPage(
     if (!catalogueCourse) notFound();
 
     return (
-      <section className="min-h-screen bg-white py-16 dark:bg-[#0e0f14]">
+      <>
+        <PublicPageHero
+          eyebrow={catalogueCourse.accredited ? catalogueCourse.seta : 'Self-paced Skill Builder'}
+          title={catalogueCourse.title}
+          description={catalogueCourse.shortDesc}
+        />
+        <section className="min-h-screen bg-slate-50 py-16 dark:bg-[#0b1a0b]">
         <Container>
           <div className="max-w-3xl">
             <div className="mb-6 flex items-center gap-2 text-xs text-text-muted">
@@ -53,9 +60,9 @@ export default async function CourseDetailPage(
             <p className="text-xs font-bold uppercase text-brand-secondary">
               {catalogueCourse.accredited ? catalogueCourse.seta : 'Self-paced Skill Builder'}
             </p>
-            <h1 className="mt-3 text-3xl font-bold text-brand-primary dark:text-white sm:text-4xl">
+            <h2 className="mt-3 text-3xl font-bold text-brand-primary dark:text-white sm:text-4xl">
               {catalogueCourse.title}
-            </h1>
+            </h2>
             <p className="mt-5 text-lg leading-relaxed text-text-secondary dark:text-gray-300">
               {catalogueCourse.fullDesc}
             </p>
@@ -67,7 +74,7 @@ export default async function CourseDetailPage(
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href={`/apply?course=${catalogueCourse.slug}`}
-                className="inline-flex items-center gap-2 bg-brand-secondary px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-secondary-dark"
+                className="inline-flex items-center gap-2 bg-brand-primary px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-primary-light"
               >
                 Enquire / Enrol <FaArrowRight className="text-xs" aria-hidden="true" />
               </Link>
@@ -80,20 +87,27 @@ export default async function CourseDetailPage(
             </div>
           </div>
         </Container>
-      </section>
+        </section>
+      </>
     );
   }
 
   const schedules = cohortSchedules.filter((s) => s.courseId === course.id);
 
   return (
-    <section className="py-16 bg-slate-50 dark:bg-[#0e0f14] min-h-screen">
+    <>
+      <PublicPageHero
+        eyebrow={`${course.category} | ${course.framework}`}
+        title={course.title}
+        description={course.shortDesc}
+      />
+      <section className="py-16 bg-slate-50 dark:bg-[#0b1a0b] min-h-screen">
       <Container>
         {/* Breadcrumb & Category */}
         <div className="flex items-center gap-2 text-xs text-slate-400 mb-6">
-          <Link href="/" className="hover:text-[#84ba3f]">Home</Link>
+          <Link href="/" className="hover:text-brand-primary dark:hover:text-brand-secondary">Home</Link>
           <span>/</span>
-          <Link href="/courses" className="hover:text-[#84ba3f]">Courses</Link>
+          <Link href="/courses" className="hover:text-brand-primary dark:hover:text-brand-secondary">Courses</Link>
           <span>/</span>
           <span className="text-slate-700 dark:text-slate-200 font-semibold">{course.title}</span>
         </div>
@@ -104,7 +118,7 @@ export default async function CourseDetailPage(
             {/* Hero Card */}
             <div className="bg-white dark:bg-[#16171d] rounded-3xl border border-slate-200 dark:border-[#2e303a] shadow-sm p-8 sm:p-10">
               <div className="flex flex-wrap items-center gap-2 mb-3">
-                <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#84ba3f]/15 text-[#84ba3f]">
+                <span className="text-xs font-bold px-3 py-1 rounded-full bg-brand-primary/10 text-brand-primary dark:bg-brand-secondary/15 dark:text-brand-secondary">
                   {course.category}
                 </span>
                 <span className="text-xs font-semibold px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
@@ -133,7 +147,7 @@ export default async function CourseDetailPage(
                 </div>
                 <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/50">
                   <span className="text-xs text-slate-400 font-semibold uppercase">Credits</span>
-                  <p className="text-xl font-bold text-[#84ba3f] mt-1">{course.credits} Credits</p>
+                  <p className="text-xl font-bold text-brand-primary dark:text-brand-secondary mt-1">{course.credits} Credits</p>
                 </div>
                 <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/50">
                   <span className="text-xs text-slate-400 font-semibold uppercase">Duration</span>
@@ -141,7 +155,7 @@ export default async function CourseDetailPage(
                 </div>
                 <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/50">
                   <span className="text-xs text-slate-400 font-semibold uppercase">Accreditation</span>
-                  <p className="text-sm sm:text-base font-bold text-[#006600] dark:text-[#84ba3f] mt-1">ETDP SETA</p>
+                  <p className="text-sm sm:text-base font-bold text-brand-primary dark:text-brand-secondary mt-1">ETDP SETA</p>
                 </div>
               </div>
             </div>
@@ -150,7 +164,7 @@ export default async function CourseDetailPage(
             <div className="bg-white dark:bg-[#16171d] rounded-3xl border border-slate-200 dark:border-[#2e303a] shadow-sm p-8 sm:p-10">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-[#84ba3f]">
+                  <span className="text-xs font-bold uppercase tracking-wider text-brand-primary dark:text-brand-secondary">
                     Curriculum Matrix
                   </span>
                   <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
@@ -166,19 +180,19 @@ export default async function CourseDetailPage(
                 {course.modules.map((mod, index) => (
                   <div
                     key={mod.code}
-                    className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/40 hover:border-[#84ba3f] transition-all"
+                    className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/40 hover:border-brand-primary dark:hover:border-brand-secondary transition-all"
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                       <div className="flex items-center gap-2.5">
-                        <span className="w-7 h-7 rounded-lg bg-[#84ba3f] text-white text-xs font-bold flex items-center justify-center shrink-0">
+                        <span className="w-7 h-7 rounded-lg bg-brand-primary text-white text-xs font-bold flex items-center justify-center shrink-0">
                           {index + 1}
                         </span>
-                        <span className="text-xs font-mono font-bold text-[#03367A] dark:text-sky-400">
+                        <span className="text-xs font-mono font-bold text-brand-primary dark:text-brand-secondary-light">
                           {mod.code}
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#84ba3f]/15 text-[#84ba3f]">
+                        <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-brand-secondary/15 text-brand-secondary-dark dark:text-brand-secondary">
                           {mod.credits} Credits
                         </span>
                         {mod.duration && (
@@ -199,7 +213,7 @@ export default async function CourseDetailPage(
 
             {/* Target Audience & Prerequisites */}
             <div className="bg-white dark:bg-[#16171d] rounded-3xl border border-slate-200 dark:border-[#2e303a] shadow-sm p-8 sm:p-10">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#84ba3f]">
+              <span className="text-xs font-bold uppercase tracking-wider text-brand-primary dark:text-brand-secondary">
                 Candidate Profile
               </span>
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
@@ -211,7 +225,7 @@ export default async function CourseDetailPage(
                     key={audience}
                     className="flex items-center gap-3 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800"
                   >
-                    <FaCheckCircle className="text-[#84ba3f] text-sm shrink-0" aria-hidden="true" />
+                    <FaCheckCircle className="text-brand-primary dark:text-brand-secondary text-sm shrink-0" aria-hidden="true" />
                     <span className="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200">
                       {audience}
                     </span>
@@ -239,7 +253,7 @@ export default async function CourseDetailPage(
               <div className="mb-6 pb-6 border-b border-slate-100 dark:border-slate-800">
                 <span className="text-xs text-slate-400 uppercase font-semibold">Standard Tuition</span>
                 <div className="flex items-baseline gap-2 mt-1">
-                  <span className="text-3xl font-extrabold text-[#006600] dark:text-[#84ba3f]">
+                  <span className="text-3xl font-extrabold text-brand-primary dark:text-brand-secondary">
                     R{course.price.toLocaleString()}
                   </span>
                   <span className="text-xs text-slate-400">per candidate</span>
@@ -252,7 +266,7 @@ export default async function CourseDetailPage(
               <div className="space-y-3">
                 <Link
                   href={`/apply?course=${course.slug}`}
-                  className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl font-bold bg-[#84ba3f] text-white hover:bg-[#6ea032] transition-colors shadow-lg text-sm"
+                  className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl font-bold bg-brand-primary text-white hover:bg-brand-primary-light transition-colors shadow-md text-sm"
                 >
                   <FaGraduationCap aria-hidden="true" />
                   Apply / Book Online
@@ -271,7 +285,7 @@ export default async function CourseDetailPage(
             {/* Upcoming Schedules Widget */}
             <div className="bg-white dark:bg-[#16171d] rounded-3xl border border-slate-200 dark:border-[#2e303a] shadow-sm p-6">
               <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2 mb-4">
-                <FaCalendarAlt className="text-[#84ba3f]" aria-hidden="true" />
+                <FaCalendarAlt className="text-brand-primary dark:text-brand-secondary" aria-hidden="true" />
                 Upcoming Intakes
               </h3>
 
@@ -299,7 +313,7 @@ export default async function CourseDetailPage(
                           </span>
                         </div>
                         <div className="flex items-center gap-1 text-slate-500 text-[11px]">
-                          <FaMapMarkerAlt className="text-[#84ba3f]" aria-hidden="true" />
+                          <FaMapMarkerAlt className="text-brand-primary dark:text-brand-secondary" aria-hidden="true" />
                           <span>{sched.location} ({sched.deliveryMode})</span>
                         </div>
                       </div>
@@ -315,6 +329,7 @@ export default async function CourseDetailPage(
           </div>
         </div>
       </Container>
-    </section>
+      </section>
+    </>
   );
 }

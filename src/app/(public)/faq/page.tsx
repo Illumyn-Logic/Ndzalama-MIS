@@ -48,24 +48,24 @@ const faqs = [
 function FaqItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border border-[#e5e4e7] dark:border-[#2e303a] rounded-xl overflow-hidden">
+    <div className="border border-[#e5e4e7] dark:border-[#2e303a] rounded-xl overflow-hidden bg-white dark:bg-[#122415] shadow-xs">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center justify-between gap-4 px-6 py-4 text-left text-sm font-semibold text-[#333] dark:text-white hover:bg-[#84ba3f]/5 transition-colors"
+        className="w-full flex items-center justify-between gap-4 px-6 py-4 text-left text-sm font-semibold text-[#333] dark:text-white hover:bg-brand-primary/5 dark:hover:bg-white/5 transition-colors"
         aria-expanded={open}
       >
         <span>{q}</span>
         <FaChevronDown
           className={cn(
-            'shrink-0 text-[#84ba3f] transition-transform',
+            'shrink-0 text-brand-primary dark:text-brand-secondary transition-transform',
             open && 'rotate-180',
           )}
           aria-hidden="true"
         />
       </button>
       {open && (
-        <div className="px-6 pb-5 text-sm text-[#555] dark:text-gray-400 leading-relaxed border-t border-[#e5e4e7] dark:border-[#2e303a] pt-4">
+        <div className="px-6 pb-5 text-sm text-[#555] dark:text-gray-300 leading-relaxed border-t border-[#e5e4e7] dark:border-white/10 pt-4">
           {a}
         </div>
       )}
@@ -75,26 +75,60 @@ function FaqItem({ q, a }: { q: string; a: string }) {
 
 export default function FaqPage() {
   return (
-    <section className="py-16">
-      <Container>
-        <SectionTitle
-          title="Frequently Asked Questions"
-          subtitle="Everything you need to know about studying with Ndzalama Training"
-        />
-        <div className="max-w-3xl mx-auto space-y-3">
-          {faqs.map((item) => (
-            <FaqItem key={item.q} q={item.q} a={item.a} />
-          ))}
-        </div>
-        <div className="mt-10 text-center">
-          <p className="text-sm text-[#666] dark:text-gray-400">
-            Still have questions?{' '}
-            <a href="/contact" className="text-[#84ba3f] font-medium hover:underline">
-              Contact us
+    <>
+      {/* Hero: Canopy Header */}
+      <section className="relative overflow-hidden bg-linear-to-br from-[#102e14] via-[#163f1b] to-[#0c2210] text-white dark:from-[#061408] dark:via-[#091f0c] dark:to-[#040e05] py-16 md:py-20">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_40%,rgba(123,198,45,0.15),transparent_60%)]" aria-hidden="true" />
+        <Container className="relative z-10">
+          <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-2 mb-4 px-3.5 py-1.5 bg-black/25 backdrop-blur-xs border border-white/20 text-xs font-semibold uppercase tracking-[0.22em] text-white/95">
+              <span className="h-2 w-2 rounded-full bg-[#efa936] shadow-xs shadow-amber-400" aria-hidden="true" />
+              <span>Learner &amp; Corporate FAQ</span>
+              <span className="text-white/30">|</span>
+              <span className="text-white/80">Help Centre</span>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
+              Frequently Asked Questions
+            </h1>
+            <p className="mt-4 text-base md:text-lg text-white/85 max-w-2xl leading-relaxed">
+              Find clear answers on SETA accreditation, assessment requirements, certificate verification, and enrolment processes.
+            </p>
+          </div>
+        </Container>
+      </section>
+
+      {/* Flush 4-Block Strip */}
+      <div className="grid h-2.5 grid-cols-4 gap-0 shadow-xs" aria-hidden="true">
+        <span className="bg-[#efa936]" />
+        <span className="bg-[#249c9b]" />
+        <span className="bg-[#ed704c]" />
+        <span className="bg-[#6b6570]" />
+      </div>
+
+      <section className="py-16 bg-slate-50 dark:bg-[#0b1a0b] min-h-screen">
+        <Container>
+          <SectionTitle
+            title="Questions &amp; Guidance"
+            subtitle="Everything you need to know about studying with Ndzalama Training"
+          />
+          <div className="max-w-3xl mx-auto space-y-3">
+            {faqs.map((item) => (
+              <FaqItem key={item.q} q={item.q} a={item.a} />
+            ))}
+          </div>
+          <div className="mt-12 text-center p-8 bg-white dark:bg-[#122415] rounded-2xl max-w-xl mx-auto border border-slate-200 dark:border-white/10 shadow-sm">
+            <p className="text-sm text-[#444] dark:text-gray-300">
+              Have a specific question about your organisation&apos;s training plan?
+            </p>
+            <a
+              href="/contact"
+              className="mt-4 inline-flex items-center justify-center px-6 py-2.5 rounded-full font-bold bg-brand-primary text-white hover:bg-brand-primary-light transition-colors text-sm shadow-md"
+            >
+              Contact our team
             </a>
-          </p>
-        </div>
-      </Container>
-    </section>
+          </div>
+        </Container>
+      </section>
+    </>
   );
 }

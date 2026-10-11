@@ -8,7 +8,7 @@ interface AwardLogoStripProps {
 export function AwardLogoStrip({ compact = false }: AwardLogoStripProps) {
   return (
     <div
-      className="overflow-x-auto pb-3 [scrollbar-color:#84ba3f_transparent]"
+      className="overflow-x-auto pb-3 [scrollbar-color:#1B3B1B_transparent] dark:[scrollbar-color:#9DD857_transparent]"
       aria-label="Partner and accreditation logos"
     >
       <div className={`flex min-w-max items-center ${compact ? 'gap-4' : 'gap-6'}`}>
