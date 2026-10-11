@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { Container } from '@/components/ui/container';
 import { cn } from '@/lib/utils';
-import { courses, type CourseCategory } from '@/data/courses';
+import { courses, type CourseCategory, type CourseProvider } from '@/data/courses';
 import {
   FaEnvelope,
   FaPhone,
@@ -36,13 +36,19 @@ const accreditationLinks = [
   { label: 'Become Accredited Training Provider', href: '/accreditation-services' },
   { label: 'Register a TVET College', href: '/accreditation-services/tvet' },
   { label: 'Be SETA Registered', href: '/accreditation-services/seta' },
+  { label: 'Verify Certificate', href: '/verify' },
 ];
 
-const courseCategories: CourseCategory[] = [
-  'Occupational Certificates',
-  'Skills Programmes',
-  'Short Courses',
-  'OD-ETDP NC',
+const courseMenuGroups: {
+  title: string;
+  provider: CourseProvider;
+  categories: CourseCategory[];
+}[] = [
+  { title: 'ETDP SETA', provider: 'ETDP SETA', categories: ['Occupational Certificates', 'Skills Programmes'] },
+  { title: 'Services SETA', provider: 'Services SETA', categories: ['Skills Programmes'] },
+  { title: 'HWSETA', provider: 'HWSETA', categories: ['Occupational Certificates', 'First Aid Programmes'] },
+  { title: 'Skill Builder Courses', provider: 'Skill Builder', categories: ['Skill Builder Courses'] },
+  { title: 'Legacy Qualifications', provider: 'Legacy Unit Standards', categories: ['Legacy Qualifications'] },
 ];
 
 /* ─── helpers ─────────────────────────────────────────────────────── */
@@ -85,8 +91,8 @@ function NavDropdown({ label, href, isActive, children }: DropdownProps) {
         <Link
           href={href}
           className={cn(
-            'flex items-center gap-1 px-4 py-2 text-sm font-medium rounded transition-colors hover:text-[#84ba3f]',
-            isActive ? 'text-[#84ba3f]' : 'text-[#333] dark:text-gray-300',
+            'flex items-center gap-1 px-4 py-2 text-sm font-medium transition-colors hover:text-brand-secondary',
+            isActive ? 'text-brand-secondary' : 'text-text-primary dark:text-gray-300',
           )}
           aria-haspopup="true"
           aria-expanded={open}
@@ -102,8 +108,8 @@ function NavDropdown({ label, href, isActive, children }: DropdownProps) {
           type="button"
           onClick={() => setOpen((v) => !v)}
           className={cn(
-            'flex items-center gap-1 px-4 py-2 text-sm font-medium rounded transition-colors hover:text-[#84ba3f]',
-            isActive ? 'text-[#84ba3f]' : 'text-[#333] dark:text-gray-300',
+            'flex items-center gap-1 px-4 py-2 text-sm font-medium transition-colors hover:text-brand-secondary',
+            isActive ? 'text-brand-secondary' : 'text-text-primary dark:text-gray-300',
           )}
           aria-haspopup="true"
           aria-expanded={open}
@@ -119,7 +125,7 @@ function NavDropdown({ label, href, isActive, children }: DropdownProps) {
       {open && (
         <div
           role="menu"
-          className="absolute top-full left-0 min-w-56 bg-white dark:bg-[#1f2028] border border-[#e5e4e7] dark:border-[#2e303a] rounded-xl shadow-xl py-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150"
+          className="absolute top-full left-0 min-w-56 bg-white dark:bg-[#183018] border border-[#e5e4e7] dark:border-brand-primary-light/40 shadow-xl py-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150"
         >
           {children}
         </div>
@@ -133,7 +139,7 @@ function DropdownItem({ href, label }: { href: string; label: string }) {
     <Link
       role="menuitem"
       href={href}
-      className="block px-4 py-2.5 text-sm text-[#333] dark:text-gray-300 hover:bg-[#84ba3f]/10 hover:text-[#84ba3f] transition-colors"
+      className="block px-4 py-2.5 text-sm text-text-primary dark:text-gray-300 hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors"
     >
       {label}
     </Link>
@@ -144,22 +150,52 @@ function DropdownItem({ href, label }: { href: string; label: string }) {
 
 function CoursesDropdown({ isActive }: { isActive: boolean }) {
   const [open, setOpen] = useState(false);
+  const [selectedProvider, setSelectedProvider] = useState<CourseProvider>('ETDP SETA');
+  const [expandedCategory, setExpandedCategory] = useState<CourseCategory | null>(null);
   const ref = useRef<HTMLDivElement>(null);
-  const close = useCallback(() => setOpen(false), []);
+  const closeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const close = useCallback(() => {
+    if (closeTimeout.current) clearTimeout(closeTimeout.current);
+    setOpen(false);
+    setSelectedProvider('ETDP SETA');
+    setExpandedCategory(null);
+  }, []);
   useClickOutside(ref, close);
+
+  const openMenu = () => {
+    if (closeTimeout.current) clearTimeout(closeTimeout.current);
+    setOpen(true);
+  };
+
+  const scheduleClose = () => {
+    closeTimeout.current = setTimeout(() => setOpen(false), 120);
+  };
+
+  useEffect(() => () => {
+    if (closeTimeout.current) clearTimeout(closeTimeout.current);
+  }, []);
 
   return (
     <div
       ref={ref}
       className="relative"
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
+      onMouseEnter={openMenu}
+      onMouseLeave={scheduleClose}
+      onFocus={openMenu}
+      onBlur={(event) => {
+        if (!ref.current?.contains(event.relatedTarget as Node)) scheduleClose();
+      }}
+      onKeyDown={(event) => {
+        if (event.key === 'Escape') close();
+      }}
     >
-      <Link
-        href="/courses"
+      <button
+        type="button"
+        onClick={openMenu}
         className={cn(
-          'flex items-center gap-1 px-4 py-2 text-sm font-medium rounded transition-colors hover:text-[#84ba3f]',
-          isActive ? 'text-[#84ba3f]' : 'text-[#333] dark:text-gray-300',
+          'flex items-center gap-1 px-4 py-2 text-sm font-medium transition-colors hover:text-brand-secondary',
+          isActive ? 'text-brand-secondary' : 'text-text-primary dark:text-gray-300',
         )}
         aria-haspopup="true"
         aria-expanded={open}
@@ -169,45 +205,112 @@ function CoursesDropdown({ isActive }: { isActive: boolean }) {
           className={cn('text-[10px] mt-0.5 transition-transform', open && 'rotate-180')}
           aria-hidden="true"
         />
-      </Link>
+      </button>
 
       {open && (
         <div
-          role="menu"
-          className="absolute top-full left-0 w-[480px] bg-white dark:bg-[#1f2028] border border-[#e5e4e7] dark:border-[#2e303a] rounded-xl shadow-xl py-4 z-50 animate-in fade-in slide-in-from-top-1 duration-150"
+          role="region"
+          aria-label="Browse courses by category"
+          onMouseEnter={openMenu}
+          onMouseLeave={scheduleClose}
+          className="absolute left-1/2 top-full z-50 w-[min(48rem,calc(100vw-2rem))] -translate-x-1/2 border-t-2 border-brand-secondary bg-white shadow-2xl dark:bg-[#183018]"
         >
-          <div className="grid grid-cols-2 gap-x-4 px-4">
-            {courseCategories.map((category) => {
-              const categoryCourses = courses.filter((c) => c.category === category);
-              return (
-                <div key={category} className="mb-3">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#006600] dark:text-[#84ba3f] px-1 mb-1.5">
-                    {category}
-                  </p>
-                  {categoryCourses.map((course) => (
-                    <Link
-                      role="menuitem"
-                      key={course.slug}
-                      href={`/courses/${course.slug}`}
-                      className="flex items-center gap-1.5 px-1 py-1.5 text-sm text-[#333] dark:text-gray-300 hover:text-[#84ba3f] transition-colors rounded group"
-                    >
-                      <FaChevronRight className="text-[8px] text-[#84ba3f] opacity-0 group-hover:opacity-100 transition-opacity shrink-0" aria-hidden="true" />
-                      {course.title}
-                    </Link>
-                  ))}
+          <div className="grid grid-cols-[12rem_minmax(0,1fr)]">
+            <div className="border-r border-brand-neutral bg-brand-neutral/40 p-3 dark:border-gray-700 dark:bg-black/10">
+              <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-text-muted">
+                Training areas
+              </p>
+              <div className="space-y-1">
+                {courseMenuGroups.map((group) => (
+                  <button
+                    key={group.provider}
+                    type="button"
+                    onMouseEnter={() => {
+                      setSelectedProvider(group.provider);
+                      setExpandedCategory(null);
+                    }}
+                    onFocus={() => {
+                      setSelectedProvider(group.provider);
+                      setExpandedCategory(null);
+                    }}
+                    onClick={() => {
+                      setSelectedProvider(group.provider);
+                      setExpandedCategory(null);
+                    }}
+                    className={cn(
+                      'flex w-full items-center justify-between gap-2 px-3 py-2.5 text-left text-xs font-semibold transition-colors',
+                      selectedProvider === group.provider
+                        ? 'bg-white text-brand-primary shadow-sm dark:bg-[#234523] dark:text-brand-secondary'
+                        : 'text-text-secondary hover:bg-white/70 hover:text-brand-primary dark:text-gray-300 dark:hover:bg-[#234523]',
+                    )}
+                    aria-pressed={selectedProvider === group.provider}
+                  >
+                    {group.title}
+                    <FaChevronRight className="shrink-0 text-[9px]" aria-hidden="true" />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {courseMenuGroups.filter((group) => group.provider === selectedProvider).map((group) => (
+              <section key={group.provider} className="p-5">
+                <h2 className="mb-3 text-sm font-bold text-brand-primary dark:text-brand-secondary">
+                  {group.title}
+                </h2>
+                <div className="space-y-1">
+                  {group.categories.map((category) => {
+                    const categoryCourses = courses.filter(
+                      (course) => course.seta === group.provider && course.category === category,
+                    );
+                    const expanded = expandedCategory === category;
+                    const panelId = `course-category-${category.toLowerCase().replace(/\W+/g, '-')}`;
+
+                    return (
+                      <div key={category} className="border-b border-gray-100 last:border-0 dark:border-gray-700">
+                        <button
+                          type="button"
+                          onClick={() => setExpandedCategory(expanded ? null : category)}
+                          className="flex w-full items-center justify-between gap-3 px-3 py-3 text-left text-sm font-semibold text-text-primary transition-colors hover:bg-brand-neutral/50 dark:text-gray-200"
+                          aria-expanded={expanded}
+                          aria-controls={panelId}
+                        >
+                          <span>{category}</span>
+                          <FaChevronDown
+                            className={cn('shrink-0 text-[10px] transition-transform', expanded && 'rotate-180')}
+                            aria-hidden="true"
+                          />
+                        </button>
+                        {expanded && (
+                          <div id={panelId} className="grid grid-cols-2 gap-x-4 gap-y-1 px-3 pb-3">
+                            {categoryCourses.map((course) => (
+                              <Link
+                                key={course.id}
+                                href={`/courses/${course.slug}`}
+                                onClick={close}
+                                className="border-l-2 border-transparent px-2 py-1.5 text-sm leading-snug text-text-secondary transition-colors hover:border-brand-secondary hover:bg-brand-neutral/50 hover:text-brand-primary dark:text-gray-300 dark:hover:text-brand-secondary"
+                              >
+                                {course.title}
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
-              );
-            })}
-          </div>
-          <div className="border-t border-[#e5e4e7] dark:border-[#2e303a] mt-2 pt-2 px-4">
-            <Link
-              role="menuitem"
-              href="/courses"
-              className="flex items-center gap-2 text-sm font-semibold text-[#84ba3f] hover:text-[#6ea032] transition-colors"
-            >
-              View All Courses
-              <FaArrowRight className="text-xs" aria-hidden="true" />
-            </Link>
+              </section>
+            ))}
+
+            <div className="col-span-2 border-t border-gray-200 px-5 py-3 text-right dark:border-gray-700">
+              <Link
+                href="/courses"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-brand-primary transition-colors hover:text-brand-secondary dark:text-brand-secondary"
+                onClick={close}
+              >
+                View All Courses
+                <FaArrowRight className="text-xs" aria-hidden="true" />
+              </Link>
+            </div>
           </div>
         </div>
       )}
@@ -217,7 +320,7 @@ function CoursesDropdown({ isActive }: { isActive: boolean }) {
 
 /* ─── main component ──────────────────────────────────────────────── */
 
-export function PublicHeader() {
+export function PublicHeader({ compactHeader }: { compactHeader: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
   const [mobileAboutOpen, setMobileAboutOpen] = useState(false);
   const [mobileCoursesOpen, setMobileCoursesOpen] = useState(false);
@@ -235,11 +338,6 @@ export function PublicHeader() {
   
   const initials = getInitials(user?.name);
 
-  // Close mobile menu on route change
-  useEffect(() => {
-    setIsOpen(false);
-  }, [pathname]);
-
   const isAboutActive =
     pathname === '/about' ||
     pathname === '/why-choose-us' ||
@@ -253,19 +351,24 @@ export function PublicHeader() {
   return (
     <header className="w-full sticky top-0 z-50">
       {/* ── top bar ── */}
-      <div className="bg-[#006600] text-white text-sm py-2 hidden md:block">
-        <Container className="flex items-center justify-between">
+      <div
+        className={cn(
+          'hidden overflow-hidden bg-brand-primary text-sm text-white transition-[max-height,opacity] duration-300 ease-in-out md:block',
+          compactHeader ? 'max-h-0 opacity-0' : 'max-h-10 opacity-100',
+        )}
+      >
+        <Container className="flex items-center justify-between py-2">
           <div className="flex items-center gap-6">
             <a
               href="mailto:headoffice@ndzalama.org.za"
-              className="flex items-center gap-2 hover:text-[#84ba3f] transition-colors"
+              className="flex items-center gap-2 hover:text-brand-secondary transition-colors"
             >
               <FaEnvelope aria-hidden="true" />
               headoffice@ndzalama.org.za
             </a>
             <a
               href="tel:+27155900732"
-              className="flex items-center gap-2 hover:text-[#84ba3f] transition-colors"
+              className="flex items-center gap-2 hover:text-brand-secondary transition-colors"
             >
               <FaPhone aria-hidden="true" />
               +(27) 15-5900-732
@@ -274,26 +377,30 @@ export function PublicHeader() {
               href="https://api.whatsapp.com/send?phone=27664832441"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 hover:text-[#84ba3f] transition-colors"
+              className="flex items-center gap-2 hover:text-brand-secondary transition-colors"
             >
               <FaWhatsapp aria-hidden="true" />
               WhatsApp Us
             </a>
           </div>
-          <div className="flex items-center gap-3">
+
+          <div className="inline-flex items-center gap-0 overflow-hidden border border-white/25 shadow-xs">
             {[
-              { href: 'https://www.facebook.com/ndzalamatraining.co.za', label: 'Facebook', Icon: FaFacebookF },
-              { href: '#', label: 'Instagram', Icon: FaInstagram },
-              { href: '#', label: 'Twitter', Icon: FaTwitter },
-              { href: '#', label: 'LinkedIn', Icon: FaLinkedinIn },
-            ].map(({ href, label, Icon }) => (
+              { href: 'https://www.facebook.com/ndzalamatraining.co.za', label: 'Facebook', Icon: FaFacebookF, bg: 'bg-[#efa936] hover:bg-[#df9926]' },
+              { href: '#', label: 'Instagram', Icon: FaInstagram, bg: 'bg-[#249c9b] hover:bg-[#1e8887]' },
+              { href: '#', label: 'Twitter', Icon: FaTwitter, bg: 'bg-[#ed704c] hover:bg-[#d85e3a]' },
+              { href: '#', label: 'LinkedIn', Icon: FaLinkedinIn, bg: 'bg-[#6b6570] hover:bg-[#58535d]' },
+            ].map(({ href, label, Icon, bg }) => (
               <a
                 key={label}
                 href={href}
                 target={href !== '#' ? '_blank' : undefined}
                 rel={href !== '#' ? 'noopener noreferrer' : undefined}
                 aria-label={label}
-                className="hover:text-[#84ba3f] transition-colors"
+                className={cn(
+                  'flex h-6 w-6 items-center justify-center text-white text-[11px] transition-colors hover:brightness-110',
+                  bg,
+                )}
               >
                 <Icon aria-hidden="true" />
               </a>
@@ -303,7 +410,7 @@ export function PublicHeader() {
       </div>
 
       {/* ── main nav ── */}
-      <div className="bg-white dark:bg-[#16171d] border-b border-[#e5e4e7] dark:border-[#2e303a] shadow-sm">
+      <div className="bg-white dark:bg-[#071407] border-b border-[#e5e4e7] dark:border-brand-primary-light/40 shadow-sm">
         <Container className="py-4 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 shrink-0">
@@ -322,8 +429,8 @@ export function PublicHeader() {
             <Link
               href="/"
               className={cn(
-                'px-4 py-2 text-sm font-medium rounded transition-colors hover:text-[#84ba3f]',
-                pathname === '/' ? 'text-[#84ba3f]' : 'text-[#333] dark:text-gray-300',
+                'px-4 py-2 text-sm font-medium transition-colors hover:text-brand-secondary',
+                pathname === '/' ? 'text-brand-secondary' : 'text-text-primary dark:text-gray-300',
               )}
             >
               Home
@@ -339,27 +446,7 @@ export function PublicHeader() {
             {/* Courses mega dropdown */}
             <CoursesDropdown isActive={isCoursesActive} />
 
-            <Link
-              href="/posts"
-              className={cn(
-                'px-4 py-2 text-sm font-medium rounded transition-colors hover:text-[#84ba3f]',
-                pathname.startsWith('/posts') ? 'text-[#84ba3f]' : 'text-[#333] dark:text-gray-300',
-              )}
-            >
-              Updates
-            </Link>
-
-            <Link
-              href="/verify"
-              className={cn(
-                'px-4 py-2 text-sm font-medium rounded transition-colors hover:text-[#84ba3f]',
-                pathname === '/verify' ? 'text-[#84ba3f]' : 'text-[#333] dark:text-gray-300',
-              )}
-            >
-              Verify
-            </Link>
-
-            {/* Accreditation dropdown */}
+            {/* Accreditation dropdown (includes Verify) */}
             <NavDropdown label="Accreditation" isActive={isAccreditationActive}>
               {accreditationLinks.map((l) => (
                 <DropdownItem key={l.href} href={l.href} label={l.label} />
@@ -367,40 +454,51 @@ export function PublicHeader() {
             </NavDropdown>
 
             <Link
+              href="/posts"
+              className={cn(
+                'px-4 py-2 text-sm font-medium transition-colors hover:text-brand-secondary',
+                pathname.startsWith('/posts') ? 'text-brand-secondary' : 'text-text-primary dark:text-gray-300',
+              )}
+            >
+              Updates
+            </Link>
+
+            <Link
               href="/contact"
               className={cn(
-                'px-4 py-2 text-sm font-medium rounded transition-colors hover:text-[#84ba3f]',
-                pathname === '/contact' ? 'text-[#84ba3f]' : 'text-[#333] dark:text-gray-300',
+                'px-4 py-2 text-sm font-medium transition-colors hover:text-brand-secondary',
+                pathname === '/contact' ? 'text-brand-secondary' : 'text-text-primary dark:text-gray-300',
               )}
             >
               Contact
             </Link>
 
-            {/* CTA group */}
+            {/* Learning CTA */}
             <div className="flex items-center gap-2 ml-3">
               {user && isLearner ? (
-                // Logged-in learner on public site
+                // Logged-in learner on public site - show profile
                 <Link
                   href="/learn/dashboard"
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                  className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                 >
                   <div
-                    className="flex h-8 w-8 items-center justify-center rounded-full bg-[#84ba3f] text-xs font-bold text-white"
+                    className="flex h-8 w-8 items-center justify-center bg-brand-secondary text-xs font-bold text-white"
                     aria-hidden="true"
                   >
                     {initials}
                   </div>
                   <span className="text-xs font-bold text-slate-900 dark:text-white hidden lg:block">
-                    {user.name?.split(' ')[0]}
+                    Continue Learning
                   </span>
                 </Link>
               ) : (
-                // Guest user
+                // Guest user - Grey Block CTA
                 <Link
-                  href="/register"
-                  className="px-5 py-2 text-sm font-semibold rounded-full bg-[#84ba3f] text-white hover:bg-[#6ea032] transition-colors shadow-sm"
+                  href="/learn"
+                  className="group flex items-center gap-2 border border-white/25 bg-[#4b5157] px-5 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:border-white hover:bg-[#383d42] dark:bg-[#323940] dark:hover:bg-[#252b31]"
                 >
-                  Learn Online
+                  <span>Start Learning</span>
+                  <FaArrowRight className="text-xs transition-transform group-hover:translate-x-1" aria-hidden="true" />
                 </Link>
               )}
             </div>
@@ -426,27 +524,17 @@ export function PublicHeader() {
         {isOpen && (
           <div
             id="mobile-menu"
-            className="lg:hidden border-t border-[#e5e4e7] dark:border-[#2e303a] bg-white dark:bg-[#16171d]"
+            className="lg:hidden border-t border-[#e5e4e7] dark:border-brand-primary-light/40 bg-white dark:bg-[#071407]"
           >
             <Container className="py-4 flex flex-col gap-1">
-              {/* Contact info strip */}
-              <div className="flex flex-col gap-2 pb-3 mb-3 border-b border-[#e5e4e7] dark:border-[#2e303a]">
-                <a href="mailto:headoffice@ndzalama.org.za" className="flex items-center gap-2 text-sm text-[#006600] dark:text-[#84ba3f]">
-                  <FaEnvelope aria-hidden="true" /> headoffice@ndzalama.org.za
-                </a>
-                <a href="tel:+27155900732" className="flex items-center gap-2 text-sm text-[#006600] dark:text-[#84ba3f]">
-                  <FaPhone aria-hidden="true" /> +(27) 15-5900-732
-                </a>
-              </div>
-
-              <Link href="/" className="block py-2 px-3 text-sm font-medium rounded hover:bg-[#84ba3f]/10 hover:text-[#84ba3f] transition-colors text-[#333] dark:text-gray-300">Home</Link>
+              <Link href="/" onClick={() => setIsOpen(false)} className="block py-2 px-3 text-sm font-medium hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300">Home</Link>
 
               {/* About accordion */}
               <div>
                 <button
                   type="button"
                   onClick={() => setMobileAboutOpen((v) => !v)}
-                  className="w-full flex items-center justify-between py-2 px-3 text-sm font-medium rounded hover:bg-[#84ba3f]/10 hover:text-[#84ba3f] transition-colors text-[#333] dark:text-gray-300"
+                  className="w-full flex items-center justify-between py-2 px-3 text-sm font-medium hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300"
                   aria-expanded={mobileAboutOpen}
                 >
                   About
@@ -455,7 +543,7 @@ export function PublicHeader() {
                 {mobileAboutOpen && (
                   <div className="pl-4 mt-1 flex flex-col gap-1">
                     {aboutLinks.map((l) => (
-                      <Link key={l.href} href={l.href} className="block py-2 px-3 text-sm text-[#555] dark:text-gray-400 rounded hover:bg-[#84ba3f]/10 hover:text-[#84ba3f] transition-colors">{l.label}</Link>
+                      <Link key={l.href} href={l.href} onClick={() => setIsOpen(false)} className="block py-2 px-3 text-sm text-text-secondary dark:text-gray-400 rounded hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors">{l.label}</Link>
                     ))}
                   </div>
                 )}
@@ -466,42 +554,61 @@ export function PublicHeader() {
                 <button
                   type="button"
                   onClick={() => setMobileCoursesOpen((v) => !v)}
-                  className="w-full flex items-center justify-between py-2 px-3 text-sm font-medium rounded hover:bg-[#84ba3f]/10 hover:text-[#84ba3f] transition-colors text-[#333] dark:text-gray-300"
+                  className="w-full flex items-center justify-between py-2 px-3 text-sm font-medium rounded hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300"
                   aria-expanded={mobileCoursesOpen}
                 >
                   Courses
                   <FaChevronDown className={cn('text-xs transition-transform', mobileCoursesOpen && 'rotate-180')} aria-hidden="true" />
                 </button>
                 {mobileCoursesOpen && (
-                  <div className="pl-4 mt-1 flex flex-col gap-1">
-                    {courseCategories.map((category) => {
-                      const categoryCourses = courses.filter((c) => c.category === category);
-                      return (
-                        <div key={category}>
-                          <p className="text-[10px] font-bold uppercase tracking-widest text-[#006600] dark:text-[#84ba3f] px-3 pt-2 pb-1">
-                            {category}
-                          </p>
-                          {categoryCourses.map((course) => (
-                            <Link key={course.slug} href={`/courses/${course.slug}`} className="block py-1.5 px-3 text-sm text-[#555] dark:text-gray-400 rounded hover:bg-[#84ba3f]/10 hover:text-[#84ba3f] transition-colors">
-                              {course.title}
-                            </Link>
-                          ))}
-                        </div>
-                      );
-                    })}
-                    <Link href="/courses" className="flex items-center gap-2 py-2 px-3 text-sm font-semibold text-[#84ba3f] hover:underline">
+                  <div className="pl-4 mt-1 flex flex-col gap-2">
+                    {courseMenuGroups.map((group) => (
+                      <section key={group.provider}>
+                        <p className="px-3 pb-1 pt-2 text-[10px] font-bold uppercase tracking-widest text-brand-primary dark:text-brand-secondary">
+                          {group.title}
+                        </p>
+                        {group.categories.map((category) => {
+                          const categoryCourses = courses.filter(
+                            (course) => course.seta === group.provider && course.category === category,
+                          );
+
+                          return (
+                            <div key={category}>
+                              {group.categories.length > 1 && (
+                                <p className="px-3 pt-1 text-[9px] font-semibold uppercase tracking-wide text-text-secondary">
+                                  {category}
+                                </p>
+                              )}
+                              {categoryCourses.map((course) => (
+                                <Link
+                                  key={course.id}
+                                  href={`/courses/${course.slug}`}
+                                  onClick={() => setIsOpen(false)}
+                                  className="block rounded px-3 py-1.5 text-xs text-text-secondary transition-colors hover:bg-brand-secondary/10 hover:text-brand-secondary dark:text-gray-400"
+                                >
+                                  {course.title}
+                                </Link>
+                              ))}
+                            </div>
+                          );
+                        })}
+                      </section>
+                    ))}
+                    <Link href="/courses" onClick={() => setIsOpen(false)} className="flex items-center gap-2 py-2 px-3 text-sm font-semibold text-brand-secondary hover:underline">
                       View All Courses <FaArrowRight className="text-xs" aria-hidden="true" />
                     </Link>
                   </div>
                 )}
               </div>
 
-              {/* Accreditation accordion */}
+              <Link href="/posts" onClick={() => setIsOpen(false)} className="block py-2 px-3 text-sm font-medium hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300">Updates</Link>
+
+              {/* Accreditation accordion (includes Verify) */}
               <div>
                 <button
                   type="button"
                   onClick={() => setMobileAccreditationOpen((v) => !v)}
-                  className="w-full flex items-center justify-between py-2 px-3 text-sm font-medium rounded hover:bg-[#84ba3f]/10 hover:text-[#84ba3f] transition-colors text-[#333] dark:text-gray-300"
+                  className="w-full flex items-center justify-between py-2 px-3 text-sm font-medium hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300"
                   aria-expanded={mobileAccreditationOpen}
                 >
                   Accreditation
@@ -510,36 +617,39 @@ export function PublicHeader() {
                 {mobileAccreditationOpen && (
                   <div className="pl-4 mt-1 flex flex-col gap-1">
                     {accreditationLinks.map((l) => (
-                      <Link key={l.href} href={l.href} className="block py-2 px-3 text-sm text-[#555] dark:text-gray-400 rounded hover:bg-[#84ba3f]/10 hover:text-[#84ba3f] transition-colors">{l.label}</Link>
+                      <Link key={l.href} href={l.href} onClick={() => setIsOpen(false)} className="block py-2 px-3 text-sm text-text-secondary dark:text-gray-400 hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors">{l.label}</Link>
                     ))}
                   </div>
                 )}
               </div>
 
-              <Link href="/contact" className="block py-2 px-3 text-sm font-medium rounded hover:bg-[#84ba3f]/10 hover:text-[#84ba3f] transition-colors text-[#333] dark:text-gray-300">Contact</Link>
+              <Link href="/contact" onClick={() => setIsOpen(false)} className="block py-2 px-3 text-sm font-medium hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300">Contact</Link>
 
               <div className="flex flex-col gap-2 mt-3 pt-3 border-t border-[#e5e4e7] dark:border-[#2e303a]">
                 {user && isLearner ? (
                   // Logged-in learner
                   <Link
                     href="/learn/dashboard"
-                    className="flex items-center justify-center gap-2 py-2.5 px-3 text-sm font-semibold rounded-full bg-[#84ba3f] text-white hover:bg-[#6ea032] transition-colors"
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center justify-center gap-2 py-2.5 px-3 text-sm font-semibold bg-brand-secondary text-white hover:bg-brand-secondary-dark transition-colors"
                   >
                     <div
-                      className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20 text-xs font-bold"
+                      className="flex h-6 w-6 items-center justify-center bg-white/20 text-xs font-bold"
                       aria-hidden="true"
                     >
                       {initials}
                     </div>
-                    My Dashboard
+                    Continue Learning
                   </Link>
                 ) : (
-                  // Guest
+                  // Guest - Grey Block CTA
                   <Link
-                    href="/register"
-                    className="block py-2.5 px-3 text-sm font-semibold rounded-full bg-[#84ba3f] text-white text-center hover:bg-[#6ea032] transition-colors"
+                    href="/learn"
+                    onClick={() => setIsOpen(false)}
+                    className="group flex items-center justify-center gap-2 border border-white/20 bg-[#4b5157] py-2.5 px-3 text-sm font-semibold text-white transition-colors hover:border-white hover:bg-[#383d42] dark:bg-[#323940]"
                   >
-                    Learn Online
+                    <span>Start Learning</span>
+                    <FaArrowRight className="text-xs transition-transform group-hover:translate-x-1" aria-hidden="true" />
                   </Link>
                 )}
               </div>

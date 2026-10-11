@@ -12,7 +12,6 @@ import {
   FaLock,
   FaGraduationCap,
   FaArrowRight,
-  FaCheckCircle,
   FaShieldAlt,
 } from 'react-icons/fa';
 
@@ -63,7 +62,7 @@ export function ApplyForm() {
     <div className="max-w-xl mx-auto">
       <div className="bg-white dark:bg-[#16171d] rounded-3xl border border-slate-200 dark:border-[#2e303a] shadow-xl p-8 sm:p-10">
         <div className="text-center mb-8">
-          <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#84ba3f]/15 text-[#4c7a1f] dark:text-[#84ba3f] text-xs font-bold uppercase tracking-wider mb-2">
+          <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-brand-primary/10 text-brand-primary dark:bg-brand-secondary/15 dark:text-brand-secondary text-xs font-bold uppercase tracking-wider mb-2">
             <FaShieldAlt aria-hidden="true" />
             Quick Platform Onboarding
           </span>
@@ -79,7 +78,7 @@ export function ApplyForm() {
         {selectedCourseObj && (
           <div className="mb-6 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
             <div>
-              <span className="text-[10px] uppercase font-bold text-[#84ba3f] tracking-wider">
+              <span className="text-[10px] uppercase font-bold text-brand-primary dark:text-brand-secondary tracking-wider">
                 Interested Programme
               </span>
               <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
@@ -111,7 +110,7 @@ export function ApplyForm() {
                 value={form.fullName}
                 onChange={(e) => setForm({ ...form, fullName: e.target.value })}
                 placeholder="e.g. Lerato Ndlovu"
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#84ba3f]"
+                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary dark:focus:ring-brand-secondary"
               />
             </div>
             {errors.fullName && <p className="text-xs text-rose-500 mt-1">{errors.fullName}</p>}
@@ -128,7 +127,7 @@ export function ApplyForm() {
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 placeholder="you@example.com"
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#84ba3f]"
+                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary dark:focus:ring-brand-secondary"
               />
             </div>
             {errors.email && <p className="text-xs text-rose-500 mt-1">{errors.email}</p>}
@@ -145,7 +144,7 @@ export function ApplyForm() {
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
                 placeholder="+27 72 000 0000"
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#84ba3f]"
+                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary dark:focus:ring-brand-secondary"
               />
             </div>
             {errors.phone && <p className="text-xs text-rose-500 mt-1">{errors.phone}</p>}
@@ -162,7 +161,7 @@ export function ApplyForm() {
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
                 placeholder="Minimum 6 characters"
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#84ba3f]"
+                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary dark:focus:ring-brand-secondary"
               />
             </div>
             {errors.password && <p className="text-xs text-rose-500 mt-1">{errors.password}</p>}
@@ -178,7 +177,7 @@ export function ApplyForm() {
                 <select
                   value={form.courseSlug}
                   onChange={(e) => setForm({ ...form, courseSlug: e.target.value })}
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#84ba3f]"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary dark:focus:ring-brand-secondary"
                 >
                   <option value="">— Select if you have a specific course in mind —</option>
                   {detailedCourses.map((c) => (
@@ -195,7 +194,7 @@ export function ApplyForm() {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full py-3.5 rounded-2xl font-bold text-sm bg-[#84ba3f] text-white hover:bg-[#6ea032] transition-colors shadow-lg flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full py-3.5 rounded-2xl font-bold text-sm bg-brand-primary text-white hover:bg-brand-primary-light transition-colors shadow-lg flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {submitting ? (
                 'Creating Account & Entering Portal…'
@@ -210,7 +209,7 @@ export function ApplyForm() {
 
           <div className="text-center pt-2 text-xs text-slate-500">
             Already have an account?{' '}
-            <Link href="/login" className="text-[#84ba3f] font-bold hover:underline">
+            <Link href="/login" className="text-brand-primary font-bold hover:underline dark:text-brand-secondary">
               Student Portal Sign In
             </Link>
           </div>

@@ -10,8 +10,6 @@ import {
   FaHome, 
   FaBook, 
   FaInfoCircle, 
-  FaNewspaper, 
-  FaQuestionCircle,
   FaUser,
   FaCog,
   FaSignOutAlt,
@@ -52,10 +50,8 @@ export function LearnHeader() {
 
   const guestNavLinks = [
     { href: '/learn', label: 'Home', icon: FaHome },
-    { href: '/courses', label: 'Courses', icon: FaBook },
-    { href: '/about', label: 'About', icon: FaInfoCircle },
-    { href: '/posts', label: 'Blogs', icon: FaNewspaper },
-    { href: '/contact', label: 'Support', icon: FaQuestionCircle },
+    { href: '/learn/courses', label: 'Courses', icon: FaBook },
+    { href: '/learn/about', label: 'About', icon: FaInfoCircle },
   ];
 
   const navLinks = (isLearner && isDashboardView) ? dashboardNavLinks : guestNavLinks;
@@ -114,6 +110,15 @@ export function LearnHeader() {
 
           {/* Right side: Auth-aware CTAs */}
           <div className="flex items-center gap-3">
+            <Link
+              href="/"
+              title="Back to public home"
+              aria-label="Back to public home"
+              className="inline-flex items-center gap-1.5 rounded-md px-2 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#84ba3f] dark:text-slate-300 dark:hover:bg-slate-800"
+            >
+              <FaHome aria-hidden="true" />
+              <span className="hidden sm:inline">Public home</span>
+            </Link>
             {user && isLearner ? (
               // Logged-in learner - Enhanced profile with dropdown
               <>

@@ -4,6 +4,7 @@ import { Container } from '@/components/ui/container';
 import { SectionTitle } from '@/components/ui/section-title';
 import { accreditationServices } from '@/data/accreditationServices';
 import { AwardLogoStrip } from '@/components/common/award-logo-strip';
+import { PublicPageHero } from '@/components/common/public-page-hero';
 import { FaArrowRight, FaCheckCircle, FaFileDownload } from 'react-icons/fa';
 
 export const metadata: Metadata = {
@@ -15,22 +16,11 @@ export const metadata: Metadata = {
 export default function AccreditationServicesPage() {
   return (
     <>
-      {/* Hero */}
-      <section className="bg-[#03367A] text-white py-16">
-        <Container>
-          <span className="inline-block mb-4 px-4 py-1.5 rounded-full bg-white/10 text-[#84ba3f] text-sm font-semibold tracking-wide uppercase">
-            Beyond Training
-          </span>
-          <h1 className="text-4xl md:text-5xl font-bold leading-tight max-w-2xl">
-            Accreditation Services
-          </h1>
-          <p className="mt-5 text-lg text-white/80 max-w-2xl leading-relaxed">
-            Ndzalama is a SAQA-accredited training provider ourselves, and we help other
-            organisations achieve the same recognition — from provider accreditation to
-            TVET college and SETA registration.
-          </p>
-        </Container>
-      </section>
+      <PublicPageHero
+        eyebrow="Beyond Training"
+        title="Accreditation Services"
+        description="Ndzalama is a SAQA-accredited training provider ourselves, and we help other organisations achieve the same recognition — from provider accreditation to TVET college and SETA registration."
+      />
 
       {/* Services */}
       <section className="py-16">
@@ -66,7 +56,7 @@ export default function AccreditationServicesPage() {
           <div className="rounded-3xl bg-white dark:bg-[#171b22] p-8 shadow-sm flex flex-col md:flex-row items-start md:items-center gap-6 justify-between">
             <div>
               <h3 className="text-2xl font-bold text-[#333] dark:text-white flex items-center gap-2">
-                <FaCheckCircle className="text-[#84ba3f]" aria-hidden="true" />
+                <FaCheckCircle className="text-brand-primary dark:text-brand-secondary" aria-hidden="true" />
                 Our own accreditation
               </h3>
               <p className="mt-3 text-[#4a4f57] dark:text-gray-300 max-w-xl">
@@ -77,7 +67,7 @@ export default function AccreditationServicesPage() {
             </div>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 shrink-0 rounded-full bg-[#84ba3f] px-6 py-3 font-semibold text-white transition-colors hover:bg-[#6ea032]"
+              className="inline-flex shrink-0 items-center gap-2 rounded-full bg-brand-primary px-6 py-3 font-semibold text-white transition-colors hover:bg-brand-primary-light"
             >
               <FaFileDownload aria-hidden="true" />
               Request proof of accreditation
@@ -95,7 +85,7 @@ export default function AccreditationServicesPage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-[#006600] text-white py-16">
+      <section className="bg-brand-primary py-16 text-white dark:bg-[#0e2411]">
         <Container className="max-w-3xl text-center">
           <h3 className="text-3xl font-bold">Ready to get accredited?</h3>
           <p className="mt-4 text-white/85">
@@ -105,14 +95,14 @@ export default function AccreditationServicesPage() {
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 font-semibold text-[#006600] transition-colors hover:bg-[#eef6df]"
+              className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 font-semibold text-brand-primary transition-colors hover:bg-[#edf5ec]"
             >
               Contact us
               <FaArrowRight aria-hidden="true" />
             </Link>
             <Link
               href="/register"
-              className="inline-flex items-center rounded-full border border-white/40 px-6 py-3 font-semibold text-white transition-colors hover:bg-white/10"
+              className="inline-flex items-center rounded-full bg-[#4b5157] hover:bg-[#383d42] border border-white/30 hover:border-white px-6 py-3 font-semibold text-white transition-colors"
             >
               Book training instead
             </Link>

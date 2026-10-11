@@ -66,7 +66,7 @@ export default function LearnCoursesPage() {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#0a0a0a]">
       {/* Header Section */}
-      <section className="bg-gradient-to-r from-[#006600] to-[#03367A] text-white py-16">
+      <section className="bg-linear-to-r from-[#006600] to-[#03367A] text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto">
             <span className="inline-block mb-3 px-4 py-1.5 rounded-full bg-[#84ba3f]/20 text-[#84ba3f] text-sm font-semibold tracking-wide uppercase">
@@ -114,7 +114,7 @@ export default function LearnCoursesPage() {
                 className="bg-white dark:bg-[#16171d] rounded-2xl border border-slate-200 dark:border-[#2e303a] overflow-hidden hover:shadow-xl transition-shadow"
               >
                 {/* Card Header */}
-                <div className="bg-gradient-to-br from-[#006600] to-[#03367A] text-white p-6">
+                <div className="bg-linear-to-br from-[#006600] to-[#03367A] text-white p-6">
                   <div className="flex items-start justify-between mb-3">
                     <span className="px-3 py-1 rounded-full bg-white/20 text-xs font-bold uppercase tracking-wide">
                       {course.category}
@@ -226,16 +226,16 @@ export default function LearnCoursesPage() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/contact"
+              href="mailto:headoffice@ndzalama.org.za"
               className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-base bg-[#84ba3f] text-white hover:bg-[#6ea032] transition-colors shadow-md"
             >
               Contact Us
             </Link>
             <Link
-              href="/qualifications"
+              href="/learn"
               className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-base border-2 border-slate-300 dark:border-[#2e303a] text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#0a0a0a] transition-colors"
             >
-              View All Qualifications
+              LMS Home
             </Link>
           </div>
         </div>

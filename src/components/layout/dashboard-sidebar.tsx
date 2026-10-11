@@ -4,11 +4,12 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import { cn } from '@/lib/utils';
+import { AdminNavigation } from '@/components/layout/admin-navigation';
 import {
   FaTachometerAlt, FaUserGraduate, FaBook, FaClipboardList, FaCalendarAlt,
   FaShieldAlt, FaFileExport, FaTasks, FaCheckDouble, FaChalkboardTeacher,
-  FaCertificate, FaFileUpload, FaHome, FaCog, FaGraduationCap, FaFileSignature,
-  FaChartLine, FaComments, FaChartPie, FaQuestionCircle, FaReceipt,
+  FaCertificate, FaFileUpload, FaHome, FaGraduationCap,
+  FaQuestionCircle, FaReceipt,
   FaIdCard, FaSignOutAlt
 } from 'react-icons/fa';
 
@@ -90,32 +91,20 @@ const roleNavigations: Record<string, { title: string; subtitle: string; items: 
     title: 'LMIS Operations',
     subtitle: 'Registrar & Admin',
     items: [
-      { label: 'Dashboard Hub', href: '/dashboard/admin?tab=overview', icon: <FaTachometerAlt aria-hidden="true" /> },
-      { label: 'Programs & Quals', href: '/dashboard/admin?tab=programs', icon: <FaGraduationCap aria-hidden="true" /> },
-      { label: 'Courses & Lessons', href: '/dashboard/admin?tab=courses', icon: <FaBook aria-hidden="true" /> },
-      { label: 'Manage Staff', href: '/dashboard/admin?tab=staff', icon: <FaChalkboardTeacher aria-hidden="true" /> },
-      { label: 'Manage Applications', href: '/dashboard/admin?tab=applications', icon: <FaFileSignature aria-hidden="true" /> },
-      { label: 'Assessments & Quizzes', href: '/dashboard/admin?tab=quizzes', icon: <FaTasks aria-hidden="true" /> },
-      { label: 'Learner Progress', href: '/dashboard/admin?tab=progress', icon: <FaChartLine aria-hidden="true" /> },
-      { label: 'Communication', href: '/dashboard/admin?tab=communication', icon: <FaComments aria-hidden="true" /> },
-      { label: 'Reports & Analytics', href: '/dashboard/admin?tab=reports', icon: <FaChartPie aria-hidden="true" /> },
-      { label: 'System Settings', href: '/dashboard/admin?tab=settings', icon: <FaCog aria-hidden="true" /> },
+      { label: 'Dashboard Hub', href: '/admin', icon: <FaTachometerAlt aria-hidden="true" /> },
+      { label: 'Curriculum Builder', href: '/admin/programmes', icon: <FaGraduationCap aria-hidden="true" /> },
+      { label: 'Courses & Lessons', href: '/admin/courses', icon: <FaBook aria-hidden="true" /> },
+      { label: 'Learner Records', href: '/admin/learners', icon: <FaUserGraduate aria-hidden="true" /> },
     ],
   },
   super_admin: {
     title: 'Executive Portal',
     subtitle: 'Director Governance',
     items: [
-      { label: 'Executive Dashboard', href: '/dashboard/admin?tab=overview', icon: <FaTachometerAlt aria-hidden="true" /> },
-      { label: 'Programs & Quals', href: '/dashboard/admin?tab=programs', icon: <FaGraduationCap aria-hidden="true" /> },
-      { label: 'Courses & Lessons', href: '/dashboard/admin?tab=courses', icon: <FaBook aria-hidden="true" /> },
-      { label: 'Manage Staff', href: '/dashboard/admin?tab=staff', icon: <FaChalkboardTeacher aria-hidden="true" /> },
-      { label: 'Manage Applications', href: '/dashboard/admin?tab=applications', icon: <FaFileSignature aria-hidden="true" /> },
-      { label: 'Assessments & Quizzes', href: '/dashboard/admin?tab=quizzes', icon: <FaTasks aria-hidden="true" /> },
-      { label: 'Learner Progress', href: '/dashboard/admin?tab=progress', icon: <FaChartLine aria-hidden="true" /> },
-      { label: 'Communication', href: '/dashboard/admin?tab=communication', icon: <FaComments aria-hidden="true" /> },
-      { label: 'Reports & Analytics', href: '/dashboard/admin?tab=reports', icon: <FaChartPie aria-hidden="true" /> },
-      { label: 'System Settings', href: '/dashboard/admin?tab=settings', icon: <FaCog aria-hidden="true" /> },
+      { label: 'Executive Dashboard', href: '/admin', icon: <FaTachometerAlt aria-hidden="true" /> },
+      { label: 'Curriculum Builder', href: '/admin/programmes', icon: <FaGraduationCap aria-hidden="true" /> },
+      { label: 'Courses & Lessons', href: '/admin/courses', icon: <FaBook aria-hidden="true" /> },
+      { label: 'Learner Records', href: '/admin/learners', icon: <FaUserGraduate aria-hidden="true" /> },
     ],
   },
 };
@@ -137,13 +126,14 @@ export function DashboardSidebar() {
   // Map Prisma's UPPERCASE roles to our lowercase navigation keys
   const currentRole = (user?.role || 'visitor').toLowerCase(); 
   const config = roleNavigations[currentRole] || roleNavigations.admin;
+  const isAdminWorkspace = !['visitor', 'learner', 'facilitator', 'assessor', 'moderator', 'sme_mentor'].includes(currentRole);
   const initials = getInitials(user?.name);
 
   return (
     <aside className="fixed inset-y-0 left-0 z-30 w-72 bg-[#03367A] text-white shadow-2xl hidden lg:flex flex-col">
       {/* Brand Header */}
       <div className="flex items-center gap-3 border-b border-white/10 px-6 py-5">
-        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-[#84ba3f] to-[#006600] text-lg font-extrabold text-white shadow-md">
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-linear-to-br from-[#84ba3f] to-[#006600] text-lg font-extrabold text-white shadow-md">
           N
         </div>
         <div>
@@ -168,41 +158,47 @@ export function DashboardSidebar() {
       </div>
 
       {/* Nav List */}
-      <nav className="flex-1 space-y-1 px-3 py-4 overflow-y-auto" aria-label="Dashboard navigation">
-        {config.items.map((item) => {
-          // usePathname doesn't include query params (?tab=...), so we split the href to match the base path
-          const isActive = pathname === item.href.split('?')[0]; 
-          return (
-            <Link
-              key={item.label}
-              href={item.href}
-              className={cn(
-                'flex items-center gap-3 rounded-xl px-4 py-3 text-xs font-bold transition-all',
-                isActive
-                  ? 'bg-white/15 text-white shadow-inner ring-1 ring-white/20'
-                  : 'text-sky-100/80 hover:bg-white/5 hover:text-white'
-              )}
-            >
-              <span className="text-sm shrink-0 text-[#84ba3f]">{item.icon}</span>
-              <span className="truncate">{item.label}</span>
-            </Link>
-          );
-        })}
-      </nav>
+      <div className="min-h-0 flex-1 overflow-y-auto px-3 py-4">
+        {isAdminWorkspace ? (
+          <AdminNavigation variant="sidebar" />
+        ) : (
+          <nav aria-label="Dashboard navigation">
+            <ul className="space-y-1">
+              {config.items.map((item) => {
+                const routePath = item.href.split('?')[0];
+                const isActive = pathname === routePath || (routePath !== '/admin' && pathname.startsWith(`${routePath}/`));
+                return (
+                  <li key={item.label}>
+                    <Link
+                      href={item.href}
+                      className={cn(
+                        'flex items-center gap-3 rounded-xl px-4 py-3 text-xs font-bold transition-all',
+                        isActive
+                          ? 'bg-white/15 text-white shadow-inner ring-1 ring-white/20'
+                          : 'text-sky-100/80 hover:bg-white/5 hover:text-white'
+                      )}
+                    >
+                      <span className="shrink-0 text-sm text-[#84ba3f]">{item.icon}</span>
+                      <span className="truncate">{item.label}</span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+        )}
+      </div>
 
       {/* System Status & Logout Footer */}
       <div className="m-4 space-y-3">
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm text-xs">
+        <div className="rounded-md border border-white/10 bg-white/5 p-4 text-xs">
           <div className="flex items-center justify-between">
             <span className="text-sky-200/80">Accreditation</span>
             <span className="font-mono font-bold text-[#84ba3f]">ETDP0204</span>
           </div>
           <div className="mt-2 flex items-center justify-between">
-            <span className="text-sky-200/80">System Mode</span>
-            <span className="inline-flex items-center gap-1.5 font-bold text-emerald-300">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              Live Neon DB
-            </span>
+            <span className="text-sky-200/80">Workspace</span>
+            <span className="font-semibold text-white">Operations</span>
           </div>
         </div>
         
