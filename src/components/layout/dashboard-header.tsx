@@ -3,14 +3,8 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { FaBars, FaBook, FaGraduationCap, FaHome, FaTimes, FaUserGraduate } from 'react-icons/fa';
-
-const adminNavigation = [
-  { label: 'Dashboard', href: '/admin', icon: FaHome },
-  { label: 'Curriculum Builder', href: '/admin/programmes', icon: FaGraduationCap },
-  { label: 'Courses & Lessons', href: '/admin/courses', icon: FaBook },
-  { label: 'Learner Records', href: '/admin/learners', icon: FaUserGraduate },
-];
+import { FaBars, FaHome, FaTimes } from 'react-icons/fa';
+import { AdminNavigation } from '@/components/layout/admin-navigation';
 
 function getInitials(name?: string | null) {
   if (!name) return 'U';
@@ -23,9 +17,6 @@ export function DashboardHeader() {
   const user = session?.user;
   const role = user?.role || 'GUEST';
   const isAdminWorkspace = ['SUPER_ADMIN', 'ADMIN', 'REGISTRAR', 'FINANCE_OFFICER'].includes(role);
-  const navigation = role === 'FINANCE_OFFICER'
-    ? adminNavigation.filter((item) => item.href !== '/admin/programmes')
-    : adminNavigation;
   const initials = getInitials(user?.name);
 
   return (
@@ -85,16 +76,12 @@ export function DashboardHeader() {
         </div>
       </div>
       {menuOpen && isAdminWorkspace && (
-        <nav aria-label="Mobile admin navigation" className="absolute inset-x-0 top-full border-b border-slate-200 bg-white p-2 shadow-lg dark:border-[#2e303a] dark:bg-[#16171d] lg:hidden">
-          {navigation.map(({ label, href, icon: Icon }) => (
-            <Link key={href} href={href} onClick={() => setMenuOpen(false)} className="flex items-center gap-3 rounded-md px-3 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#84ba3f] dark:text-slate-200 dark:hover:bg-[#0a0a0a]">
-              <Icon className="text-[#006600] dark:text-[#84ba3f]" aria-hidden="true" />{label}
-            </Link>
-          ))}
-          <Link href="/" onClick={() => setMenuOpen(false)} className="mt-1 flex items-center gap-3 border-t border-slate-200 px-3 py-3 text-sm font-semibold text-slate-500 dark:border-[#2e303a] dark:text-slate-400">
+        <div className="absolute inset-x-0 top-full max-h-[calc(100dvh-5rem)] overflow-y-auto border-b border-slate-200 bg-white p-3 shadow-lg dark:border-[#2e303a] dark:bg-[#16171d] lg:hidden">
+          <AdminNavigation variant="mobile" onNavigate={() => setMenuOpen(false)} />
+          <Link href="/" onClick={() => setMenuOpen(false)} className="mt-3 flex items-center gap-3 border-t border-slate-200 px-3 py-3 text-sm font-semibold text-slate-500 dark:border-[#2e303a] dark:text-slate-400">
             <FaHome aria-hidden="true" />Back to public home
           </Link>
-        </nav>
+        </div>
       )}
     </header>
   );

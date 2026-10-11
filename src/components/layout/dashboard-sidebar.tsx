@@ -4,11 +4,12 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import { cn } from '@/lib/utils';
+import { AdminNavigation } from '@/components/layout/admin-navigation';
 import {
   FaTachometerAlt, FaUserGraduate, FaBook, FaClipboardList, FaCalendarAlt,
   FaShieldAlt, FaFileExport, FaTasks, FaCheckDouble, FaChalkboardTeacher,
-  FaCertificate, FaFileUpload, FaHome, FaCog, FaGraduationCap, FaFileSignature,
-  FaChartLine, FaComments, FaChartPie, FaQuestionCircle, FaReceipt,
+  FaCertificate, FaFileUpload, FaHome, FaGraduationCap,
+  FaQuestionCircle, FaReceipt,
   FaIdCard, FaSignOutAlt
 } from 'react-icons/fa';
 
@@ -125,6 +126,7 @@ export function DashboardSidebar() {
   // Map Prisma's UPPERCASE roles to our lowercase navigation keys
   const currentRole = (user?.role || 'visitor').toLowerCase(); 
   const config = roleNavigations[currentRole] || roleNavigations.admin;
+  const isAdminWorkspace = !['visitor', 'learner', 'facilitator', 'assessor', 'moderator', 'sme_mentor'].includes(currentRole);
   const initials = getInitials(user?.name);
 
   return (
@@ -156,41 +158,47 @@ export function DashboardSidebar() {
       </div>
 
       {/* Nav List */}
-      <nav className="flex-1 space-y-1 px-3 py-4 overflow-y-auto" aria-label="Dashboard navigation">
-        {config.items.map((item) => {
-          const routePath = item.href.split('?')[0];
-          const isActive = pathname === routePath || (routePath !== '/admin' && pathname.startsWith(`${routePath}/`));
-          return (
-            <Link
-              key={item.label}
-              href={item.href}
-              className={cn(
-                'flex items-center gap-3 rounded-xl px-4 py-3 text-xs font-bold transition-all',
-                isActive
-                  ? 'bg-white/15 text-white shadow-inner ring-1 ring-white/20'
-                  : 'text-sky-100/80 hover:bg-white/5 hover:text-white'
-              )}
-            >
-              <span className="text-sm shrink-0 text-[#84ba3f]">{item.icon}</span>
-              <span className="truncate">{item.label}</span>
-            </Link>
-          );
-        })}
-      </nav>
+      <div className="min-h-0 flex-1 overflow-y-auto px-3 py-4">
+        {isAdminWorkspace ? (
+          <AdminNavigation variant="sidebar" />
+        ) : (
+          <nav aria-label="Dashboard navigation">
+            <ul className="space-y-1">
+              {config.items.map((item) => {
+                const routePath = item.href.split('?')[0];
+                const isActive = pathname === routePath || (routePath !== '/admin' && pathname.startsWith(`${routePath}/`));
+                return (
+                  <li key={item.label}>
+                    <Link
+                      href={item.href}
+                      className={cn(
+                        'flex items-center gap-3 rounded-xl px-4 py-3 text-xs font-bold transition-all',
+                        isActive
+                          ? 'bg-white/15 text-white shadow-inner ring-1 ring-white/20'
+                          : 'text-sky-100/80 hover:bg-white/5 hover:text-white'
+                      )}
+                    >
+                      <span className="shrink-0 text-sm text-[#84ba3f]">{item.icon}</span>
+                      <span className="truncate">{item.label}</span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+        )}
+      </div>
 
       {/* System Status & Logout Footer */}
       <div className="m-4 space-y-3">
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm text-xs">
+        <div className="rounded-md border border-white/10 bg-white/5 p-4 text-xs">
           <div className="flex items-center justify-between">
             <span className="text-sky-200/80">Accreditation</span>
             <span className="font-mono font-bold text-[#84ba3f]">ETDP0204</span>
           </div>
           <div className="mt-2 flex items-center justify-between">
-            <span className="text-sky-200/80">System Mode</span>
-            <span className="inline-flex items-center gap-1.5 font-bold text-emerald-300">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              Live Neon DB
-            </span>
+            <span className="text-sky-200/80">Workspace</span>
+            <span className="font-semibold text-white">Operations</span>
           </div>
         </div>
         
