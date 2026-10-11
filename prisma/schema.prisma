@@ -1,0 +1,821 @@
+// ============================================================================
+// NDZALAMA TRAINING — ENTERPRISE PRISMA SCHEMA SPECIFICATION
+// Compatible with PostgreSQL & Next.js 16 App Router
+// ============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL_UNPOOLED")
+}
+
+// ----------------------------------------------------------------------------
+// ENUMS
+// ----------------------------------------------------------------------------
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  REGISTRAR
+  FINANCE_OFFICER
+  FACILITATOR
+  ASSESSOR
+  MODERATOR
+  SME_MENTOR
+  HOST_EMPLOYER
+  LEARNER
+  PROSPECTIVE_LEARNER
+}
+
+enum EquityGroup {
+  AFRICAN
+  COLOURED
+  INDIAN
+  WHITE
+  OTHER
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  PREFER_NOT_TO_SAY
+}
+
+enum CitizenStatus {
+  SA_CITIZEN
+  PERMANENT_RESIDENT
+  FOREIGN_NATIONAL_WITH_PERMIT
+  OTHER
+}
+
+enum SocioEconomicStatus {
+  EMPLOYED
+  UNEMPLOYED
+  SELF_EMPLOYED
+  STUDENT_SCHOLAR
+}
+
+enum DisabilityType {
+  NONE
+  SIGHT
+  HEARING
+  PHYSICAL
+  INTELLECTUAL
+  COMMUNICATION
+  EMOTIONAL
+  MULTIPLE
+}
+
+enum QualificationFramework {
+  LEGACY_UNIT_STANDARD // Legacy ETDP SETA
+  QCTO_OCCUPATIONAL_CERTIFICATE // Modern QCTO
+  SKILLS_PROGRAMME
+  SHORT_COURSE
+  REGULATORY_EXAM_PREP
+}
+
+enum ModuleCategory {
+  UNIT_STANDARD
+  KNOWLEDGE_MODULE // KM
+  PRACTICAL_MODULE // PM
+  WORKPLACE_MODULE // WM
+  GENERAL_TOPIC
+}
+
+enum DeliveryMode {
+  CONTACT_CLASSROOM
+  DISTANCE_ONLINE
+  BLENDED_HYBRID
+  WORKPLACE_BASED
+}
+
+enum ProgrammeDeliveryMode {
+  FULL_TIME
+  PART_TIME
+  DISTANCE
+  BLENDED
+}
+
+enum DurationUnit {
+  WEEKS
+  MONTHS
+  YEARS
+}
+
+enum ApplicationStatus {
+  SUBMITTED
+  UNDER_REVIEW
+  DOCUMENTS_VERIFIED
+  INVOICED
+  PAYMENT_CONFIRMED
+  ACCEPTED_ENROLLED
+  REJECTED
+  WAITLISTED
+}
+
+enum EnrollmentStatus {
+  ENROLLED
+  IN_TRAINING
+  POE_SUBMITTED
+  ASSESSMENT_IN_PROGRESS
+  MODERATION_IN_PROGRESS
+  COMPETENT_CERTIFIED
+  NOT_YET_COMPETENT
+  WITHDRAWN
+  DEFERRED
+}
+
+enum AssessmentOutcome {
+  PENDING_SUBMISSION
+  SUBMITTED
+  UNDER_ASSESSMENT
+  COMPETENT
+  NOT_YET_COMPETENT
+  REMEDIATION_REQUIRED
+  MODERATED_CONFIRMED
+}
+
+enum ModerationDecision {
+  UPHELD // Assessor decision confirmed
+  OVERTURNED // Decision modified
+  SAMPLE_EXPANSION_REQUIRED
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum PostCategory {
+  ANNOUNCEMENT
+  SETA_REGULATORY_UPDATE
+  COURSE_INTAKE
+  INDUSTRY_NEWS
+  SUCCESS_STORY
+  TRAINING_TIP
+}
+
+enum QualificationStatus {
+  DEVELOPMENT
+  ACTIVE
+  ARCHIVED
+}
+
+enum ModuleType {
+  KNOWLEDGE
+  PRACTICAL
+  WORK_EXPERIENCE
+}
+
+enum ResourceKind {
+  PDF
+  VIDEO
+  SLIDES
+  AUDIO
+  LINK
+}
+
+enum AssessmentKind {
+  FORMATIVE
+  SUMMATIVE
+  FISA
+}
+
+// ----------------------------------------------------------------------------
+// 1. IDENTITY, AUTHENTICATION & PROFILES
+// ----------------------------------------------------------------------------
+
+model User {
+  id            String       @id @default(cuid())
+  
+  // Auth Emails
+  email         String    @unique              // Personal email (e.g., gmail - used for registration)
+  orgEmail      String?   @unique              // Org email (e.g., 202600123@ndzalama.org.za)
+  emailVerified DateTime?
+  
+  passwordHash  String?
+  role          UserRole     @default(LEARNER)
+  isActive      Boolean      @default(true)
+  avatarUrl     String?
+
+  profile       Profile?
+  accounts      Account[]
+  sessions      Session[]
+  
+  // Relations by Operational Role
+  postsCreated          Post[]               @relation("AuthorPosts")
+  applications          Application[]        @relation("LearnerApplications")
+  enrollments           Enrollment[]         @relation("LearnerEnrollments")
+  assignedCohorts       CohortFacilitator[]  @relation("FacilitatorCohorts")
+  assessorSubmissions   AssessmentReview[]   @relation("AssessorReviews")
+  moderatorSubmissions  ModerationReview[]   @relation("ModeratorReviews")
+  mentorPlacements      WorkplacePlacement[] @relation("MentorPlacements")
+  issuedCertificates    Certificate[]        @relation("LearnerCertificates")
+  auditLogs             AuditLog[]
+
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@index([email, role])
+}
+
+model Profile {
+  id                   String              @id @default(cuid())
+  userId               String              @unique
+  user                 User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Business Identity
+  studentNumber    String?  @unique            // e.g., "202600123"
+  
+  // Statutory Identity (POPIA & NLRD)
+  idNumber         String?  @unique            // SA ID or Passport Number
+ 
+  // Primary Demographics (South African NLRD / SETA Spec)
+  firstName            String
+  lastName             String
+  idOrPassportNumber   String              @unique
+  isPassport           Boolean             @default(false)
+  passportCountry      String?
+  dateOfBirth          DateTime
+  gender               Gender
+  equity               EquityGroup
+  citizenStatus        CitizenStatus       @default(SA_CITIZEN)
+  homeLanguage         String              @default("English")
+  socioEconomicStatus  SocioEconomicStatus @default(EMPLOYED)
+  disability           DisabilityType      @default(NONE)
+  
+  // Contact & Location
+  phone                String
+  alternativePhone     String?
+  streetAddress        String
+  suburbCity           String
+  province             String
+  postalCode           String
+  municipality         String?
+  isUrban              Boolean             @default(true)
+
+  // Professional / Accreditation Specifics
+  highestQualification String?
+  setaAssessorRegNo    String?             // For registered Assessors
+  setaModeratorRegNo   String?             // For registered Moderators
+  employerName         String?
+  employerSdlNumber    String?             // Skills Development Levy number
+
+  // Compliance
+  popiaConsentSigned   Boolean             @default(false)
+  popiaConsentDate     DateTime?
+
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ----------------------------------------------------------------------------
+// 2. DYNAMIC CONTENT & PUBLIC PORTAL ENGINE
+// ----------------------------------------------------------------------------
+
+model Post {
+  id            String        @id @default(cuid())
+  title         String
+  slug          String        @unique
+  summary       String        @db.Text
+  content       String        @db.Text // Markdown or HTML
+  coverImage    String?
+  category      PostCategory  @default(ANNOUNCEMENT)
+  status        PostStatus    @default(DRAFT)
+  isFeatured    Boolean       @default(false)
+  tags          String[]      // e.g. ["QCTO", "ODETDP", "Workshop"]
+
+  authorId      String
+  author        User          @relation("AuthorPosts", fields: [authorId], references: [id])
+
+  publishedAt   DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([slug, category, status])
+}
+
+model NewsletterSubscriber {
+  id            String        @id @default(cuid())
+  email         String        @unique
+  isActive      Boolean       @default(true)
+  subscribedAt  DateTime      @default(now())
+}
+
+model ContactInquiry {
+  id            String        @id @default(cuid())
+  fullName      String
+  email         String
+  phone         String?
+  subject       String
+  message       String        @db.Text
+  isResolved    Boolean       @default(false)
+  createdAt     DateTime      @default(now())
+}
+
+// ----------------------------------------------------------------------------
+// 3. ACADEMIC CURRICULUM & COURSE CATALOGUE
+// ----------------------------------------------------------------------------
+
+model Qualification {
+  id                String                 @id @default(cuid())
+  code              String                 @unique // e.g. "50334", "101321"
+  saqaId            String?                @unique
+  qctoCode          String?
+  title             String
+  slug              String                 @unique
+  framework         QualificationFramework @default(LEGACY_UNIT_STANDARD)
+  accreditation     String?
+  nqfLevel          Int                    @default(5)
+  credits           Int
+  durationMonths    Int                    @default(12)
+  durationValue     Int                    @default(12)
+  durationUnit      DurationUnit            @default(MONTHS)
+  deliveryMode      ProgrammeDeliveryMode   @default(PART_TIME)
+  shortDescription  String                 @db.Text
+  fullDescription   String                 @db.Text
+  entryRequirements String[]                @default([])
+  targetAudience    String[]                @default([])
+  benefits          String[]                @default([])
+  price             Decimal                @db.Decimal(10, 2)
+  coverImageUrl     String?
+  isActive          Boolean                @default(true)
+  status            QualificationStatus   @default(DEVELOPMENT)
+  
+  // Breakdown
+  modules           CourseModule[]
+  resources         ProgrammeResource[]
+  cohorts           Cohort[]
+  applications      Application[]
+  enrollments       Enrollment[]
+
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
+
+  @@index([slug, framework])
+}
+
+model CourseModule {
+  id                String          @id @default(cuid())
+  qualificationId   String
+  qualification     Qualification   @relation(fields: [qualificationId], references: [id], onDelete: Cascade)
+  
+  moduleCode        String          // e.g. "KM-01", "US-117871"
+  code              String?         @unique
+  title             String
+  category          ModuleCategory  @default(UNIT_STANDARD)
+  unitStandardId    String?         // SAQA Unit Standard ID if applicable
+  credits           Int
+  durationDays      Int?
+  individualPrice   Decimal?        @db.Decimal(10, 2)
+  summary           String?         @db.Text
+  orderIndex        Int             @default(0)
+  type              ModuleType      @default(KNOWLEDGE)
+  notionalHours     Int             @default(0)
+
+  topics            Topic[]
+  lessons           Lesson[]
+  assessmentTasks   AssessmentTask[]
+  tests             CurriculumTest[]
+  assignments       CurriculumAssignment[]
+  resources         ProgrammeResource[]
+
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@unique([qualificationId, moduleCode])
+}
+
+model Lesson {
+  id                String          @id @default(cuid())
+  moduleId          String
+  module            CourseModule    @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  topicId           String?
+  topic             Topic?          @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  title             String
+  slug              String
+  orderIndex        Int             @default(0)
+  durationMinutes   Int             @default(0)
+  contentBody       String?         @db.Text
+  resourceUrls      String[]        // PDF links, slides, handouts
+  videoEmbedUrl     String?
+
+  resources         LessonResource[]
+  programmeResources ProgrammeResource[]
+  tests             CurriculumTest[]
+  assignments       CurriculumAssignment[]
+  progressRecords   LessonProgress[]
+
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+}
+
+model Topic {
+  id          String       @id @default(cuid())
+  title       String
+  order       Int          @default(0)
+  moduleId    String
+  module      CourseModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  lessons     Lesson[]
+  resources   ProgrammeResource[]
+  tests       CurriculumTest[]
+  assignments CurriculumAssignment[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@unique([moduleId, title])
+  @@index([moduleId, order])
+}
+
+model LessonResource {
+  id        String       @id @default(cuid())
+  kind      ResourceKind
+  url       String
+  label     String
+  lessonId  String
+  lesson    Lesson       @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@index([lessonId])
+}
+
+model ProgrammeResource {
+  id              String        @id @default(cuid())
+  kind            ResourceKind
+  url             String
+  label           String
+  qualificationId String?
+  qualification   Qualification? @relation(fields: [qualificationId], references: [id], onDelete: Cascade)
+  moduleId        String?
+  module          CourseModule?  @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  topicId         String?
+  topic           Topic?         @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  lessonId        String?
+  lesson          Lesson?        @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@index([qualificationId])
+  @@index([moduleId])
+  @@index([topicId])
+  @@index([lessonId])
+}
+
+// ----------------------------------------------------------------------------
+// 4. COHORTS, INTAKES & VENUE LOGISTICS
+// ----------------------------------------------------------------------------
+
+model CampusVenue {
+  id            String        @id @default(cuid())
+  name          String        // e.g. "Polokwane Head Office", "Gauteng - Kempton Park", "Tzaneen", "Virtual Campus"
+  address       String
+  contactPerson String?
+  contactPhone  String?
+  isVirtual     Boolean       @default(false)
+  virtualLink   String?       // Zoom/Teams permanent URL
+
+  cohorts       Cohort[]
+}
+
+model Cohort {
+  id                String              @id @default(cuid())
+  code              String              @unique // e.g. "ODETDP-2026-Q1-PLK"
+  name              String
+  qualificationId   String
+  qualification     Qualification       @relation(fields: [qualificationId], references: [id])
+  venueId           String
+  venue             CampusVenue         @relation(fields: [venueId], references: [id])
+  
+  startDate         DateTime
+  endDate           DateTime
+  deliveryMode      DeliveryMode        @default(BLENDED_HYBRID)
+  capacity          Int                 @default(25)
+  isEnrollmentOpen  Boolean             @default(true)
+
+  facilitators      CohortFacilitator[]
+  enrollments       Enrollment[]
+  attendanceRecords AttendanceRecord[]
+
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+}
+
+model CohortFacilitator {
+  id            String        @id @default(cuid())
+  cohortId      String
+  cohort        Cohort        @relation(fields: [cohortId], references: [id], onDelete: Cascade)
+  facilitatorId String
+  facilitator   User          @relation("FacilitatorCohorts", fields: [facilitatorId], references: [id])
+  isLead        Boolean       @default(true)
+
+  @@unique([cohortId, facilitatorId])
+}
+
+// ----------------------------------------------------------------------------
+// 5. LMIS: APPLICATIONS, ENROLLMENTS & WORKPLACE HOST EMPLOYERS
+// ----------------------------------------------------------------------------
+
+model HostEmployer {
+  id                String               @id @default(cuid())
+  companyName       String
+  tradingName       String?
+  sdlNumber         String               @unique // Skills Development Levy
+  setaAffiliation   String               // e.g. "ETDP SETA", "W&RSETA", "SERVICES SETA"
+  contactPersonName String
+  contactEmail      String
+  contactPhone      String
+  physicalAddress   String
+  
+  placements        WorkplacePlacement[]
+  sponsoredLearners Enrollment[]
+
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+}
+
+model Application {
+  id                  String             @id @default(cuid())
+  applicationNumber   String             @unique // e.g. "NDZ-APP-2026-0042"
+  applicantId         String
+  applicant           User               @relation("LearnerApplications", fields: [applicantId], references: [id])
+  qualificationId     String
+  qualification       Qualification      @relation(fields: [qualificationId], references: [id])
+  
+  status              ApplicationStatus  @default(SUBMITTED)
+  preferredCampus     String?
+  fundingType         String             @default("Self-Funded") // "Self-Funded", "Corporate Sponsored", "SETA Grant"
+  notes               String?            @db.Text
+
+  // Uploaded Compliance Verification Files
+  idDocumentUrl       String?
+  matricCertificateUrl String?
+  cvUrl               String?
+  proofOfPaymentUrl   String?
+
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+}
+
+model Enrollment {
+  id                  String             @id @default(cuid())
+  enrollmentNumber    String             @unique // e.g. "NDZ-LRN-2026-0089"
+  learnerId           String
+  learner             User               @relation("LearnerEnrollments", fields: [learnerId], references: [id])
+  qualificationId     String
+  qualification       Qualification      @relation(fields: [qualificationId], references: [id])
+  cohortId            String?
+  cohort              Cohort?            @relation(fields: [cohortId], references: [id])
+  hostEmployerId      String?
+  hostEmployer        HostEmployer?      @relation(fields: [hostEmployerId], references: [id])
+
+  status              EnrollmentStatus   @default(ENROLLED)
+  startDate           DateTime           @default(now())
+  completionDate      DateTime?
+  finalResult         String?            // "COMPETENT", "NYC"
+
+  submissions         AssessmentSubmission[]
+  lessonProgress      LessonProgress[]
+  workplacePlacement  WorkplacePlacement?
+  certificates        Certificate[]
+
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  @@unique([learnerId, qualificationId])
+}
+
+model WorkplacePlacement {
+  id                String         @id @default(cuid())
+  enrollmentId      String         @unique
+  enrollment        Enrollment     @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  hostEmployerId    String
+  hostEmployer      HostEmployer   @relation(fields: [hostEmployerId], references: [id])
+  mentorId          String?
+  mentor            User?          @relation("MentorPlacements", fields: [mentorId], references: [id])
+  
+  startDate         DateTime
+  endDate           DateTime
+  mentorSignOff     Boolean        @default(false)
+  signOffDate       DateTime?
+
+  logbookEntries    LogbookEntry[]
+
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+}
+
+model LogbookEntry {
+  id            String             @id @default(cuid())
+  placementId   String
+  placement     WorkplacePlacement @relation(fields: [placementId], references: [id], onDelete: Cascade)
+  activityDate  DateTime
+  hoursSpent    Int
+  description   String             @db.Text
+  evidenceUrl   String?
+  isVerified    Boolean            @default(false)
+  verifiedAt    DateTime?
+}
+
+// ----------------------------------------------------------------------------
+// 6. LMS: ASSESSMENTS, PORTFOLIO OF EVIDENCE (PoE) & MODERATION
+// ----------------------------------------------------------------------------
+
+model AssessmentTask {
+  id                String                 @id @default(cuid())
+  moduleId          String
+  module            CourseModule           @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  title             String
+  instructions      String?                @db.Text
+  kind              AssessmentKind         @default(FORMATIVE)
+  maxMarks          Int                    @default(100)
+  order             Int                    @default(0)
+  totalMarks        Int                    @default(100)
+  passPercentage    Int                    @default(50)
+  rubricCriteria    Json                   // Structured scoring rubric
+  
+  submissions       AssessmentSubmission[]
+
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
+}
+
+model CurriculumTest {
+  id              String        @id @default(cuid())
+  title           String
+  durationMinutes Int?
+  passMark        Int?
+  order           Int           @default(0)
+  moduleId        String?
+  module          CourseModule? @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  topicId         String?
+  topic           Topic?        @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  lessonId        String?
+  lesson          Lesson?       @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([moduleId])
+  @@index([topicId])
+  @@index([lessonId])
+}
+
+model CurriculumAssignment {
+  id                   String        @id @default(cuid())
+  title                String
+  instructions         String?       @db.Text
+  evidenceRequirements String[]      @default([])
+  moduleId             String?
+  module               CourseModule? @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  topicId              String?
+  topic                Topic?        @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  lessonId             String?
+  lesson               Lesson?       @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+
+  @@index([moduleId])
+  @@index([topicId])
+  @@index([lessonId])
+}
+
+model AssessmentSubmission {
+  id                String              @id @default(cuid())
+  taskId            String
+  task              AssessmentTask      @relation(fields: [taskId], references: [id])
+  enrollmentId      String
+  enrollment        Enrollment          @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  
+  attemptNumber     Int                 @default(1)
+  fileUrls          String[]            // Multiple PoE attachments
+  submissionNotes   String?             @db.Text
+  submittedAt       DateTime            @default(now())
+  
+  outcome           AssessmentOutcome   @default(SUBMITTED)
+  scoreAchieved     Decimal?            @db.Decimal(5, 2)
+  assessorReview    AssessmentReview?
+  moderationReview  ModerationReview?
+
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+}
+
+model AssessmentReview {
+  id                String               @id @default(cuid())
+  submissionId      String               @unique
+  submission        AssessmentSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  assessorId        String
+  assessor          User                 @relation("AssessorReviews", fields: [assessorId], references: [id])
+  
+  isCompetent       Boolean
+  marksAwarded      Decimal              @db.Decimal(5, 2)
+  feedbackReport    String               @db.Text
+  remediationPlan   String?              @db.Text
+  assessorSignature String               // Digital signature confirmation
+  reviewedAt        DateTime             @default(now())
+}
+
+model ModerationReview {
+  id                String               @id @default(cuid())
+  submissionId      String               @unique
+  submission        AssessmentSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  moderatorId       String
+  moderator         User                 @relation("ModeratorReviews", fields: [moderatorId], references: [id])
+  
+  decision          ModerationDecision   @default(UPHELD)
+  moderationReport  String               @db.Text
+  moderatorSignature String
+  moderatedAt       DateTime             @default(now())
+}
+
+model LessonProgress {
+  id            String        @id @default(cuid())
+  lessonId      String
+  lesson        Lesson        @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  enrollmentId  String
+  enrollment    Enrollment    @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  isCompleted   Boolean       @default(false)
+  completedAt   DateTime?
+
+  @@unique([lessonId, enrollmentId])
+}
+
+model AttendanceRecord {
+  id            String        @id @default(cuid())
+  cohortId      String
+  cohort        Cohort        @relation(fields: [cohortId], references: [id], onDelete: Cascade)
+  learnerId     String
+  sessionDate   DateTime
+  isPresent     Boolean       @default(true)
+  notes         String?
+}
+
+// ----------------------------------------------------------------------------
+// 7. CERTIFICATION & PUBLIC VERIFICATION
+// ----------------------------------------------------------------------------
+
+model Certificate {
+  id                 String       @id @default(cuid())
+  certificateNumber  String       @unique // e.g. "NDZ-CERT-2026-8831"
+  verificationHash   String       @unique // Cryptographic SHA-256 for public QR verify
+  learnerId          String
+  learner            User         @relation("LearnerCertificates", fields: [learnerId], references: [id])
+  enrollmentId       String
+  enrollment         Enrollment   @relation(fields: [enrollmentId], references: [id])
+  
+  issueDate          DateTime     @default(now())
+  pdfDownloadUrl     String
+  setaEndorsementRef String?      // SETA batch verification ref
+
+  createdAt          DateTime     @default(now())
+}
+
+// ----------------------------------------------------------------------------
+// 8. AUDIT TRAILS & COMPLIANCE LOGS
+// ----------------------------------------------------------------------------
+
+model AuditLog {
+  id            String        @id @default(cuid())
+  userId        String?
+  user          User?         @relation(fields: [userId], references: [id])
+  action        String        // e.g. "ENROLLMENT_CREATED", "POE_ASSESSED", "ROLE_UPDATED"
+  entityType    String        // e.g. "AssessmentSubmission", "User"
+  entityId      String
+  details       Json?
+  ipAddress     String?
+  createdAt     DateTime      @default(now())
+
+  @@index([action, entityType, entityId])
+}

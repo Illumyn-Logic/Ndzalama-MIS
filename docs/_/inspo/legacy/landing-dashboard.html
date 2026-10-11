@@ -1,0 +1,1245 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LMS Platform - Dashboard</title>
+    <link rel="icon" type="image/png" href="../assets/img/favicon_1784268148.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #03367A;
+            --primary-dark: #03367A;
+            --accent: #03367A;
+            --sidebar-bg: #03367A;
+            --sidebar-hover: #cbd5e1;
+            --sidebar-text: #FFFFFF;
+            --sidebar-text-hover: #FFFFFF;
+            --header-bg: #FFFFFF;
+            --text-light: #e2e8f0;
+            --text-dark: #0f172a;
+            --bg: #f5f7fb;
+            --card: #ffffff;
+            --border: #cbd5e1;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+        }
+        
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header Styles */
+        .header {
+            background: var(--header-bg);
+            height: 70px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.5rem;
+            position: fixed;
+            top: 0; 
+            left: 0; 
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .left-area { 
+            display: flex; 
+            align-items: center; 
+            gap: 16px; 
+        }
+        
+        .menu-toggle {
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: var(--primary);
+            display: none;
+            background: none;
+            border: none;
+            padding: 8px;
+        }
+        
+        .logo-img {
+            height: 45px;
+            width: auto;
+            max-width: 200px;
+            object-fit: contain;
+        }
+        
+        .brand {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+        
+        /* User Area */
+        .user-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+        }
+        
+        .user-info { 
+            text-align: right; 
+        }
+        
+        .user-name { 
+            font-weight: 600; 
+            font-size: 0.95rem; 
+            color: var(--text-dark); 
+        }
+        
+        .user-role { 
+            font-size: 0.75rem; 
+            color: #64748b; 
+        }
+        
+        .user-avatar {
+            width: 42px; 
+            height: 42px; 
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-weight: bold; 
+            font-size: 1rem;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .user-avatar:hover {
+            transform: scale(1.05);
+        }
+        
+        .user-avatar img {
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover;
+        }
+        
+        .dots-toggle {
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: var(--primary);
+            display: none;
+            background: none;
+            border: none;
+            padding: 8px;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, var(--sidebar-bg) 0%, var(--primary-dark) 100%);
+            color: var(--sidebar-text);
+            position: fixed;
+            top: 70px; 
+            bottom: 0; 
+            left: 0;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 900;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+        /* Custom Scrollbar for Sidebar */
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .sidebar::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.3);
+            border-radius: 3px;
+        }
+        
+        .sidebar.active { 
+            transform: translateX(0); 
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem 1.25rem;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+            font-size: 1rem; 
+            font-weight: 600;
+            color: var(--sidebar-text);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .nav-list { 
+            list-style: none; 
+            padding: 0.75rem 0; 
+        }
+        
+        /* Navigation Items */
+        .nav-item {
+            padding: 0.85rem 1.25rem;
+            display: flex; 
+            align-items: center; 
+            gap: 14px;
+            transition: all 0.25s;
+            font-size: 0.9rem;
+            color: var(--sidebar-text);
+            cursor: pointer;
+        }
+        
+        .nav-item a {
+            color: inherit;
+            text-decoration: none;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        /* Hover State */
+        .nav-item:hover {
+            background: var(--sidebar-hover);
+            color: var(--sidebar-text-hover);
+            padding-left: 1.5rem;
+        }
+        
+        /* Active State */
+        .nav-item.active {
+            background: rgba(255,255,255,0.15);
+            color: var(--sidebar-text-hover);
+            border-left: 4px solid white;
+            font-weight: 500;
+        }
+        
+        .nav-item i {
+            width: 22px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        /* Divider */
+        .nav-divider {
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+            margin: 0.5rem 1rem;
+        }
+        
+        /* Logout item styling */
+        .logout-item {
+            margin-top: 0.5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .logout-item:hover {
+            background: rgba(239, 68, 68, 0.2);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            margin-top: 70px;
+            padding: 2rem;
+            flex: 1;
+            transition: margin-left 0.3s ease;
+            min-height: calc(100vh - 70px);
+        }
+        
+        /* Card Styles */
+        .card {
+            background: var(--card);
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+        }
+        
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+        
+        /* Mobile User Menu */
+        .mobile-user-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            min-width: 200px;
+            z-index: 1100;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        
+        .mobile-user-menu.active { 
+            display: block; 
+        }
+        
+        .menu-item {
+            padding: 0.75rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .menu-item a {
+            color: inherit;
+            text-decoration: none;
+            flex: 1;
+        }
+        
+        .menu-item:hover, .menu-item:focus {
+            background: #f1f5f9;
+            color: var(--primary);
+        }
+        
+        .logout-item {
+            color: var(--danger);
+            border-bottom: none;
+        }
+        
+        .logout-item:hover { 
+            background: #fef2f2; 
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .menu-toggle, .dots-toggle { 
+                display: block; 
+            }
+            .main-content { 
+                margin-left: 0; 
+            }
+            .sidebar { 
+                transform: translateX(-100%); 
+            }
+            .sidebar.active { 
+                transform: translateX(0); 
+            }
+            .desktop-user-info {
+                display: none;
+            }
+        }
+        
+        @media (min-width: 993px) {
+            .menu-toggle, .dots-toggle, .mobile-user-menu { 
+                display: none !important; 
+            }
+            .sidebar { 
+                transform: translateX(0) !important; 
+            }
+            .desktop-user-info {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+            .logo-img { 
+                height: 38px; 
+                max-width: 140px; 
+            }
+            .header {
+                padding: 0 1rem;
+            }
+            .user-name {
+                font-size: 0.85rem;
+            }
+        }
+        
+        /* Utility Classes */
+        .text-muted { color: #64748b; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-3 { margin-top: 1rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-3 { margin-bottom: 1rem; }
+    </style>
+<script src="chrome-extension://mooikfkahbdckldjjndioackbalphokd/assets/prompt.js"></script><script src="chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/js/recordConsoleEvents.js"></script></head>
+<body>
+
+<header class="header">
+    <div class="left-area">
+        <button class="menu-toggle" id="sidebarToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+                <img src="../assets/img/logo_1784268148.png" alt="LMS Platform Logo" class="logo-img">
+    </div>
+    
+    <div class="user-area">
+        <div class="user-info desktop-user-info">
+            <div class="user-name">Kabelo P Matlakala</div>
+            <div class="user-role"></div>
+        </div>
+        
+        <div class="user-avatar" id="userAvatar">
+                            KP                    </div>
+        
+        <button class="dots-toggle" id="dotsToggle">
+            <i class="fas fa-ellipsis-v"></i>
+        </button>
+        
+        <div class="mobile-user-menu" id="mobileUserMenu">
+            <div class="menu-item">
+                <i class="fas fa-user-circle"></i>
+                <span>Kabelo P Matlakala</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-cog"></i>
+                <a href="settings.php">Settings</a>
+            </div>
+            <div class="menu-item logout-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <a href="logout.php">Logout</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <i class="fas fa-graduation-cap"></i> LMS Platform    </div>
+    
+    <ul class="nav-list">
+        <!-- Dashboard -->
+        <li class="nav-item active" id="nav-dashboard">
+            <a href="index.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        </li>
+        
+        <!-- Programs -->
+        <li class="nav-item " id="nav-programs">
+            <a href="programs.php"><i class="fas fa-graduation-cap"></i> Programs</a>
+        </li>
+        
+        <!-- Courses & Lessons -->
+        <li class="nav-item " id="nav-courses">
+            <a href="courses.php"><i class="fas fa-book-open"></i> Courses &amp; Lessons</a>
+        </li>
+        
+        <!-- Manage Staff -->
+        <li class="nav-item " id="nav-staff">
+            <a href="staff.php"><i class="fas fa-chalkboard-user"></i> Manage Staff</a>
+        </li>
+        
+        <!-- Manage Applications -->
+        <li class="nav-item " id="nav-applications">
+            <a href="applications.php"><i class="fas fa-user-graduate"></i> Manage Applications</a>
+        </li>
+        
+        <!-- Assessments & Quizzes -->
+        <li class="nav-item " id="nav-quizzes">
+            <a href="quizzes.php"><i class="fas fa-file-signature"></i> Assessments &amp; Quizzes</a>
+        </li>
+        
+        <!-- Learner Progress -->
+        <li class="nav-item " id="nav-progress">
+            <a href="progress.php"><i class="fas fa-chart-line"></i> Learner Progress</a>
+        </li>
+        
+        <!-- Communication -->
+        <li class="nav-item " id="nav-communication">
+            <a href="communication.php"><i class="fas fa-comments"></i> Communication</a>
+        </li>
+        
+        <!-- Reports & Analytics -->
+        <li class="nav-item " id="nav-reports">
+            <a href="reports-analytics.php"><i class="fas fa-chart-pie"></i> Reports &amp; Analytics</a>
+        </li>
+        
+        <!-- Settings -->
+        <li class="nav-item " id="nav-settings">
+            <a href="settings.php"><i class="fas fa-cog"></i> Settings</a>
+        </li>
+        
+        <!-- Manage Users -->
+        <li class="nav-item " id="nav-users">
+            <a href="users.php"><i class="fas fa-users-cog"></i> Manage Users</a>
+        </li>
+        
+        <div class="nav-divider"></div>
+        
+        <!-- Logout -->
+        <li class="nav-item logout-item">
+            <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </li>
+    </ul>
+</aside>
+
+<script>
+// Sidebar and Mobile Menu Toggle
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const dotsToggle = document.getElementById('dotsToggle');
+    const sidebar = document.getElementById('sidebar');
+    const userMenu = document.getElementById('mobileUserMenu');
+    const userAvatar = document.getElementById('userAvatar');
+
+    // Toggle sidebar on mobile
+    if (sidebarToggle && sidebar) {
+        sidebarToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            sidebar.classList.toggle('active');
+            if (userMenu) userMenu.classList.remove('active');
+        });
+    }
+
+    // Toggle mobile user menu
+    if (dotsToggle && userMenu) {
+        dotsToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            userMenu.classList.toggle('active');
+            if (sidebar) sidebar.classList.remove('active');
+        });
+    }
+    
+    // Click on avatar to toggle user menu (alternative)
+    if (userAvatar && userMenu) {
+        userAvatar.addEventListener('click', function(e) {
+            e.stopPropagation();
+            userMenu.classList.toggle('active');
+            if (sidebar) sidebar.classList.remove('active');
+        });
+    }
+
+    // Close menus when clicking outside
+    document.addEventListener('click', function(e) {
+        if (window.innerWidth > 992) return;
+        
+        const isSidebarClick = sidebar && (sidebar.contains(e.target) || (sidebarToggle && sidebarToggle.contains(e.target)));
+        const isMenuClick = userMenu && (userMenu.contains(e.target) || (dotsToggle && dotsToggle.contains(e.target)) || (userAvatar && userAvatar.contains(e.target)));
+        
+        if (!isSidebarClick && sidebar) sidebar.classList.remove('active');
+        if (!isMenuClick && userMenu) userMenu.classList.remove('active');
+    });
+    
+    // Close sidebar when window resizes above mobile breakpoint
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 992) {
+            if (sidebar) sidebar.classList.remove('active');
+            if (userMenu) userMenu.classList.remove('active');
+        }
+    });
+    
+    // Prevent sidebar link clicks from closing sidebar on mobile
+    const navLinks = document.querySelectorAll('.nav-item a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            if (window.innerWidth <= 992) {
+                // Let the navigation happen, sidebar will close on page load
+                setTimeout(() => {
+                    if (sidebar) sidebar.classList.remove('active');
+                }, 100);
+            }
+        });
+    });
+});
+</script>
+<main class="main-content">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+        <div class="welcome-text">
+            <h1 class="page-title">Welcome back, Kabelo!</h1>
+            <p class="page-subtitle">Here's what's happening with your LMS Platform platform today.</p>
+        </div>
+        <div class="current-time-display">
+            <i class="fas fa-calendar-alt"></i>
+            <span id="current-time">09:34:55 <span class="date-separator">•</span> Monday, August 10, 2026</span>
+        </div>
+    </div>
+
+    <!-- Statistics Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-book-open"></i></div>
+            <div class="stat-details">
+                <span class="stat-value">18</span>
+                <span class="stat-label">Active Courses</span>
+                <span class="stat-trend">Published &amp; available</span>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-user-graduate"></i></div>
+            <div class="stat-details">
+                <span class="stat-value">4</span>
+                <span class="stat-label">Total Learners</span>
+                <span class="stat-trend">Active registered students</span>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+            <div class="stat-details">
+                <span class="stat-value">0.0%</span>
+                <span class="stat-label">Avg. Completion Rate</span>
+                <div class="progress-mini">
+                    <div class="progress-bar-mini" style="width: 0.0%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-file-signature"></i></div>
+            <div class="stat-details">
+                <span class="stat-value">0</span>
+                <span class="stat-label">Pending Applications</span>
+                            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-chalkboard-user"></i></div>
+            <div class="stat-details">
+                <span class="stat-value">5</span>
+                <span class="stat-label">Staff Members</span>
+                <span class="stat-trend">Facilitators &amp; Admin</span>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+            <div class="stat-details">
+                <span class="stat-value">9</span>
+                <span class="stat-label">Active Enrollments</span>
+                <span class="stat-trend">Currently enrolled</span>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-certificate"></i></div>
+            <div class="stat-details">
+                <span class="stat-value">0</span>
+                <span class="stat-label">Certificates Issued</span>
+                <span class="stat-trend">Successful completions</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-row">
+        <div class="card chart-card">
+            <h3><i class="fas fa-chart-bar"></i> Course Enrollment Distribution</h3>
+            <p class="text-muted">Top 6 courses by student enrollment</p>
+            <div class="chart-container">
+                <canvas id="courseChart" width="448" height="224" style="display: block; box-sizing: border-box; height: 280px; width: 560px;"></canvas>
+            </div>
+        </div>
+
+        <div class="card chart-card">
+            <h3><i class="fas fa-chart-line"></i> Enrollment Trends</h3>
+            <p class="text-muted">Last 6 months activity</p>
+            <div class="chart-container">
+                <canvas id="trendChart" width="448" height="224" style="display: block; box-sizing: border-box; height: 280px; width: 560px;"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity Section -->
+    <div class="activity-row">
+        <div class="card activity-card">
+            <h3><i class="fas fa-user-plus"></i> Recent Enrollments</h3>
+            <div class="activity-list">
+                                                            <div class="activity-item">
+                            <div class="activity-icon" style="background: rgba(3,54,122, 0.1);">
+                                <i class="fas fa-user-graduate" style="color: #03367A;"></i>
+                            </div>
+                            <div class="activity-details">
+                                <div class="activity-title">
+                                    Sanette werwer                                    enrolled in
+                                    <strong>Critical Workplace Competencies</strong>
+                                </div>
+                                <div class="activity-time">
+                                    <i class="far fa-clock"></i> 05 Aug 2026                                </div>
+                            </div>
+                        </div>
+                                            <div class="activity-item">
+                            <div class="activity-icon" style="background: rgba(3,54,122, 0.1);">
+                                <i class="fas fa-user-graduate" style="color: #03367A;"></i>
+                            </div>
+                            <div class="activity-details">
+                                <div class="activity-title">
+                                    Gift Malungana                                    enrolled in
+                                    <strong>Work Based Learning Principles</strong>
+                                </div>
+                                <div class="activity-time">
+                                    <i class="far fa-clock"></i> 01 Jun 2026                                </div>
+                            </div>
+                        </div>
+                                            <div class="activity-item">
+                            <div class="activity-icon" style="background: rgba(3,54,122, 0.1);">
+                                <i class="fas fa-user-graduate" style="color: #03367A;"></i>
+                            </div>
+                            <div class="activity-details">
+                                <div class="activity-title">
+                                    Thomas Mwenitet                                    enrolled in
+                                    <strong>Demonstrate Ability to Lead a Team</strong>
+                                </div>
+                                <div class="activity-time">
+                                    <i class="far fa-clock"></i> 01 Jun 2026                                </div>
+                            </div>
+                        </div>
+                                            <div class="activity-item">
+                            <div class="activity-icon" style="background: rgba(3,54,122, 0.1);">
+                                <i class="fas fa-user-graduate" style="color: #03367A;"></i>
+                            </div>
+                            <div class="activity-details">
+                                <div class="activity-title">
+                                    Innocent Mabunda                                    enrolled in
+                                    <strong>Facilitate Work-Based Learning Process</strong>
+                                </div>
+                                <div class="activity-time">
+                                    <i class="far fa-clock"></i> 20 May 2026                                </div>
+                            </div>
+                        </div>
+                                            <div class="activity-item">
+                            <div class="activity-icon" style="background: rgba(3,54,122, 0.1);">
+                                <i class="fas fa-user-graduate" style="color: #03367A;"></i>
+                            </div>
+                            <div class="activity-details">
+                                <div class="activity-title">
+                                    Innocent Mabunda                                    enrolled in
+                                    <strong>Facilitation of Learning in Occupational Contexts</strong>
+                                </div>
+                                <div class="activity-time">
+                                    <i class="far fa-clock"></i> 15 May 2026                                </div>
+                            </div>
+                        </div>
+                                                </div>
+        </div>
+
+        <div class="card activity-card">
+            <h3><i class="fas fa-file-alt"></i> Recent Applications</h3>
+            <div class="activity-list">
+                                                            <div class="activity-item">
+                            <div class="activity-icon" style="background: rgba(3,54,122, 0.1);">
+                                <i class="fas fa-pen-fancy" style="color: #03367A;"></i>
+                            </div>
+                            <div class="activity-details">
+                                <div class="activity-title">
+                                    Gift Malungana                                    applied for
+                                    <strong>Work Based Learning Principles</strong>
+                                </div>
+                                <div class="activity-time">
+                                    <i class="far fa-clock"></i> 01 Jun 2026                                </div>
+                            </div>
+                        </div>
+                                            <div class="activity-item">
+                            <div class="activity-icon" style="background: rgba(3,54,122, 0.1);">
+                                <i class="fas fa-pen-fancy" style="color: #03367A;"></i>
+                            </div>
+                            <div class="activity-details">
+                                <div class="activity-title">
+                                    Sanette werwer                                    applied for
+                                    <strong>Critical Workplace Competencies</strong>
+                                </div>
+                                <div class="activity-time">
+                                    <i class="far fa-clock"></i> 26 May 2026                                </div>
+                            </div>
+                        </div>
+                                            <div class="activity-item">
+                            <div class="activity-icon" style="background: rgba(3,54,122, 0.1);">
+                                <i class="fas fa-pen-fancy" style="color: #03367A;"></i>
+                            </div>
+                            <div class="activity-details">
+                                <div class="activity-title">
+                                    Thomas Nedi                                    applied for
+                                    <strong>Critical Workplace Competencies</strong>
+                                </div>
+                                <div class="activity-time">
+                                    <i class="far fa-clock"></i> 20 May 2026                                </div>
+                            </div>
+                        </div>
+                                            <div class="activity-item">
+                            <div class="activity-icon" style="background: rgba(3,54,122, 0.1);">
+                                <i class="fas fa-pen-fancy" style="color: #03367A;"></i>
+                            </div>
+                            <div class="activity-details">
+                                <div class="activity-title">
+                                    Thomas Mwenitete                                    applied for
+                                    <strong>Coaching and Mentoring</strong>
+                                </div>
+                                <div class="activity-time">
+                                    <i class="far fa-clock"></i> 20 May 2026                                </div>
+                            </div>
+                        </div>
+                                            <div class="activity-item">
+                            <div class="activity-icon" style="background: rgba(3,54,122, 0.1);">
+                                <i class="fas fa-pen-fancy" style="color: #03367A;"></i>
+                            </div>
+                            <div class="activity-details">
+                                <div class="activity-title">
+                                    Thomas Mwenitete                                    applied for
+                                    <strong>Training Assessor</strong>
+                                </div>
+                                <div class="activity-time">
+                                    <i class="far fa-clock"></i> 20 May 2026                                </div>
+                            </div>
+                        </div>
+                                                </div>
+                    </div>
+
+        <div class="card activity-card">
+            <h3><i class="fas fa-calendar-week"></i> Upcoming Quizzes</h3>
+            <div class="activity-list">
+                                    <div class="empty-activity">
+                        <i class="fas fa-calendar-check"></i>
+                        <p>No upcoming quizzes scheduled</p>
+                    </div>
+                            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+        <div class="action-buttons">
+            <a href="../admin/applications.php" class="action-btn">
+                <i class="fas fa-file-signature"></i>
+                <span>Review Applications</span>
+            </a>
+            <a href="../admin/courses.php" class="action-btn">
+                <i class="fas fa-plus-circle"></i>
+                <span>Add New Course</span>
+            </a>
+            <a href="../admin/users.php" class="action-btn">
+                <i class="fas fa-user-plus"></i>
+                <span>Add New User</span>
+            </a>
+            <a href="../admin/communication.php" class="action-btn">
+                <i class="fas fa-paper-plane"></i>
+                <span>Send Announcement</span>
+            </a>
+            <a href="../admin/reports-analytics.php" class="action-btn">
+                <i class="fas fa-chart-line"></i>
+                <span>View Reports</span>
+            </a>
+            <a href="../admin/settings.php" class="action-btn">
+                <i class="fas fa-cog"></i>
+                <span>System Settings</span>
+            </a>
+        </div>
+    </div>
+</main>
+
+<style>
+    :root {
+        --primary-color: #03367A;
+        --primary-dark: #03367A;
+        --border-color: #cbd5e1;
+        --primary-rgb: 3,54,122;
+    }
+    
+    .main-content {
+        padding: 2rem;
+        background: #f5f7fb;
+        min-height: calc(100vh - 70px);
+    }
+    
+    /* Welcome Section */
+    .welcome-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    
+    .page-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 0.25rem;
+    }
+    
+    .page-subtitle {
+        color: #64748b;
+        font-size: 0.9rem;
+    }
+    
+    .current-time-display {
+        background: white;
+        padding: 0.75rem 1.25rem;
+        border-radius: 40px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #1e293b;
+        border: 1px solid var(--border-color, #e2e8f0);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .current-time-display i {
+        color: var(--primary-color);
+    }
+    
+    .date-separator {
+        margin: 0 0.25rem;
+        color: #64748b;
+    }
+    
+    /* Stats Grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 20px;
+        padding: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        border: 1px solid var(--border-color, #e2e8f0);
+        transition: all 0.3s ease;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+    }
+    
+    .stat-icon {
+        width: 55px;
+        height: 55px;
+        background: rgba(var(--primary-rgb), 0.1);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-color);
+        font-size: 1.5rem;
+    }
+    
+    .stat-details {
+        flex: 1;
+    }
+    
+    .stat-value {
+        display: block;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #0f172a;
+        line-height: 1.2;
+    }
+    
+    .stat-label {
+        display: block;
+        font-size: 0.75rem;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-top: 0.25rem;
+    }
+    
+    .stat-trend {
+        display: block;
+        font-size: 0.7rem;
+        color: #94a3b8;
+        margin-top: 0.25rem;
+    }
+    
+    .stat-link {
+        display: inline-block;
+        margin-top: 0.5rem;
+        font-size: 0.7rem;
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+    }
+    
+    .stat-link:hover {
+        text-decoration: underline;
+    }
+    
+    .progress-mini {
+        margin-top: 0.5rem;
+        background: #e2e8f0;
+        height: 4px;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    
+    .progress-bar-mini {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary-color), #34d399);
+        border-radius: 4px;
+        transition: width 0.6s ease;
+    }
+    
+    /* Charts Row */
+    .charts-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .chart-card {
+        background: white;
+        border-radius: 20px;
+        padding: 1.5rem;
+        border: 1px solid var(--border-color, #e2e8f0);
+    }
+    
+    .chart-card h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        color: #1e293b;
+    }
+    
+    .chart-card h3 i {
+        color: var(--primary-color);
+        margin-right: 0.5rem;
+    }
+    
+    .chart-container {
+        position: relative;
+        height: 280px;
+        margin-top: 1rem;
+    }
+    
+    /* Activity Row */
+    .activity-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .activity-card {
+        background: white;
+        border-radius: 20px;
+        padding: 1.5rem;
+        border: 1px solid var(--border-color, #e2e8f0);
+    }
+    
+    .activity-card h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--border-color, #e2e8f0);
+        color: #1e293b;
+    }
+    
+    .activity-card h3 i {
+        color: var(--primary-color);
+        margin-right: 0.5rem;
+    }
+    
+    .activity-list {
+        max-height: 350px;
+        overflow-y: auto;
+    }
+    
+    .activity-item {
+        display: flex;
+        gap: 0.75rem;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+    
+    .activity-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    
+    .activity-details {
+        flex: 1;
+    }
+    
+    .activity-title {
+        font-size: 0.85rem;
+        color: #1e293b;
+        margin-bottom: 0.25rem;
+    }
+    
+    .activity-title strong {
+        color: #0f172a;
+    }
+    
+    .badge {
+        display: inline-block;
+        background: #f1f5f9;
+        padding: 0.15rem 0.5rem;
+        border-radius: 12px;
+        font-size: 0.65rem;
+        font-weight: 500;
+        color: #64748b;
+        margin-left: 0.5rem;
+    }
+    
+    .activity-time {
+        font-size: 0.7rem;
+        color: #94a3b8;
+    }
+    
+    .activity-time i {
+        margin-right: 0.25rem;
+    }
+    
+    .empty-activity {
+        text-align: center;
+        padding: 2rem;
+        color: #94a3b8;
+    }
+    
+    .empty-activity i {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        opacity: 0.5;
+    }
+    
+    .empty-activity p {
+        font-size: 0.85rem;
+    }
+    
+    .card-footer {
+        margin-top: 1rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid var(--border-color, #e2e8f0);
+        text-align: center;
+    }
+    
+    .view-all {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+    
+    .view-all:hover {
+        text-decoration: underline;
+    }
+    
+    /* Quick Actions */
+    .quick-actions {
+        background: white;
+        border-radius: 20px;
+        padding: 1.5rem;
+        border: 1px solid var(--border-color, #e2e8f0);
+    }
+    
+    .quick-actions h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #1e293b;
+    }
+    
+    .quick-actions h3 i {
+        color: var(--primary-color);
+        margin-right: 0.5rem;
+    }
+    
+    .action-buttons {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 0.75rem;
+    }
+    
+    .action-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.85rem 1rem;
+        background: #f8fafc;
+        border-radius: 12px;
+        text-decoration: none;
+        color: #1e293b;
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: all 0.2s;
+        border: 1px solid var(--border-color, #e2e8f0);
+    }
+    
+    .action-btn i {
+        width: 24px;
+        color: var(--primary-color);
+        font-size: 1rem;
+    }
+    
+    .action-btn:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: translateY(-2px);
+    }
+    
+    .action-btn:hover i {
+        color: white;
+    }
+    
+    .text-muted {
+        color: #64748b;
+        font-size: 0.75rem;
+        margin-top: 0.25rem;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .main-content { padding: 1rem; }
+        .welcome-section { flex-direction: column; align-items: flex-start; }
+        .stats-grid { grid-template-columns: 1fr; gap: 1rem; }
+        .charts-row { grid-template-columns: 1fr; }
+        .activity-row { grid-template-columns: 1fr; }
+        .action-buttons { grid-template-columns: 1fr; }
+        .stat-value { font-size: 1.4rem; }
+        .stat-icon { width: 45px; height: 45px; font-size: 1.2rem; }
+        .chart-container { height: 220px; }
+    }
+    
+    @media (max-width: 480px) {
+        .stat-card { padding: 1rem; }
+        .stat-value { font-size: 1.2rem; }
+    }
+</style>
+
+</body>
+</html>
