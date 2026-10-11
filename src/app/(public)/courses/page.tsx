@@ -6,7 +6,7 @@ import { CourseCard } from '@/components/common/course-card';
 
 export const metadata: Metadata = {
   title: 'Courses',
-  description: 'Browse our full range of SAQA-accredited training programmes.',
+  description: 'Browse accredited programmes, legacy qualifications, and self-paced skill builder courses.',
 };
 
 export default function CoursesPage() {
@@ -14,8 +14,8 @@ export default function CoursesPage() {
     <section className="py-16">
       <Container>
         <SectionTitle
-          title="All Courses"
-          subtitle="Our full range of accredited programmes"
+          title="Explore Our Courses"
+          subtitle="Accredited programmes, legacy qualifications, and self-paced skill builders"
         />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {courses.map((course) => (

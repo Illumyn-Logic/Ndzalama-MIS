@@ -14,7 +14,7 @@ export function CourseCard({ course }: CourseCardProps) {
     >
       <div className="relative w-full h-48">
         <Image
-          src={course.image}
+          src={course.image.startsWith('/images/courses/placeholder-') ? '/images/clients/carousel/01.jpg' : course.image}
           alt={course.title}
           fill
           className="object-cover"
@@ -22,6 +22,9 @@ export function CourseCard({ course }: CourseCardProps) {
         />
       </div>
       <div className="p-6">
+        <p className="text-xs font-semibold uppercase tracking-wide text-[#5f8f26]">
+          {course.accredited ? course.seta : `${course.seta} · Non-accredited · ${course.delivery ?? 'Self-paced'}`}
+        </p>
         <h3 className="text-xl font-semibold text-[#333] dark:text-white group-hover:text-[#84ba3f] transition-colors">
           {course.title}
         </h3>

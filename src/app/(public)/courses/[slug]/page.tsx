@@ -2,34 +2,31 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { detailedCourses, cohortSchedules, type DetailedCourse } from '@/lib/offline_data';
+import { courses } from '@/data/courses';
+import { detailedCourses, cohortSchedules } from '@/lib/offline_data';
 import { Container } from '@/components/ui/container';
 import {
   FaCheckCircle,
   FaCalendarAlt,
   FaMapMarkerAlt,
   FaGraduationCap,
-  FaClock,
-  FaUsers,
-  FaAward,
-  FaFileAlt,
   FaArrowRight,
-  FaTag,
 } from 'react-icons/fa';
 
 export async function generateStaticParams() {
-  return detailedCourses.map((c) => ({ slug: c.slug }));
+  return [...new Set([...detailedCourses, ...courses].map((course) => course.slug))].map((slug) => ({ slug }));
 }
 
 export async function generateMetadata(
   props: PageProps<'/courses/[slug]'>,
 ): Promise<Metadata> {
   const { slug } = await props.params;
-  const course = detailedCourses.find((c) => c.slug === slug);
-  if (!course) return {};
+  const course = detailedCourses.find((item) => item.slug === slug);
+  const catalogueCourse = courses.find((item) => item.slug === slug);
+  if (!course && !catalogueCourse) return {};
   return {
-    title: `${course.title} | Ndzalama Training`,
-    description: course.shortDesc,
+    title: `${course?.title ?? catalogueCourse?.title} | Ndzalama Training`,
+    description: course?.shortDesc ?? catalogueCourse?.shortDesc,
   };
 }
 
@@ -38,7 +35,54 @@ export default async function CourseDetailPage(
 ) {
   const { slug } = await props.params;
   const course = detailedCourses.find((c) => c.slug === slug);
-  if (!course) notFound();
+  if (!course) {
+    const catalogueCourse = courses.find((item) => item.slug === slug);
+    if (!catalogueCourse) notFound();
+
+    return (
+      <section className="min-h-screen bg-white py-16 dark:bg-[#0e0f14]">
+        <Container>
+          <div className="max-w-3xl">
+            <div className="mb-6 flex items-center gap-2 text-xs text-text-muted">
+              <Link href="/" className="hover:text-brand-secondary">Home</Link>
+              <span>/</span>
+              <Link href="/courses" className="hover:text-brand-secondary">Courses</Link>
+              <span>/</span>
+              <span>{catalogueCourse.title}</span>
+            </div>
+            <p className="text-xs font-bold uppercase text-brand-secondary">
+              {catalogueCourse.accredited ? catalogueCourse.seta : 'Self-paced Skill Builder'}
+            </p>
+            <h1 className="mt-3 text-3xl font-bold text-brand-primary dark:text-white sm:text-4xl">
+              {catalogueCourse.title}
+            </h1>
+            <p className="mt-5 text-lg leading-relaxed text-text-secondary dark:text-gray-300">
+              {catalogueCourse.fullDesc}
+            </p>
+            {catalogueCourse.note && (
+              <p className="mt-4 text-sm font-semibold text-brand-primary dark:text-brand-secondary">
+                {catalogueCourse.note}
+              </p>
+            )}
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link
+                href={`/apply?course=${catalogueCourse.slug}`}
+                className="inline-flex items-center gap-2 bg-brand-secondary px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-secondary-dark"
+              >
+                Enquire / Enrol <FaArrowRight className="text-xs" aria-hidden="true" />
+              </Link>
+              <Link
+                href="/courses"
+                className="inline-flex items-center border border-brand-primary px-5 py-3 text-sm font-semibold text-brand-primary transition-colors hover:bg-brand-neutral dark:border-brand-secondary dark:text-brand-secondary"
+              >
+                Browse all courses
+              </Link>
+            </div>
+          </div>
+        </Container>
+      </section>
+    );
+  }
 
   const schedules = cohortSchedules.filter((s) => s.courseId === course.id);
 

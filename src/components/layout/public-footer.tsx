@@ -14,22 +14,20 @@ import {
 } from 'react-icons/fa';
 
 const navLinks = [
-  { label: 'Home', href: '/' },
-  { label: 'About Ndzalama', href: '/about' },
-  { label: 'Why Choose Us', href: '/why-choose-us' },
-  { label: 'Accreditation Services', href: '/accreditation-services' },
   { label: 'Privacy Policy', href: '/privacy-policy' },
   { label: 'Terms of Use', href: '/terms-of-use' },
-  { label: 'Contact Us', href: '/contact' },
+  { label: 'FAQ', href: '/faq' },
+  { label: 'Verify Certificate', href: '/verify' },
+  { label: 'Learn Online', href: '/learn' },
 ];
 
-const courseLinks = [
-  { label: 'Facilitator Training', href: '/courses/facilitator' },
-  { label: 'Assessor Training', href: '/courses/assessor' },
-  { label: 'Moderator Training', href: '/courses/moderator' },
-  { label: 'Skills Development Facilitator', href: '/courses/sdf' },
-  { label: 'OD-ETDP Qualification', href: '/courses/odetp' },
-  { label: 'Early Childhood Development', href: '/courses/ecd' },
+const courseCategories = [
+  { label: 'ETDP SETA', href: '/courses?provider=etdp-seta' },
+  { label: 'Services SETA', href: '/courses?provider=services-seta' },
+  { label: 'HWSETA', href: '/courses?provider=hwseta' },
+  { label: 'Skill Builder', href: '/courses?provider=skill-builder' },
+  { label: 'Legacy Unit Standards', href: '/courses?provider=legacy' },
+  { label: 'View All Courses', href: '/courses' },
 ];
 
 export function PublicFooter() {
@@ -89,10 +87,10 @@ export function PublicFooter() {
               </div>
             </div>
 
-            {/* Navigation */}
+            {/* Quick Links */}
             <div>
               <h6 className="text-white text-sm font-semibold uppercase tracking-widest mb-5">
-                Navigation
+                Quick Links
               </h6>
               <ul className="space-y-2.5">
                 {navLinks.map((link) => (
@@ -109,36 +107,16 @@ export function PublicFooter() {
                     </Link>
                   </li>
                 ))}
-                <li>
-                  <Link
-                    href="/learn"
-                    className="flex items-center gap-2 text-sm text-gray-400 hover:text-brand-secondary transition-colors group"
-                  >
-                    <FaArrowRight
-                      className="text-xs text-brand-secondary opacity-0 group-hover:opacity-100 transition-opacity"
-                      aria-hidden="true"
-                    />
-                    Learn Online
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/login"
-                    className="flex items-center gap-2 text-xs text-gray-500 hover:text-gray-400 transition-colors"
-                  >
-                    Staff Portal
-                  </Link>
-                </li>
               </ul>
             </div>
 
-            {/* Courses */}
+            {/* Course Categories */}
             <div>
               <h6 className="text-white text-sm font-semibold uppercase tracking-widest mb-5">
-                Our Courses
+                Course Categories
               </h6>
               <ul className="space-y-2.5">
-                {courseLinks.map((link) => (
+                {courseCategories.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}

@@ -1,14 +1,21 @@
 export type CourseCategory =
   | 'Occupational Certificates'
   | 'Skills Programmes'
-  | 'Short Courses'
-  | 'Legacy / Non-Accredited';
+  | 'First Aid Programmes'
+  | 'Skill Builder Courses'
+  | 'Legacy Qualifications';
 
-export type SETA = 'ETDP SETA' | 'Services SETA' | 'HWSETA' | 'Non-SETA';
+export type CourseProvider =
+  | 'ETDP SETA'
+  | 'Services SETA'
+  | 'HWSETA'
+  | 'Skill Builder'
+  | 'Legacy Unit Standards';
+export type CourseDelivery = 'Scheduled training' | 'Self-paced';
 
 export interface Course {
   id: number;
-  code: string; // e.g., "OC-97154", "SP-220319"
+  code: string;
   slug: string;
   title: string;
   shortDesc: string;
@@ -16,300 +23,63 @@ export interface Course {
   duration: string;
   image: string;
   category: CourseCategory;
-  seta: SETA;
+  seta: CourseProvider;
   accredited: boolean;
+  delivery?: CourseDelivery;
+  note?: string;
 }
 
+const course = (
+  id: number,
+  code: string,
+  slug: string,
+  title: string,
+  category: CourseCategory,
+  seta: CourseProvider,
+  description: string,
+  options: {
+    accredited?: boolean;
+    delivery?: CourseDelivery;
+    duration?: string;
+    note?: string;
+  } = {},
+): Course => ({
+  id,
+  code,
+  slug,
+  title,
+  shortDesc: description,
+  fullDesc: description,
+  duration: options.duration ?? 'Contact us for upcoming dates',
+  image: '/images/clients/carousel/01.jpg',
+  category,
+  seta,
+  accredited: options.accredited ?? true,
+  delivery: options.delivery ?? 'Scheduled training',
+  note: options.note,
+});
+
 export const courses: Course[] = [
-  // ETDP SETA - Occupational Certificates
-  {
-    id: 1,
-    code: 'OC-97154',
-    slug: 'adult-education-training-developer',
-    title: 'Adult Education and Training Developer',
-    shortDesc: 'ETDP SETA accredited occupational certificate for adult education practitioners.',
-    fullDesc:
-      'This occupational certificate prepares practitioners to design, develop, and deliver adult education and training programmes in compliance with SAQA and QCTO standards.',
-    duration: '12 Months',
-    image: '/images/courses/placeholder-etdp.jpg',
-    category: 'Occupational Certificates',
-    seta: 'ETDP SETA',
-    accredited: true,
-  },
-  {
-    id: 2,
-    code: 'OC-101321',
-    slug: 'training-development-practitioner',
-    title: 'Training and Development Practitioner',
-    shortDesc: 'Full occupational certificate for training and development professionals.',
-    fullDesc:
-      'The Occupational Certificate: Training and Development Practitioner prepares you for a career in the education, training and development sector, covering all core competencies required by SAQA and the QCTO.',
-    duration: '12 Months',
-    image: '/images/courses/placeholder-etdp.jpg',
-    category: 'Occupational Certificates',
-    seta: 'ETDP SETA',
-    accredited: true,
-  },
-  {
-    id: 3,
-    code: 'OC-97542',
-    slug: 'skills-development-facilitator',
-    title: 'Skills Development Facilitator',
-    shortDesc: 'Manage organisational skills development strategy and compliance.',
-    fullDesc:
-      'This occupational certificate equips you to act as a registered Skills Development Facilitator (SDF). Covers WSP/ATR submissions, SETA relationships, and skills planning within the South African legislative framework.',
-    duration: '12 Months',
-    image: '/images/courses/placeholder-etdp.jpg',
-    category: 'Occupational Certificates',
-    seta: 'ETDP SETA',
-    accredited: true,
-  },
-
-  // ETDP SETA - Skills Programmes
-  {
-    id: 4,
-    code: 'SP-220319',
-    slug: 'workplace-coaching-mentoring',
-    title: 'Workplace Coaching and Mentoring',
-    shortDesc: 'Develop coaching and mentoring skills in workplace contexts.',
-    fullDesc:
-      'This skills programme equips you with practical coaching and mentoring skills to support performance improvement and professional growth in organisational settings.',
-    duration: '3 Months',
-    image: '/images/courses/placeholder-etdp.jpg',
-    category: 'Skills Programmes',
-    seta: 'ETDP SETA',
-    accredited: true,
-  },
-  {
-    id: 5,
-    code: 'SP-220320',
-    slug: 'facilitate-learning',
-    title: 'Facilitate Learning',
-    shortDesc: 'Foundational facilitation skills for training practitioners.',
-    fullDesc:
-      'This skills programme covers the essential competencies required to facilitate learning in various contexts. Aligned with SAQA unit standards and prepares you for facilitator registration.',
-    duration: '2 Months',
-    image: '/images/courses/placeholder-etdp.jpg',
-    category: 'Skills Programmes',
-    seta: 'ETDP SETA',
-    accredited: true,
-  },
-  {
-    id: 6,
-    code: 'SP-220321',
-    slug: 'conduct-outcomes-based-assessment',
-    title: 'Conduct Outcomes-Based Assessment',
-    shortDesc: 'Learn to assess candidates in workplace and training contexts.',
-    fullDesc:
-      'Become a registered assessor with this SAQA-accredited skills programme. Covers all aspects of conducting competence-based assessments in occupational contexts.',
-    duration: '2 Months',
-    image: '/images/courses/placeholder-etdp.jpg',
-    category: 'Skills Programmes',
-    seta: 'ETDP SETA',
-    accredited: true,
-  },
-  {
-    id: 7,
-    code: 'SP-220322',
-    slug: 'moderate-outcomes-based-assessment',
-    title: 'Moderate Outcomes-Based Assessment',
-    shortDesc: 'Quality assurance for assessment practices.',
-    fullDesc:
-      'This skills programme prepares you to moderate assessment processes and outcomes. Learn to evaluate assessment instruments and validate assessment decisions.',
-    duration: '2 Months',
-    image: '/images/courses/placeholder-etdp.jpg',
-    category: 'Skills Programmes',
-    seta: 'ETDP SETA',
-    accredited: true,
-  },
-  {
-    id: 8,
-    code: 'SP-211001',
-    slug: 'design-develop-learning-programmes',
-    title: 'Design and Develop Learning Programmes',
-    shortDesc: 'Create effective training programmes aligned to business needs.',
-    fullDesc:
-      'This skills programme covers the systematic design and development of learning programmes that meet organisational and regulatory requirements.',
-    duration: '3 Months',
-    image: '/images/courses/placeholder-etdp.jpg',
-    category: 'Skills Programmes',
-    seta: 'ETDP SETA',
-    accredited: true,
-  },
-
-  // Services SETA - Skills Programmes
-  {
-    id: 9,
-    code: 'SP-201201',
-    slug: 'customer-service',
-    title: 'Customer Service Excellence',
-    shortDesc: 'Deliver exceptional customer service in any industry.',
-    fullDesc:
-      'This Services SETA accredited skills programme equips you with the knowledge and skills to provide excellent customer service across various service industry contexts.',
-    duration: '2 Months',
-    image: '/images/courses/placeholder-services.jpg',
-    category: 'Skills Programmes',
-    seta: 'Services SETA',
-    accredited: true,
-  },
-  {
-    id: 10,
-    code: 'SP-211009',
-    slug: 'project-management-fundamentals',
-    title: 'Project Management Fundamentals',
-    shortDesc: 'Essential project management skills for service professionals.',
-    fullDesc:
-      'Learn the fundamentals of project management in service industry contexts. Covers planning, execution, monitoring, and closure of projects.',
-    duration: '3 Months',
-    image: '/images/courses/placeholder-services.jpg',
-    category: 'Skills Programmes',
-    seta: 'Services SETA',
-    accredited: true,
-  },
-  {
-    id: 11,
-    code: 'SP-211010',
-    slug: 'team-leadership',
-    title: 'Team Leadership',
-    shortDesc: 'Lead and manage teams effectively in service environments.',
-    fullDesc:
-      'This skills programme develops your ability to lead teams, manage performance, and drive results in service industry settings.',
-    duration: '2 Months',
-    image: '/images/courses/placeholder-services.jpg',
-    category: 'Skills Programmes',
-    seta: 'Services SETA',
-    accredited: true,
-  },
-
-  // HWSETA - Occupational Certificates
-  {
-    id: 12,
-    code: 'OC-121929',
-    slug: 'early-childhood-development-practitioner',
-    title: 'Early Childhood Development Practitioner',
-    shortDesc: 'Care and education for children from birth to age 4.',
-    fullDesc:
-      'This HWSETA occupational certificate prepares practitioners to provide quality care and education to young children. Covers child development, learning facilitation, and ECD centre operations.',
-    duration: '18 Months',
-    image: '/images/courses/placeholder-hwseta.jpg',
-    category: 'Occupational Certificates',
-    seta: 'HWSETA',
-    accredited: true,
-  },
-  {
-    id: 13,
-    code: 'OC-121930',
-    slug: 'social-auxiliary-worker',
-    title: 'Social Auxiliary Worker',
-    shortDesc: 'Support social workers in community development.',
-    fullDesc:
-      'This occupational certificate prepares you to work as a Social Auxiliary Worker, providing support services under the supervision of qualified social workers.',
-    duration: '18 Months',
-    image: '/images/courses/placeholder-hwseta.jpg',
-    category: 'Occupational Certificates',
-    seta: 'HWSETA',
-    accredited: true,
-  },
-
-  // HWSETA - Skills Programmes
-  {
-    id: 14,
-    code: 'SP-230801',
-    slug: 'home-based-care',
-    title: 'Home-Based Care',
-    shortDesc: 'Provide quality care in home and community settings.',
-    fullDesc:
-      'This skills programme prepares you to provide home-based care services to individuals and families in community settings.',
-    duration: '3 Months',
-    image: '/images/courses/placeholder-hwseta.jpg',
-    category: 'Skills Programmes',
-    seta: 'HWSETA',
-    accredited: true,
-  },
-  {
-    id: 15,
-    code: 'SP-230802',
-    slug: 'community-development',
-    title: 'Community Development',
-    shortDesc: 'Drive positive change in communities.',
-    fullDesc:
-      'Learn to plan and implement community development initiatives that address social needs and promote sustainable development.',
-    duration: '3 Months',
-    image: '/images/courses/placeholder-hwseta.jpg',
-    category: 'Skills Programmes',
-    seta: 'HWSETA',
-    accredited: true,
-  },
-  {
-    id: 16,
-    code: 'SP-230803',
-    slug: 'child-youth-care',
-    title: 'Child and Youth Care',
-    shortDesc: 'Support the development and wellbeing of children and youth.',
-    fullDesc:
-      'This skills programme equips you to provide care and developmental support to children and youth in various settings.',
-    duration: '3 Months',
-    image: '/images/courses/placeholder-hwseta.jpg',
-    category: 'Skills Programmes',
-    seta: 'HWSETA',
-    accredited: true,
-  },
-
-  // Legacy / Non-Accredited Courses
-  {
-    id: 17,
-    code: 'LEGACY-001',
-    slug: 'facilitator-training-legacy',
-    title: 'Facilitator Training (Legacy)',
-    shortDesc: 'Short course for aspiring facilitators.',
-    fullDesc:
-      'This legacy short course provides foundational facilitation skills. While not SETA-accredited, it offers practical training for those entering the facilitation field.',
-    duration: '5 Days',
-    image: '/images/courses/placeholder-legacy.jpg',
-    category: 'Short Courses',
-    seta: 'Non-SETA',
-    accredited: false,
-  },
-  {
-    id: 18,
-    code: 'LEGACY-002',
-    slug: 'assessor-training-legacy',
-    title: 'Assessor Training (Legacy)',
-    shortDesc: 'Short course for workplace assessors.',
-    fullDesc:
-      'This legacy short course covers basic assessment practices in workplace contexts. Not SETA-accredited but provides practical assessment skills.',
-    duration: '4 Days',
-    image: '/images/courses/placeholder-legacy.jpg',
-    category: 'Short Courses',
-    seta: 'Non-SETA',
-    accredited: false,
-  },
-  {
-    id: 19,
-    code: 'LEGACY-003',
-    slug: 'moderator-training-legacy',
-    title: 'Moderator Training (Legacy)',
-    shortDesc: 'Short course for assessment moderators.',
-    fullDesc:
-      'This legacy short course introduces moderation practices for assessment quality assurance. Not SETA-accredited but offers practical moderation knowledge.',
-    duration: '4 Days',
-    image: '/images/courses/placeholder-legacy.jpg',
-    category: 'Short Courses',
-    seta: 'Non-SETA',
-    accredited: false,
-  },
-  {
-    id: 20,
-    code: 'NONAC-001',
-    slug: 'leadership-development',
-    title: 'Leadership Development',
-    shortDesc: 'Non-accredited leadership training for managers.',
-    fullDesc:
-      'This non-accredited course develops essential leadership and management skills for supervisors and managers across industries.',
-    duration: '3 Days',
-    image: '/images/courses/placeholder-legacy.jpg',
-    category: 'Legacy / Non-Accredited',
-    seta: 'Non-SETA',
-    accredited: false,
-  },
+  course(1, 'OC-97154', 'occupational-trainer', 'Occupational Trainer', 'Occupational Certificates', 'ETDP SETA', 'Occupational Certificate for people who plan, deliver, and evaluate workplace learning.'),
+  course(2, 'OC-101321', 'training-development-practitioner', 'Training and Development Practitioner', 'Occupational Certificates', 'ETDP SETA', 'Occupational Certificate for practitioners who develop and coordinate workplace learning.'),
+  course(3, 'OC-97542', 'ecd-practitioner', 'Early Childhood Development Practitioner', 'Occupational Certificates', 'ETDP SETA', 'Occupational Certificate at NQF Level 4 with 131 credits.', { note: 'NQF Level 4 · 131 credits' }),
+  course(4, 'SP-220319', 'learning-development-facilitator', 'Learning and Development Facilitator', 'Skills Programmes', 'ETDP SETA', 'Skills Programme for facilitating learning and supporting learner development.'),
+  course(5, 'SP-220320', 'assessment-practitioner', 'Assessment Practitioner', 'Skills Programmes', 'ETDP SETA', 'Skills Programme for planning and conducting outcomes-based assessments.'),
+  course(6, 'SP-220321', 'skills-development-facilitation-practitioner', 'Skills Development Facilitation Practitioner', 'Skills Programmes', 'ETDP SETA', 'Skills Programme for coordinating organisational skills development.'),
+  course(7, 'SP-220322', 'workplace-based-practitioner', 'Workplace-based Practitioner Programme', 'Skills Programmes', 'ETDP SETA', 'Skills Programme for supporting structured workplace-based learning.', { note: 'Verified 14 May 2026' }),
+  course(8, 'SP-211001', 'assistant-life-coach', 'Assistant Life Coach', 'Skills Programmes', 'ETDP SETA', 'Skills Programme introducing practical coaching skills for personal and workplace development.'),
+  course(9, 'SP-201201', 'workplace-preparation', 'Workplace Preparation', 'Skills Programmes', 'Services SETA', 'Skills Programme focused on preparation for entering and contributing to the workplace.'),
+  course(10, 'SP-211009', 'workplace-essential-skills', 'Workplace Essential Skills', 'Skills Programmes', 'Services SETA', 'Skills Programme developing essential communication, teamwork, and workplace practices.'),
+  course(11, 'SP-2110010', 'new-venture-creation', 'New Venture Creation', 'Skills Programmes', 'Services SETA', 'Skills Programme introducing the foundations of planning and starting a new venture.'),
+  course(12, 'OC-121929', 'occupational-health-safety-officer', 'Occupational Health and Safety Officer', 'Occupational Certificates', 'HWSETA', 'Occupational Certificate for health and safety practice in the workplace.'),
+  course(13, 'OC-121930', 'occupational-health-safety-assistant', 'Occupational Health and Safety Assistant', 'Occupational Certificates', 'HWSETA', 'Occupational Certificate for supporting occupational health and safety operations.'),
+  course(14, 'SP-230801', 'basic-emergency-first-aid-responder', 'Basic Emergency First Aid Responder', 'First Aid Programmes', 'HWSETA', 'First Aid Programme covering foundational emergency response.'),
+  course(15, 'SP-230802', 'intermediate-emergency-first-aid-responder', 'Intermediate Emergency First Aid Responder', 'First Aid Programmes', 'HWSETA', 'First Aid Programme developing intermediate emergency response skills.'),
+  course(16, 'SP-230803', 'advanced-emergency-first-aid-responder', 'Advanced Emergency First Aid Responder', 'First Aid Programmes', 'HWSETA', 'First Aid Programme for advanced emergency response.'),
+  course(17, 'SKILL-BUILDER-001', 'intro-to-ai-for-work', 'Introduction to AI for Work', 'Skill Builder Courses', 'Skill Builder', 'A practical self-paced introduction to using AI tools thoughtfully in everyday work.', { accredited: false, delivery: 'Self-paced', duration: 'Self-paced' }),
+  course(18, 'SKILL-BUILDER-002', 'write-a-job-ready-cv', 'Write a Job-Ready CV', 'Skill Builder Courses', 'Skill Builder', 'A self-paced course for creating a clear, tailored CV and preparing for job applications.', { accredited: false, delivery: 'Self-paced', duration: 'Self-paced' }),
+  course(19, 'SKILL-BUILDER-003', 'digital-workplace-essentials', 'Digital Workplace Essentials', 'Skill Builder Courses', 'Skill Builder', 'Build confidence with everyday digital tools, online communication, and safe work practices.', { accredited: false, delivery: 'Self-paced', duration: 'Self-paced' }),
+  course(20, 'US-117871', 'legacy-facilitator-unit-standard', 'Facilitate Learning (Unit Standard 117871)', 'Legacy Qualifications', 'Legacy Unit Standards', 'Legacy unit-standard training in planning and facilitating outcomes-based learning.'),
+  course(21, 'US-115753', 'legacy-assessor-unit-standard', 'Conduct Assessments (Unit Standard 115753)', 'Legacy Qualifications', 'Legacy Unit Standards', 'Legacy unit-standard training in conducting outcomes-based assessments.'),
+  course(22, 'US-115759', 'legacy-moderator-unit-standard', 'Conduct Moderation (Unit Standard 115759)', 'Legacy Qualifications', 'Legacy Unit Standards', 'Legacy unit-standard training in moderation and assessment quality assurance.'),
 ];

@@ -10,27 +10,31 @@ export default function PublicLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [scrolled, setScrolled] = useState(false);
+  const [compactHeader, setCompactHeader] = useState(false);
 
-  // Track scroll position for contact bubble
+  // Top bar visibility: immediate snap behavior - hide when scrollY > 0, show only at scrollY === 0
   useEffect(() => {
     function handleScroll() {
-      const currentScrollY = window.scrollY;
-      setScrolled(currentScrollY > 100);
+      const shouldHideTopBar = window.scrollY > 0;
+      setCompactHeader((prev) => (prev !== shouldHideTopBar ? shouldHideTopBar : prev));
     }
+
+    // Set initial state
+    setCompactHeader(window.scrollY > 0);
     
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Initial check
     
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   return (
     <>
-      <PublicHeader />
+      <PublicHeader compactHeader={compactHeader} />
       <main className="flex-1">{children}</main>
       <PublicFooter />
-      <ContactBubble show={scrolled} />
+      <ContactBubble key={compactHeader ? 'visible' : 'hidden'} show={compactHeader} />
     </>
   );
 }
