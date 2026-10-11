@@ -36,14 +36,56 @@ const accreditationLinks = [
   { label: 'Become Accredited Training Provider', href: '/accreditation-services' },
   { label: 'Register a TVET College', href: '/accreditation-services/tvet' },
   { label: 'Be SETA Registered', href: '/accreditation-services/seta' },
+  { label: 'Verify Certificate', href: '/verify' },
 ];
 
-const courseCategories: CourseCategory[] = [
-  'Occupational Certificates',
-  'Skills Programmes',
-  'Short Courses',
-  'OD-ETDP NC',
-];
+// Organized by SETA
+const coursesBySETA = {
+  'ETDP SETA': {
+    'Occupational Certificates': [
+      { code: 'OC-97154', title: 'Occupational Trainer', href: '/courses/occupational-trainer' },
+      { code: 'OC-101321', title: 'Training and Development Practitioner', href: '/courses/training-development-practitioner' },
+      { code: 'OC-97542', title: 'Early Childhood Development Practitioner', href: '/courses/ecd-practitioner', meta: 'L4 - 131 credits' },
+    ],
+    'Skills Programmes': [
+      { code: 'SP-220319', title: 'Learning and Development Facilitator', href: '/courses/learning-development-facilitator' },
+      { code: 'SP-220320', title: 'Assessment Practitioner', href: '/courses/assessment-practitioner' },
+      { code: 'SP-220321', title: 'Skills Development Facilitation Practitioner', href: '/courses/sdf-practitioner' },
+      { code: 'SP-220322', title: 'Workplace-based Practitioner Programme', href: '/courses/workplace-based-practitioner' },
+      { code: 'SP-211001', title: 'Assistant Life Coach', href: '/courses/assistant-life-coach' },
+    ],
+  },
+  'Services SETA': {
+    'Skills Programmes': [
+      { code: 'SP-201201', title: 'Workplace Preparation', href: '/courses/workplace-preparation' },
+      { code: 'SP-211009', title: 'Workplace Essential Skills', href: '/courses/workplace-essential-skills' },
+      { code: 'SP-211010', title: 'New Venture Creation', href: '/courses/new-venture-creation' },
+    ],
+  },
+  'HWSETA': {
+    'Occupational Certificates': [
+      { code: 'OC-121929', title: 'Occupational Health and Safety Officer', href: '/courses/ohs-officer' },
+      { code: 'OC-121930', title: 'Occupational Health and Safety Assistant', href: '/courses/ohs-assistant' },
+    ],
+    'First Aid Programmes': [
+      { code: 'SP-230801', title: 'Basic Emergency First Aid Responder', href: '/courses/basic-first-aid' },
+      { code: 'SP-230802', title: 'Intermediate Emergency First Aid Responder', href: '/courses/intermediate-first-aid' },
+      { code: 'SP-230803', title: 'Advanced Emergency First Aid Responder', href: '/courses/advanced-first-aid' },
+    ],
+  },
+  'Legacy Qualifications': {
+    'Unit Standards Based': [
+      // Add legacy unit standard courses here
+      { code: 'US-xxxxx', title: 'Example Legacy Course', href: '/courses/legacy-example' },
+    ],
+  },
+  'Short Courses': {
+    'Professional Development': [
+      // Non-accredited short courses
+      { code: 'SC-001', title: 'Example Short Course', href: '/courses/short-course-example' },
+    ],
+  },
+};
 
 /* ─── helpers ─────────────────────────────────────────────────────── */
 
@@ -85,7 +127,7 @@ function NavDropdown({ label, href, isActive, children }: DropdownProps) {
         <Link
           href={href}
           className={cn(
-            'flex items-center gap-1 px-4 py-2 text-sm font-medium rounded transition-colors hover:text-brand-secondary',
+            'flex items-center gap-1 px-4 py-2 text-sm font-medium transition-colors hover:text-brand-secondary',
             isActive ? 'text-brand-secondary' : 'text-text-primary dark:text-gray-300',
           )}
           aria-haspopup="true"
@@ -102,7 +144,7 @@ function NavDropdown({ label, href, isActive, children }: DropdownProps) {
           type="button"
           onClick={() => setOpen((v) => !v)}
           className={cn(
-            'flex items-center gap-1 px-4 py-2 text-sm font-medium rounded transition-colors hover:text-brand-secondary',
+            'flex items-center gap-1 px-4 py-2 text-sm font-medium transition-colors hover:text-brand-secondary',
             isActive ? 'text-brand-secondary' : 'text-text-primary dark:text-gray-300',
           )}
           aria-haspopup="true"
@@ -119,7 +161,7 @@ function NavDropdown({ label, href, isActive, children }: DropdownProps) {
       {open && (
         <div
           role="menu"
-          className="absolute top-full left-0 min-w-56 bg-white dark:bg-[#1f2028] border border-[#e5e4e7] dark:border-[#2e303a] rounded-xl shadow-xl py-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150"
+          className="absolute top-full left-0 min-w-56 bg-white dark:bg-[#1f2028] border border-[#e5e4e7] dark:border-[#2e303a] shadow-xl py-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150"
         >
           {children}
         </div>
@@ -144,8 +186,14 @@ function DropdownItem({ href, label }: { href: string; label: string }) {
 
 function CoursesDropdown({ isActive }: { isActive: boolean }) {
   const [open, setOpen] = useState(false);
+  const [expandedSETA, setExpandedSETA] = useState<string | null>(null);
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const ref = useRef<HTMLDivElement>(null);
-  const close = useCallback(() => setOpen(false), []);
+  const close = useCallback(() => {
+    setOpen(false);
+    setExpandedSETA(null);
+    setExpandedCategory(null);
+  }, []);
   useClickOutside(ref, close);
 
   return (
@@ -158,7 +206,7 @@ function CoursesDropdown({ isActive }: { isActive: boolean }) {
       <Link
         href="/courses"
         className={cn(
-          'flex items-center gap-1 px-4 py-2 text-sm font-medium rounded transition-colors hover:text-brand-secondary',
+          'flex items-center gap-1 px-4 py-2 text-sm font-medium transition-colors hover:text-brand-secondary',
           isActive ? 'text-brand-secondary' : 'text-text-primary dark:text-gray-300',
         )}
         aria-haspopup="true"
@@ -174,40 +222,89 @@ function CoursesDropdown({ isActive }: { isActive: boolean }) {
       {open && (
         <div
           role="menu"
-          className="absolute top-full left-0 w-120 bg-white dark:bg-[#1f2028] border border-[#e5e4e7] dark:border-[#2e303a] rounded-xl shadow-xl py-4 z-50 animate-in fade-in slide-in-from-top-1 duration-150"
+          className="fixed left-0 right-0 top-[calc(100%+1px)] bg-white dark:bg-[#1f2028] border-t-2 border-brand-primary shadow-2xl z-50"
+          style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)' }}
         >
-          <div className="grid grid-cols-2 gap-x-4 px-4">
-            {courseCategories.map((category) => {
-              const categoryCourses = courses.filter((c) => c.category === category);
-              return (
-                <div key={category} className="mb-3">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-brand-primary dark:text-brand-secondary px-1 mb-1.5">
-                    {category}
-                  </p>
-                  {categoryCourses.map((course) => (
-                    <Link
-                      role="menuitem"
-                      key={course.slug}
-                      href={`/courses/${course.slug}`}
-                      className="flex items-center gap-1.5 px-1 py-1.5 text-sm text-text-primary dark:text-gray-300 hover:text-brand-secondary transition-colors rounded group"
+          <div className="max-w-7xl mx-auto px-8 py-6">
+            <div className="grid grid-cols-4 gap-6">
+              {Object.entries(coursesBySETA).map(([setaName, categories]) => {
+                const setaKey = setaName.replace(/\s+/g, '-');
+                const isExpanded = expandedSETA === setaKey;
+                
+                return (
+                  <div key={setaName} className="border-r border-gray-200 dark:border-gray-700 pr-6 last:border-r-0">
+                    <button
+                      onClick={() => setExpandedSETA(isExpanded ? null : setaKey)}
+                      className="w-full flex items-center justify-between text-left px-3 py-2 bg-brand-neutral/30 hover:bg-brand-neutral transition-colors mb-3"
                     >
-                      <FaChevronRight className="text-[8px] text-brand-secondary opacity-0 group-hover:opacity-100 transition-opacity shrink-0" aria-hidden="true" />
-                      {course.title}
-                    </Link>
-                  ))}
-                </div>
-              );
-            })}
-          </div>
-          <div className="border-t border-[#e5e4e7] dark:border-[#2e303a] mt-2 pt-2 px-4">
-            <Link
-              role="menuitem"
-              href="/courses"
-              className="flex items-center gap-2 text-sm font-semibold text-brand-secondary hover:text-brand-secondary-dark transition-colors"
-            >
-              View All Courses
-              <FaArrowRight className="text-xs" aria-hidden="true" />
-            </Link>
+                      <span className="text-xs font-bold uppercase tracking-wider text-brand-primary dark:text-brand-secondary">
+                        {setaName}
+                      </span>
+                      <FaChevronDown
+                        className={cn('text-[10px] transition-transform', isExpanded && 'rotate-180')}
+                        aria-hidden="true"
+                      />
+                    </button>
+                    
+                    {isExpanded && (
+                      <div className="space-y-3">
+                        {Object.entries(categories).map(([categoryName, programmes]) => {
+                          const catKey = `${setaKey}-${categoryName.replace(/\s+/g, '-')}`;
+                          const isCatExpanded = expandedCategory === catKey;
+                          
+                          return (
+                            <div key={categoryName}>
+                              <button
+                                onClick={() => setExpandedCategory(isCatExpanded ? null : catKey)}
+                                className="w-full flex items-center justify-between text-left px-2 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                              >
+                                <span className="text-[11px] font-semibold text-text-secondary uppercase tracking-wide">
+                                  {categoryName}
+                                </span>
+                                <FaChevronRight
+                                  className={cn('text-[8px] transition-transform', isCatExpanded && 'rotate-90')}
+                                  aria-hidden="true"
+                                />
+                              </button>
+                              
+                              {isCatExpanded && (
+                                <div className="mt-1 space-y-0.5 pl-2">
+                                  {programmes.map((prog) => (
+                                    <Link
+                                      role="menuitem"
+                                      key={prog.code}
+                                      href={prog.href}
+                                      className="block px-2 py-1.5 text-xs text-text-primary dark:text-gray-300 hover:text-brand-secondary hover:bg-brand-neutral/50 transition-colors"
+                                      onClick={close}
+                                    >
+                                      <span className="font-mono text-text-muted">[{prog.code}]</span>
+                                      {' '}
+                                      <span>{prog.title}</span>
+                                    </Link>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            
+            <div className="border-t border-gray-200 dark:border-gray-700 mt-6 pt-4 text-center">
+              <Link
+                role="menuitem"
+                href="/courses"
+                className="inline-flex items-center gap-2 px-6 py-2 bg-brand-secondary text-white text-sm font-semibold hover:bg-brand-secondary-dark transition-colors"
+                onClick={close}
+              >
+                View All Courses
+                <FaArrowRight className="text-xs" aria-hidden="true" />
+              </Link>
+            </div>
           </div>
         </div>
       )}
@@ -322,7 +419,7 @@ export function PublicHeader() {
             <Link
               href="/"
               className={cn(
-                'px-4 py-2 text-sm font-medium rounded transition-colors hover:text-brand-secondary',
+                'px-4 py-2 text-sm font-medium transition-colors hover:text-brand-secondary',
                 pathname === '/' ? 'text-brand-secondary' : 'text-text-primary dark:text-gray-300',
               )}
             >
@@ -342,7 +439,7 @@ export function PublicHeader() {
             <Link
               href="/posts"
               className={cn(
-                'px-4 py-2 text-sm font-medium rounded transition-colors hover:text-brand-secondary',
+                'px-4 py-2 text-sm font-medium transition-colors hover:text-brand-secondary',
                 pathname.startsWith('/posts') ? 'text-brand-secondary' : 'text-text-primary dark:text-gray-300',
               )}
             >
@@ -369,7 +466,7 @@ export function PublicHeader() {
             <Link
               href="/contact"
               className={cn(
-                'px-4 py-2 text-sm font-medium rounded transition-colors hover:text-brand-secondary',
+                'px-4 py-2 text-sm font-medium transition-colors hover:text-brand-secondary',
                 pathname === '/contact' ? 'text-brand-secondary' : 'text-text-primary dark:text-gray-300',
               )}
             >
@@ -447,14 +544,14 @@ export function PublicHeader() {
                 </a>
               </div>
 
-              <Link href="/" className="block py-2 px-3 text-sm font-medium rounded hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300">Home</Link>
+              <Link href="/" className="block py-2 px-3 text-sm font-medium hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300">Home</Link>
 
               {/* About accordion */}
               <div>
                 <button
                   type="button"
                   onClick={() => setMobileAboutOpen((v) => !v)}
-                  className="w-full flex items-center justify-between py-2 px-3 text-sm font-medium rounded hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300"
+                  className="w-full flex items-center justify-between py-2 px-3 text-sm font-medium hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300"
                   aria-expanded={mobileAboutOpen}
                 >
                   About
@@ -524,7 +621,7 @@ export function PublicHeader() {
                 )}
               </div>
 
-              <Link href="/contact" className="block py-2 px-3 text-sm font-medium rounded hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300">Contact</Link>
+              <Link href="/contact" className="block py-2 px-3 text-sm font-medium hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300">Contact</Link>
 
               <div className="flex flex-col gap-2 mt-3 pt-3 border-t border-[#e5e4e7] dark:border-[#2e303a]">
                 {user && isLearner ? (
