@@ -349,56 +349,6 @@ export function PublicHeader() {
 
   return (
     <header className="w-full sticky top-0 z-50">
-      {/* ── top bar ── */}
-      <div className="bg-brand-primary text-white text-sm py-2 hidden md:block">
-        <Container className="flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <a
-              href="mailto:headoffice@ndzalama.org.za"
-              className="flex items-center gap-2 hover:text-brand-secondary transition-colors"
-            >
-              <FaEnvelope aria-hidden="true" />
-              headoffice@ndzalama.org.za
-            </a>
-            <a
-              href="tel:+27155900732"
-              className="flex items-center gap-2 hover:text-brand-secondary transition-colors"
-            >
-              <FaPhone aria-hidden="true" />
-              +(27) 15-5900-732
-            </a>
-            <a
-              href="https://api.whatsapp.com/send?phone=27664832441"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 hover:text-brand-secondary transition-colors"
-            >
-              <FaWhatsapp aria-hidden="true" />
-              WhatsApp Us
-            </a>
-          </div>
-          <div className="flex items-center gap-3">
-            {[
-              { href: 'https://www.facebook.com/ndzalamatraining.co.za', label: 'Facebook', Icon: FaFacebookF },
-              { href: '#', label: 'Instagram', Icon: FaInstagram },
-              { href: '#', label: 'Twitter', Icon: FaTwitter },
-              { href: '#', label: 'LinkedIn', Icon: FaLinkedinIn },
-            ].map(({ href, label, Icon }) => (
-              <a
-                key={label}
-                href={href}
-                target={href !== '#' ? '_blank' : undefined}
-                rel={href !== '#' ? 'noopener noreferrer' : undefined}
-                aria-label={label}
-                className="hover:text-brand-secondary transition-colors"
-              >
-                <Icon aria-hidden="true" />
-              </a>
-            ))}
-          </div>
-        </Container>
-      </div>
-
       {/* ── main nav ── */}
       <div className="bg-white dark:bg-[#16171d] border-b border-[#e5e4e7] dark:border-[#2e303a] shadow-sm">
         <Container className="py-4 flex items-center justify-between">
@@ -446,17 +396,7 @@ export function PublicHeader() {
               Updates
             </Link>
 
-            <Link
-              href="/verify"
-              className={cn(
-                'px-4 py-2 text-sm font-medium rounded transition-colors hover:text-brand-secondary',
-                pathname === '/verify' ? 'text-brand-secondary' : 'text-text-primary dark:text-gray-300',
-              )}
-            >
-              Verify
-            </Link>
-
-            {/* Accreditation dropdown */}
+            {/* Accreditation dropdown (includes Verify) */}
             <NavDropdown label="Accreditation" isActive={isAccreditationActive}>
               {accreditationLinks.map((l) => (
                 <DropdownItem key={l.href} href={l.href} label={l.label} />
@@ -473,16 +413,16 @@ export function PublicHeader() {
               Contact
             </Link>
 
-            {/* CTA group */}
+            {/* CTA - Single "Student Portal" button */}
             <div className="flex items-center gap-2 ml-3">
               {user && isLearner ? (
-                // Logged-in learner on public site
+                // Logged-in learner on public site - show profile
                 <Link
                   href="/learn/dashboard"
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                  className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                 >
                   <div
-                    className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-secondary text-xs font-bold text-white"
+                    className="flex h-8 w-8 items-center justify-center bg-brand-secondary text-xs font-bold text-white"
                     aria-hidden="true"
                   >
                     {initials}
@@ -492,21 +432,14 @@ export function PublicHeader() {
                   </span>
                 </Link>
               ) : (
-                // Guest user
-                <>
-                  <Link
-                    href="/apply"
-                    className="px-5 py-2 text-sm font-semibold rounded-full bg-[#84ba3f] text-white hover:bg-[#6ea032] transition-colors shadow-sm"
-                  >
-                    Apply Now
-                  </Link>
-                  <Link
-                    href="/login"
-                    className="px-5 py-2 text-sm font-semibold rounded-full border-2 border-[#03367A] text-[#03367A] hover:bg-[#03367A] hover:text-white transition-colors dark:border-sky-400 dark:text-sky-400 dark:hover:bg-sky-400 dark:hover:text-white"
-                  >
-                    Student Portal
-                  </Link>
-                </>
+                // Guest user - single CTA button
+                <Link
+                  href="/learn"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-2.5 text-sm font-semibold bg-brand-secondary text-white hover:bg-brand-secondary-dark transition-colors shadow-sm"
+                >
+                  Start Learning
+                  <FaArrowRight className="text-xs" aria-hidden="true" />
+                </Link>
               )}
             </div>
           </nav>
@@ -534,16 +467,6 @@ export function PublicHeader() {
             className="lg:hidden border-t border-[#e5e4e7] dark:border-[#2e303a] bg-white dark:bg-[#16171d]"
           >
             <Container className="py-4 flex flex-col gap-1">
-              {/* Contact info strip */}
-              <div className="flex flex-col gap-2 pb-3 mb-3 border-b border-[#e5e4e7] dark:border-[#2e303a]">
-                <a href="mailto:headoffice@ndzalama.org.za" className="flex items-center gap-2 text-sm text-brand-primary dark:text-brand-secondary">
-                  <FaEnvelope aria-hidden="true" /> headoffice@ndzalama.org.za
-                </a>
-                <a href="tel:+27155900732" className="flex items-center gap-2 text-sm text-brand-primary dark:text-brand-secondary">
-                  <FaPhone aria-hidden="true" /> +(27) 15-5900-732
-                </a>
-              </div>
-
               <Link href="/" className="block py-2 px-3 text-sm font-medium hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300">Home</Link>
 
               {/* About accordion */}
@@ -571,7 +494,7 @@ export function PublicHeader() {
                 <button
                   type="button"
                   onClick={() => setMobileCoursesOpen((v) => !v)}
-                  className="w-full flex items-center justify-between py-2 px-3 text-sm font-medium rounded hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300"
+                  className="w-full flex items-center justify-between py-2 px-3 text-sm font-medium hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300"
                   aria-expanded={mobileCoursesOpen}
                 >
                   Courses
@@ -579,34 +502,44 @@ export function PublicHeader() {
                 </button>
                 {mobileCoursesOpen && (
                   <div className="pl-4 mt-1 flex flex-col gap-1">
-                    {courseCategories.map((category) => {
-                      const categoryCourses = courses.filter((c) => c.category === category);
-                      return (
-                        <div key={category}>
-                          <p className="text-[10px] font-bold uppercase tracking-widest text-brand-primary dark:text-brand-secondary px-3 pt-2 pb-1">
-                            {category}
-                          </p>
-                          {categoryCourses.map((course) => (
-                            <Link key={course.slug} href={`/courses/${course.slug}`} className="block py-1.5 px-3 text-sm text-text-secondary dark:text-gray-400 rounded hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors">
-                              {course.title}
-                            </Link>
-                          ))}
-                        </div>
-                      );
-                    })}
-                    <Link href="/courses" className="flex items-center gap-2 py-2 px-3 text-sm font-semibold text-brand-secondary hover:underline">
+                    {Object.entries(coursesBySETA).map(([setaName, categories]) => (
+                      <div key={setaName}>
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-brand-primary dark:text-brand-secondary px-3 pt-2 pb-1">
+                          {setaName}
+                        </p>
+                        {Object.entries(categories).map(([categoryName, programmes]) => (
+                          <div key={categoryName} className="pl-2">
+                            <p className="text-[9px] font-semibold uppercase text-text-muted px-3 pt-1">
+                              {categoryName}
+                            </p>
+                            {programmes.map((prog) => (
+                              <Link
+                                key={prog.code}
+                                href={prog.href}
+                                className="block py-1.5 px-3 text-xs text-text-secondary dark:text-gray-400 hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors"
+                              >
+                                {prog.title}
+                              </Link>
+                            ))}
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                    <Link href="/courses" className="flex items-center gap-2 py-2 px-3 text-sm font-semibold text-brand-secondary hover:underline mt-2">
                       View All Courses <FaArrowRight className="text-xs" aria-hidden="true" />
                     </Link>
                   </div>
                 )}
               </div>
 
-              {/* Accreditation accordion */}
+              <Link href="/posts" className="block py-2 px-3 text-sm font-medium hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300">Updates</Link>
+
+              {/* Accreditation accordion (includes Verify) */}
               <div>
                 <button
                   type="button"
                   onClick={() => setMobileAccreditationOpen((v) => !v)}
-                  className="w-full flex items-center justify-between py-2 px-3 text-sm font-medium rounded hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300"
+                  className="w-full flex items-center justify-between py-2 px-3 text-sm font-medium hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300"
                   aria-expanded={mobileAccreditationOpen}
                 >
                   Accreditation
@@ -615,7 +548,7 @@ export function PublicHeader() {
                 {mobileAccreditationOpen && (
                   <div className="pl-4 mt-1 flex flex-col gap-1">
                     {accreditationLinks.map((l) => (
-                      <Link key={l.href} href={l.href} className="block py-2 px-3 text-sm text-text-secondary dark:text-gray-400 rounded hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors">{l.label}</Link>
+                      <Link key={l.href} href={l.href} className="block py-2 px-3 text-sm text-text-secondary dark:text-gray-400 hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors">{l.label}</Link>
                     ))}
                   </div>
                 )}
@@ -628,10 +561,10 @@ export function PublicHeader() {
                   // Logged-in learner
                   <Link
                     href="/learn/dashboard"
-                    className="flex items-center justify-center gap-2 py-2.5 px-3 text-sm font-semibold rounded-full bg-brand-secondary text-white hover:bg-brand-secondary-dark transition-colors"
+                    className="flex items-center justify-center gap-2 py-2.5 px-3 text-sm font-semibold bg-brand-secondary text-white hover:bg-brand-secondary-dark transition-colors"
                   >
                     <div
-                      className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20 text-xs font-bold"
+                      className="flex h-6 w-6 items-center justify-center bg-white/20 text-xs font-bold"
                       aria-hidden="true"
                     >
                       {initials}
@@ -639,21 +572,14 @@ export function PublicHeader() {
                     My Dashboard
                   </Link>
                 ) : (
-                  // Guest
-                  <>
-                    <Link
-                      href="/apply"
-                      className="block py-2.5 px-3 text-sm font-semibold rounded-full bg-[#84ba3f] text-white text-center hover:bg-[#6ea032] transition-colors"
-                    >
-                      Apply Now
-                    </Link>
-                    <Link
-                      href="/login"
-                      className="block py-2.5 px-3 text-sm font-semibold rounded-full border-2 border-[#03367A] text-[#03367A] text-center hover:bg-[#03367A] hover:text-white transition-colors"
-                    >
-                      Student Portal
-                    </Link>
-                  </>
+                  // Guest - CTA button
+                  <Link
+                    href="/learn"
+                    className="flex items-center justify-center gap-2 py-2.5 px-3 text-sm font-semibold bg-brand-secondary text-white text-center hover:bg-brand-secondary-dark transition-colors"
+                  >
+                    Start Learning
+                    <FaArrowRight className="text-xs" aria-hidden="true" />
+                  </Link>
                 )}
               </div>
             </Container>
