@@ -61,28 +61,28 @@ export function PublicFooter() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Facebook"
-                  className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#84ba3f] transition-colors"
+                  className="w-9 h-9 bg-white/10 flex items-center justify-center hover:bg-brand-secondary transition-colors"
                 >
                   <FaFacebookF className="text-sm" aria-hidden="true" />
                 </a>
                 <a
                   href="#"
                   aria-label="Instagram"
-                  className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#84ba3f] transition-colors"
+                  className="w-9 h-9 bg-white/10 flex items-center justify-center hover:bg-brand-secondary transition-colors"
                 >
                   <FaInstagram className="text-sm" aria-hidden="true" />
                 </a>
                 <a
                   href="#"
                   aria-label="Twitter"
-                  className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#84ba3f] transition-colors"
+                  className="w-9 h-9 bg-white/10 flex items-center justify-center hover:bg-brand-secondary transition-colors"
                 >
                   <FaTwitter className="text-sm" aria-hidden="true" />
                 </a>
                 <a
                   href="#"
                   aria-label="LinkedIn"
-                  className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#84ba3f] transition-colors"
+                  className="w-9 h-9 bg-white/10 flex items-center justify-center hover:bg-brand-secondary transition-colors"
                 >
                   <FaLinkedinIn className="text-sm" aria-hidden="true" />
                 </a>
@@ -99,10 +99,10 @@ export function PublicFooter() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="flex items-center gap-2 text-sm text-gray-400 hover:text-[#84ba3f] transition-colors group"
+                      className="flex items-center gap-2 text-sm text-gray-400 hover:text-brand-secondary transition-colors group"
                     >
                       <FaArrowRight
-                        className="text-xs text-[#84ba3f] opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="text-xs text-brand-secondary opacity-0 group-hover:opacity-100 transition-opacity"
                         aria-hidden="true"
                       />
                       {link.label}
@@ -112,10 +112,10 @@ export function PublicFooter() {
                 <li>
                   <Link
                     href="/learn"
-                    className="flex items-center gap-2 text-sm text-gray-400 hover:text-[#84ba3f] transition-colors group"
+                    className="flex items-center gap-2 text-sm text-gray-400 hover:text-brand-secondary transition-colors group"
                   >
                     <FaArrowRight
-                      className="text-xs text-[#84ba3f] opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="text-xs text-brand-secondary opacity-0 group-hover:opacity-100 transition-opacity"
                       aria-hidden="true"
                     />
                     Learn Online
@@ -142,10 +142,10 @@ export function PublicFooter() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="flex items-center gap-2 text-sm text-gray-400 hover:text-[#84ba3f] transition-colors group"
+                      className="flex items-center gap-2 text-sm text-gray-400 hover:text-brand-secondary transition-colors group"
                     >
                       <FaArrowRight
-                        className="text-xs text-[#84ba3f] opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="text-xs text-brand-secondary opacity-0 group-hover:opacity-100 transition-opacity"
                         aria-hidden="true"
                       />
                       {link.label}
@@ -163,7 +163,7 @@ export function PublicFooter() {
               <ul className="space-y-4">
                 <li className="flex items-start gap-3">
                   <FaMapMarkerAlt
-                    className="text-[#84ba3f] mt-0.5 shrink-0"
+                    className="text-brand-secondary mt-0.5 shrink-0"
                     aria-hidden="true"
                   />
                   <span className="text-sm text-gray-400">
@@ -172,30 +172,30 @@ export function PublicFooter() {
                   </span>
                 </li>
                 <li className="flex items-center gap-3">
-                  <FaPhone className="text-[#84ba3f] shrink-0" aria-hidden="true" />
+                  <FaPhone className="text-brand-secondary shrink-0" aria-hidden="true" />
                   <a
                     href="tel:+27155900732"
-                    className="text-sm text-gray-400 hover:text-[#84ba3f] transition-colors"
+                    className="text-sm text-gray-400 hover:text-brand-secondary transition-colors"
                   >
                     +(27) 15-5900-732
                   </a>
                 </li>
                 <li className="flex items-center gap-3">
-                  <FaWhatsapp className="text-[#84ba3f] shrink-0" aria-hidden="true" />
+                  <FaWhatsapp className="text-brand-secondary shrink-0" aria-hidden="true" />
                   <a
                     href="https://api.whatsapp.com/send?phone=27664832441"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm text-gray-400 hover:text-[#84ba3f] transition-colors"
+                    className="text-sm text-gray-400 hover:text-brand-secondary transition-colors"
                   >
                     +27 66 483 2441
                   </a>
                 </li>
                 <li className="flex items-center gap-3">
-                  <FaEnvelope className="text-[#84ba3f] shrink-0" aria-hidden="true" />
+                  <FaEnvelope className="text-brand-secondary shrink-0" aria-hidden="true" />
                   <a
                     href="mailto:headoffice@ndzalama.org.za"
-                    className="text-sm text-gray-400 hover:text-[#84ba3f] transition-colors"
+                    className="text-sm text-gray-400 hover:text-brand-secondary transition-colors"
                   >
                     headoffice@ndzalama.org.za
                   </a>
@@ -213,15 +213,15 @@ export function PublicFooter() {
             &copy; {new Date().getFullYear()} Ndzalama Training Institute. All rights reserved.
           </p>
           <div className="flex items-center gap-4">
-            <Link href="/privacy-policy" className="hover:text-[#84ba3f] transition-colors">
+            <Link href="/privacy-policy" className="hover:text-brand-secondary transition-colors">
               Privacy Policy
             </Link>
             <span className="text-white/20">|</span>
-            <Link href="/terms-of-use" className="hover:text-[#84ba3f] transition-colors">
+            <Link href="/terms-of-use" className="hover:text-brand-secondary transition-colors">
               Terms of Use
             </Link>
             <span className="text-white/20">|</span>
-            <Link href="/learn" className="hover:text-[#84ba3f] transition-colors">
+            <Link href="/learn" className="hover:text-brand-secondary transition-colors">
               Learn Online
             </Link>
           </div>

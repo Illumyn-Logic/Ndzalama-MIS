@@ -28,7 +28,7 @@ export default function HomePage() {
     <>
       {/* Hero */}
       <section
-        className="relative overflow-hidden bg-[#006600] text-white"
+        className="relative overflow-hidden bg-brand-primary text-white"
       >
         {/* Background photo with dark overlay */}
         <div className="absolute inset-0 z-0">
@@ -40,27 +40,27 @@ export default function HomePage() {
             priority
             aria-hidden="true"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#006600]/90 via-[#004d00]/80 to-[#03367A]/70" aria-hidden="true" />
+          <div className="absolute inset-0 bg-gradient-to-r from-brand-primary/95 via-brand-primary/85 to-brand-primary/75" aria-hidden="true" />
         </div>
 
-        {/* Decorative circles */}
+        {/* Decorative squares */}
         <span
-          className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-[#84ba3f]/20 pointer-events-none z-10"
+          className="absolute -top-24 -right-24 w-96 h-96 bg-brand-secondary/15 pointer-events-none z-10"
           aria-hidden="true"
         />
         <span
-          className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-white/5 pointer-events-none z-10"
+          className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 pointer-events-none z-10"
           aria-hidden="true"
         />
 
         <Container className="relative z-10 py-8">
           <div className="max-w-3xl">
-            <span className="inline-block mb-4 px-4 py-1.5 rounded-full bg-[#84ba3f]/20 text-[#84ba3f] text-sm font-semibold tracking-wide uppercase">
+            <span className="inline-block mb-4 px-4 py-1.5 bg-brand-secondary/20 text-brand-secondary text-sm font-semibold tracking-wide uppercase">
               SAQA Accredited Training
             </span>
             <h1 className="text-4xl md:text-6xl font-bold leading-tight">
               Welcome to{' '}
-              <span className="text-[#84ba3f]">Ndzalama</span>{' '}
+              <span className="text-brand-secondary">Ndzalama</span>{' '}
               Training
             </h1>
             <p className="mt-5 text-lg md:text-xl text-white/80 max-w-xl leading-relaxed">
@@ -75,7 +75,7 @@ export default function HomePage() {
                 'Nationwide delivery',
               ].map((item) => (
                 <span key={item} className="flex items-center gap-1.5">
-                  <FaCheckCircle className="text-[#84ba3f]" aria-hidden="true" />
+                  <FaCheckCircle className="text-brand-secondary" aria-hidden="true" />
                   {item}
                 </span>
               ))}
@@ -84,14 +84,14 @@ export default function HomePage() {
             <div className="mt-10 flex flex-col sm:flex-row gap-4">
               <Link
                 href="/courses"
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full font-semibold bg-[#84ba3f] text-white hover:bg-[#6ea032] transition-colors"
+                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 font-semibold bg-brand-secondary text-white hover:bg-[#6ea032] transition-colors"
               >
                 Explore Courses
                 <FaArrowRight className="text-sm" aria-hidden="true" />
               </Link>
               <Link
                 href="/register"
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full font-semibold border-2 border-white/40 text-white hover:bg-white/10 transition-colors"
+                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 font-semibold border-2 border-white/40 text-white hover:bg-white/10 transition-colors"
               >
                 Book Training
               </Link>
@@ -102,14 +102,14 @@ export default function HomePage() {
           <div className="mt-16 grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl">
             {[
               { icon: <FaUserGraduate aria-hidden="true" />, value: '5 000+', label: 'Learners Trained' },
-              { icon: <FaCheckCircle aria-hidden="true" />, value: '6+', label: 'Accredited Programmes' },
-              { icon: <FaCalendarAlt aria-hidden="true" />, value: '10+', label: 'Years of Experience' },
+              { icon: <FaCheckCircle aria-hidden="true" />, value: '20+', label: 'Accredited Programmes' },
+              { icon: <FaCalendarAlt aria-hidden="true" />, value: '20+', label: 'Years of Excellence' },
             ].map(({ icon, value, label }) => (
               <div
                 key={label}
-                className="bg-white/10 backdrop-blur-sm rounded-xl p-5 flex flex-col gap-1"
+                className="bg-white/10 backdrop-blur-sm p-5 flex flex-col gap-1"
               >
-                <span className="text-[#84ba3f] text-xl">{icon}</span>
+                <span className="text-brand-secondary text-xl">{icon}</span>
                 <span className="text-2xl font-bold text-white">{value}</span>
                 <span className="text-xs text-white/60 uppercase tracking-wide">{label}</span>
               </div>
@@ -119,11 +119,11 @@ export default function HomePage() {
       </section>
 
       {/* Partner and accreditation logos */}
-      <section className="border-b border-[#e5e4e7] bg-[#f9f9f9] py-10 dark:border-[#2e303a] dark:bg-[#1f2028]">
+      <section className="border-b border-[#e5e4e7] bg-brand-neutral py-10 dark:border-[#2e303a] dark:bg-[#1f2028]">
         <Container>
           <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
             <div className="max-w-sm shrink-0">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#84ba3f]">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-secondary">
                 Our network
               </p>
               <h2 className="mt-2 text-2xl font-bold text-[#333] dark:text-white">
@@ -155,7 +155,7 @@ export default function HomePage() {
           <div className="text-center mt-10">
             <Link
               href="/courses"
-              className="inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium border-2 border-[#84ba3f] text-[#84ba3f] hover:bg-[#84ba3f] hover:text-white transition-colors"
+              className="inline-flex items-center justify-center px-6 py-3 font-medium border-2 border-brand-secondary text-brand-secondary hover:bg-brand-secondary hover:text-white transition-colors"
             >
               View All Courses
             </Link>
@@ -186,25 +186,25 @@ export default function HomePage() {
               <div className="mt-6 flex flex-wrap gap-4">
                 <Link
                   href="/about"
-                  className="inline-flex items-center justify-center rounded-full bg-[#84ba3f] px-6 py-3 font-semibold text-white transition-colors hover:bg-[#6ea032]"
+                  className="inline-flex items-center justify-center bg-brand-secondary px-6 py-3 font-semibold text-white transition-colors hover:bg-[#6ea032]"
                 >
                   Read our story
                 </Link>
                 <Link
                   href="/why-choose-us"
-                  className="inline-flex items-center justify-center rounded-full border border-[#84ba3f] px-6 py-3 font-semibold text-[#84ba3f] transition-colors hover:bg-[#84ba3f] hover:text-white"
+                  className="inline-flex items-center justify-center border border-brand-secondary px-6 py-3 font-semibold text-brand-secondary transition-colors hover:bg-brand-secondary hover:text-white"
                 >
                   Why choose us
                 </Link>
               </div>
             </div>
 
-            <div className="rounded-3xl bg-[#03367A] p-8 text-white shadow-lg">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#d8ebbe]">
+            <div className="bg-brand-primary p-8 text-white shadow-lg">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-neutral">
                 Leadership
               </p>
               <div className="mt-4 flex items-center gap-4">
-                <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-full border-2 border-white/20">
+                <div className="relative h-20 w-20 shrink-0 overflow-hidden border-2 border-white/20">
                   <Image
                     src="/images/team/sanette-wevell.jpg"
                     alt="Sanette Wevell"
@@ -227,7 +227,7 @@ export default function HomePage() {
       </section>
 
       {/* Why Ndzalama */}
-      <section className="bg-[#03367A] text-white py-16">
+      <section className="bg-brand-primary text-white py-16">
         <Container>
           <SectionTitle title="Why Choose Ndzalama?" />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
@@ -261,9 +261,9 @@ export default function HomePage() {
       {/* Accreditation Services teaser */}
       <section className="py-16">
         <Container>
-          <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-10 items-center rounded-3xl bg-[#eef6df] dark:bg-[#1a2415] p-8 md:p-12">
+          <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-10 items-center bg-brand-neutral dark:bg-[#1a2415] p-8 md:p-12">
             <div>
-              <span className="inline-block mb-3 px-4 py-1.5 rounded-full bg-[#84ba3f]/20 text-[#4c7a1f] dark:text-[#84ba3f] text-sm font-semibold tracking-wide uppercase">
+              <span className="inline-block mb-3 px-4 py-1.5 bg-brand-secondary/20 text-brand-primary dark:text-brand-secondary text-sm font-semibold tracking-wide uppercase">
                 Beyond Training
               </span>
               <h2 className="text-3xl font-bold text-[#333] dark:text-white">
@@ -277,7 +277,7 @@ export default function HomePage() {
               </p>
               <Link
                 href="/accreditation-services"
-                className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#84ba3f] px-6 py-3 font-semibold text-white transition-colors hover:bg-[#6ea032]"
+                className="mt-5 inline-flex items-center gap-2 bg-brand-secondary px-6 py-3 font-semibold text-white transition-colors hover:bg-[#6ea032]"
               >
                 Explore Accreditation Services
                 <FaArrowRight className="text-sm" aria-hidden="true" />
@@ -311,13 +311,13 @@ export default function HomePage() {
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/register"
-              className="inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium bg-[#84ba3f] text-white hover:bg-[#6ea032] transition-colors"
+              className="inline-flex items-center justify-center px-6 py-3 font-medium bg-brand-secondary text-white hover:bg-[#6ea032] transition-colors"
             >
               Book Now
             </Link>
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium border-2 border-[#84ba3f] text-[#84ba3f] hover:bg-[#84ba3f] hover:text-white transition-colors"
+              className="inline-flex items-center justify-center px-6 py-3 font-medium border-2 border-brand-secondary text-brand-secondary hover:bg-brand-secondary hover:text-white transition-colors"
             >
               Contact Us
             </Link>
