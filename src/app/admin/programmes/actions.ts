@@ -114,7 +114,12 @@ function parentProgrammePath(input: { qualificationId?: string | null; moduleId?
 function validateQualificationInput(input: QualificationInput) {
   const framework = input.framework ?? QualificationFramework.QCTO_OCCUPATIONAL_CERTIFICATE;
   const registrationRef = clean(input.registrationRef ?? input.saqaId ?? "");
-  if (![QualificationFramework.QCTO_OCCUPATIONAL_CERTIFICATE, QualificationFramework.SKILLS_PROGRAMME, QualificationFramework.SHORT_COURSE].includes(framework)) return { error: "Select a supported programme type" };
+  const supportedFrameworks: QualificationFramework[] = [
+    QualificationFramework.QCTO_OCCUPATIONAL_CERTIFICATE,
+    QualificationFramework.SKILLS_PROGRAMME,
+    QualificationFramework.SHORT_COURSE,
+  ];
+  if (!supportedFrameworks.includes(framework)) return { error: "Select a supported programme type" };
   const refIsValid = framework === QualificationFramework.QCTO_OCCUPATIONAL_CERTIFICATE
     ? /^\d+$/.test(registrationRef)
     : framework === QualificationFramework.SKILLS_PROGRAMME

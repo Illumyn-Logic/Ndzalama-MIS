@@ -5,9 +5,20 @@ import bcrypt from "bcryptjs";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { email, password, firstName, lastName, phone, province, townCity, address } = body;
+    const {
+      email,
+      password,
+      firstName,
+      lastName,
+      phone,
+      province,
+      townCity,
+      address,
+      idOrPassportNumber,
+      postalCode,
+    } = body;
 
-    if (!email || !password || !firstName) {
+    if (!email || !password || !firstName || !idOrPassportNumber || !postalCode) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
@@ -31,6 +42,8 @@ export async function POST(req: Request) {
             province: province || "",
             suburbCity: townCity || "",
             streetAddress: address || "",
+            idOrPassportNumber,
+            postalCode,
             dateOfBirth: new Date("2000-01-01"), // Placeholder, update via profile settings later
             gender: "PREFER_NOT_TO_SAY",
             equity: "OTHER",
