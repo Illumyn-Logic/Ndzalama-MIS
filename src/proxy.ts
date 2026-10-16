@@ -1,32 +1,37 @@
-import { auth } from "@/auth";
-import { NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
+import { NextRequest, NextResponse } from "next/server";
 
-export default auth((req) => {
-  const { nextUrl } = req;
-  const isLoggedIn = !!req.auth;
-  const userRole = req.auth?.user?.role as string | undefined;
+export async function proxy(request: NextRequest) {
+  const token = await getToken({
+    req: request,
+    secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
+  });
+
+  const { nextUrl } = request;
+  const isLoggedIn = !!token;
+  const userRole = token?.role as string | undefined;
   const pathname = nextUrl.pathname;
 
   // 👀 DEBUG: Watch your terminal to see the middleware intercept requests
-  console.log(`[Middleware] Path: ${pathname} | Logged In: ${isLoggedIn} | Role: ${userRole || 'None'}`);
+  console.log(`[Proxy] Path: ${pathname} | Logged In: ${isLoggedIn} | Role: ${userRole || "None"}`);
 
   // 1. Legacy redirects (apply before other checks)
-  if (pathname === '/apply') {
-    console.log(`♻️ [Middleware] Legacy redirect: ${pathname} → /register`);
-    return NextResponse.redirect(new URL('/register', nextUrl));
+  if (pathname === "/apply") {
+    console.log(`♻️ [Proxy] Legacy redirect: ${pathname} → /register`);
+    return NextResponse.redirect(new URL("/register", nextUrl));
   }
-  if (pathname === '/learner' || pathname.startsWith('/learner/')) {
-    console.log(`♻️ [Middleware] Legacy redirect: ${pathname} → /learn/dashboard`);
-    return NextResponse.redirect(new URL('/learn/dashboard', nextUrl));
+  if (pathname === "/learner" || pathname.startsWith("/learner/")) {
+    console.log(`♻️ [Proxy] Legacy redirect: ${pathname} → /learn/dashboard`);
+    return NextResponse.redirect(new URL("/learn/dashboard", nextUrl));
   }
   // Consolidate all login pages to /login
-  if (pathname === '/learn/login') {
-    console.log(`♻️ [Middleware] Consolidating auth: /learn/login → /login`);
-    return NextResponse.redirect(new URL('/login', nextUrl));
+  if (pathname === "/learn/login") {
+    console.log(`♻️ [Proxy] Consolidating auth: /learn/login → /login`);
+    return NextResponse.redirect(new URL("/login", nextUrl));
   }
-  if (pathname === '/learn/register') {
-    console.log(`♻️ [Middleware] Consolidating auth: /learn/register → /register`);
-    return NextResponse.redirect(new URL('/register', nextUrl));
+  if (pathname === "/learn/register") {
+    console.log(`♻️ [Proxy] Consolidating auth: /learn/register → /register`);
+    return NextResponse.redirect(new URL("/register", nextUrl));
   }
 
   // 2. Public routes (accessible to everyone)
@@ -46,15 +51,15 @@ export default auth((req) => {
     "/privacy-policy",
     "/terms-of-use",
     "/forgot-password",
-    "/learn",           // LMS portal homepage (public landing)
-    "/learn/courses",   // Browse courses (public)
-    "/learn/about",     // About the LMS (public)
+    "/learn",
+    "/learn/courses",
+    "/learn/about",
   ];
-  
-  const isPublicRoute = 
-    publicRoutes.some(route => pathname === route || pathname.startsWith(`${route}/`)) || 
+
+  const isPublicRoute =
+    publicRoutes.some((route) => pathname === route || pathname.startsWith(`${route}/`)) ||
     pathname.startsWith("/api/auth");
-  
+
   if (isPublicRoute) {
     return NextResponse.next();
   }
@@ -63,7 +68,7 @@ export default auth((req) => {
   const authPages = ["/login", "/register"];
   if (authPages.includes(pathname)) {
     if (isLoggedIn) {
-      console.log(`♻️ [Middleware] Already logged in, redirecting to dashboard`);
+      console.log(`♻️ [Proxy] Already logged in, redirecting to dashboard`);
       return NextResponse.redirect(new URL(getDefaultRoute(userRole), nextUrl));
     }
     return NextResponse.next();
@@ -71,7 +76,7 @@ export default auth((req) => {
 
   // 4. Redirect to single login if NOT authenticated
   if (!isLoggedIn) {
-    console.log(`🔒 [Middleware] Unauthenticated, redirecting to /login`);
+    console.log(`🔒 [Proxy] Unauthenticated, redirecting to /login`);
     return NextResponse.redirect(new URL("/login", nextUrl));
   }
 
@@ -85,7 +90,7 @@ export default auth((req) => {
     "/moderator": ["SUPER_ADMIN", "ADMIN", "MODERATOR"],
     "/mentor": ["SUPER_ADMIN", "ADMIN", "SME_MENTOR"],
     "/employer": ["SUPER_ADMIN", "ADMIN", "HOST_EMPLOYER"],
-    "/learn/dashboard": ["LEARNER", "SUPER_ADMIN", "ADMIN"], // Learner workspace + admin override
+    "/learn/dashboard": ["LEARNER", "SUPER_ADMIN", "ADMIN"],
     "/learn/my-courses": ["LEARNER", "SUPER_ADMIN", "ADMIN"],
     "/learn/assessments": ["LEARNER", "SUPER_ADMIN", "ADMIN"],
     "/learn/certificates": ["LEARNER", "SUPER_ADMIN", "ADMIN"],
@@ -96,24 +101,18 @@ export default auth((req) => {
   // Check if the requested path matches any restricted prefix
   for (const [routePrefix, allowedRoles] of Object.entries(roleRouteMap)) {
     if (pathname === routePrefix || pathname.startsWith(`${routePrefix}/`)) {
-      
-      // If the user's role is NOT in the allowed list, block them!
       if (!userRole || !allowedRoles.includes(userRole)) {
-        console.log(`🚫 [Middleware] BLOCKED: ${userRole} tried to access ${pathname}`);
-        // Redirect them to their own default dashboard
+        console.log(`🚫 [Proxy] BLOCKED: ${userRole} tried to access ${pathname}`);
         return NextResponse.redirect(new URL(getDefaultRoute(userRole), nextUrl));
       }
-      
-      // Role is authorized, allow the request
+
       return NextResponse.next();
     }
   }
 
-  // 6. Fallback for generic /dashboard routing or unmatched authenticated routes
   return NextResponse.next();
-});
+}
 
-// Helper to route users to their correct home base
 function getDefaultRoute(role?: string): string {
   if (!role) return "/login";
   switch (role) {
@@ -139,7 +138,6 @@ function getDefaultRoute(role?: string): string {
   }
 }
 
-// Ensure middleware runs on all routes except static assets
 export const config = {
   matcher: ["/((?!_next/static|_next/image|favicon.ico|images|.*\\..*).*)"],
 };
