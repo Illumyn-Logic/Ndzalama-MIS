@@ -28,10 +28,12 @@ const SA_PROVINCES = [
 
 interface FormData {
   full_name: string;
+  id_or_passport_number: string;
   age: string;
   province: string;
   address: string;
   town_city: string;
+  postal_code: string;
   highest_education: string;
   email: string;
   phone: string;
@@ -47,10 +49,12 @@ export default function RegisterPage() {
 
   const [form, setForm] = useState<FormData>({
     full_name: '',
+    id_or_passport_number: '',
     age: '',
     province: '',
     address: '',
     town_city: '',
+    postal_code: '',
     highest_education: '',
     email: '',
     phone: '',
@@ -93,6 +97,10 @@ export default function RegisterPage() {
       next.full_name = 'Full name is required.';
     }
 
+    if (!form.id_or_passport_number.trim()) {
+      next.id_or_passport_number = 'SA ID or passport number is required.';
+    }
+
     const ageNum = parseInt(form.age, 10);
 
     if (!form.age.trim()) {
@@ -111,6 +119,10 @@ export default function RegisterPage() {
 
     if (!form.town_city.trim()) {
       next.town_city = 'Town / City is required.';
+    }
+
+    if (!form.postal_code.trim()) {
+      next.postal_code = 'Postal code is required.';
     }
 
     if (!form.highest_education.trim()) {
@@ -196,10 +208,12 @@ export default function RegisterPage() {
           password: form.password,
           firstName,
           lastName,
+          idOrPassportNumber: form.id_or_passport_number.trim(),
           phone: form.phone.trim(),
           province: form.province,
           townCity: form.town_city.trim(),
           address: form.address.trim(),
+          postalCode: form.postal_code.trim(),
           age: parseInt(form.age, 10),
           highestEducation: form.highest_education.trim(),
         }),
@@ -342,6 +356,12 @@ export default function RegisterPage() {
                   placeholder: 'e.g. Thabo Nkosi',
                 })}
 
+                {field('id_or_passport_number', 'SA ID / Passport Number', {
+                  type: 'text',
+                  autoComplete: 'off',
+                  placeholder: 'Enter your ID or passport number',
+                })}
+
                 {field('age', 'Age', {
                   type: 'number',
                   min: '16',
@@ -404,6 +424,13 @@ export default function RegisterPage() {
                   type: 'text',
                   autoComplete: 'address-level2',
                   placeholder: 'e.g. Polokwane',
+                })}
+
+                {field('postal_code', 'Postal Code', {
+                  type: 'text',
+                  autoComplete: 'postal-code',
+                  inputMode: 'numeric',
+                  placeholder: 'e.g. 0850',
                 })}
 
                 {field('highest_education', 'Highest Education', {

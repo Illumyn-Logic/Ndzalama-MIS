@@ -7,7 +7,7 @@ import {
   FaUser,
   FaClock,
 } from 'react-icons/fa';
-import {
+import type {
   AssessmentSubmission,
   AssessmentTask,
   CourseModule,

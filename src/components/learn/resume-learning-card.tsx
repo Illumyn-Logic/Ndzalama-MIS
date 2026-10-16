@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { FaPlay, FaLock, FaCheckCircle, FaClock } from 'react-icons/fa';
-import {
+import type {
   Enrollment,
   Qualification,
   CourseModule,
