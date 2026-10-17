@@ -1,7 +1,7 @@
 'use client';
 
 import { FaBriefcase, FaBuilding, FaPhone, FaEnvelope } from 'react-icons/fa';
-import { HostEmployer } from '@prisma/client';
+import type { HostEmployer } from '@prisma/client';
 
 interface EmployerReportCardProps {
   employer?: HostEmployer | null;

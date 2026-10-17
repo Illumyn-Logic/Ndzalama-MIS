@@ -1,7 +1,7 @@
 'use client';
 
 import { FaCheckCircle, FaClock, FaFileAlt, FaChartLine } from 'react-icons/fa';
-import { Enrollment, Qualification, CourseModule, Lesson, LessonProgress } from '@prisma/client';
+import type { Enrollment, Qualification, CourseModule, Lesson, LessonProgress } from '@prisma/client';
 
 type EnrollmentWithRelations = Enrollment & {
   qualification: Qualification & {

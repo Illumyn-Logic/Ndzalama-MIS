@@ -3,8 +3,62 @@
 import { useState, type FormEvent } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { AssessmentKind, DurationUnit, ModuleType, ProgrammeDeliveryMode, QualificationFramework, QualificationStatus, ResourceKind } from '@prisma/client';
 import * as actions from '@/app/admin/programmes/actions';
+
+const QualificationFramework = {
+  LEGACY_UNIT_STANDARD: 'LEGACY_UNIT_STANDARD',
+  QCTO_OCCUPATIONAL_CERTIFICATE: 'QCTO_OCCUPATIONAL_CERTIFICATE',
+  SKILLS_PROGRAMME: 'SKILLS_PROGRAMME',
+  SHORT_COURSE: 'SHORT_COURSE',
+  REGULATORY_EXAM_PREP: 'REGULATORY_EXAM_PREP',
+} as const;
+
+type QualificationFramework = (typeof QualificationFramework)[keyof typeof QualificationFramework];
+
+const DurationUnit = {
+  WEEKS: 'WEEKS',
+  MONTHS: 'MONTHS',
+  YEARS: 'YEARS',
+} as const;
+type DurationUnit = (typeof DurationUnit)[keyof typeof DurationUnit];
+
+const ProgrammeDeliveryMode = {
+  FULL_TIME: 'FULL_TIME',
+  PART_TIME: 'PART_TIME',
+  DISTANCE: 'DISTANCE',
+  BLENDED: 'BLENDED',
+} as const;
+type ProgrammeDeliveryMode = (typeof ProgrammeDeliveryMode)[keyof typeof ProgrammeDeliveryMode];
+
+const QualificationStatus = {
+  DEVELOPMENT: 'DEVELOPMENT',
+  ACTIVE: 'ACTIVE',
+  ARCHIVED: 'ARCHIVED',
+} as const;
+type QualificationStatus = (typeof QualificationStatus)[keyof typeof QualificationStatus];
+
+const ModuleType = {
+  KNOWLEDGE: 'KNOWLEDGE',
+  PRACTICAL: 'PRACTICAL',
+  WORK_EXPERIENCE: 'WORK_EXPERIENCE',
+} as const;
+type ModuleType = (typeof ModuleType)[keyof typeof ModuleType];
+
+const ResourceKind = {
+  PDF: 'PDF',
+  VIDEO: 'VIDEO',
+  SLIDES: 'SLIDES',
+  AUDIO: 'AUDIO',
+  LINK: 'LINK',
+} as const;
+type ResourceKind = (typeof ResourceKind)[keyof typeof ResourceKind];
+
+const AssessmentKind = {
+  FORMATIVE: 'FORMATIVE',
+  SUMMATIVE: 'SUMMATIVE',
+  FISA: 'FISA',
+} as const;
+type AssessmentKind = (typeof AssessmentKind)[keyof typeof AssessmentKind];
 
 const inputClass = 'w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-[#84ba3f] focus:ring-2 focus:ring-[#84ba3f]/30 dark:border-[#2e303a] dark:bg-[#0a0a0a] dark:text-white';
 const buttonClass = 'rounded-lg bg-[#006600] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#03367A] focus:outline-none focus:ring-2 focus:ring-[#84ba3f] disabled:opacity-50';
