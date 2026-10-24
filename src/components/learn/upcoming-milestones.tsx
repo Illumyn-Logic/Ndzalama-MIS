@@ -7,7 +7,7 @@ import {
   FaUsers,
   FaClock,
 } from 'react-icons/fa';
-import {
+import type {
   Enrollment,
   Qualification,
   CourseModule,
