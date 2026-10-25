@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import { Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { AuthSessionProvider } from '@/context/session-provider';
+import { ThemeProvider } from '@/context/theme-provider';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -32,12 +33,15 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-white dark:bg-[#0a0a0a] text-text-primary dark:text-white">
-        <AuthSessionProvider>
-          {children}
-        </AuthSessionProvider>
+        <ThemeProvider>
+          <AuthSessionProvider>
+            {children}
+          </AuthSessionProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

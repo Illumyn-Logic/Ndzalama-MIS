@@ -6,7 +6,7 @@ interface TestimonialCardProps {
 
 export function TestimonialCard({ testimonial }: TestimonialCardProps) {
   return (
-    <div className="bg-white dark:bg-[#183018] p-6 rounded-lg shadow-sm">
+    <div className="bg-[#f6f1e8] dark:bg-[#183018] p-6 rounded-lg shadow-sm border border-[#eee4d5] dark:border-white/10">
       <div className="flex items-center gap-1 text-brand-primary dark:text-brand-secondary" aria-label={`${testimonial.rating} out of 5 stars`}>
         {'★'.repeat(testimonial.rating)}
         {'☆'.repeat(5 - testimonial.rating)}

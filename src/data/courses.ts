@@ -5,6 +5,14 @@ export type CourseCategory =
   | 'Skill Builder Courses'
   | 'Legacy Qualifications';
 
+export const courseCategories: CourseCategory[] = [
+  'Occupational Certificates',
+  'Skills Programmes',
+  'First Aid Programmes',
+  'Skill Builder Courses',
+  'Legacy Qualifications',
+];
+
 export type CourseProvider =
   | 'ETDP SETA'
   | 'Services SETA'

@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { Container } from '@/components/ui/container';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { cn } from '@/lib/utils';
 import { courses, type CourseCategory, type CourseProvider } from '@/data/courses';
 import {
@@ -91,8 +92,8 @@ function NavDropdown({ label, href, isActive, children }: DropdownProps) {
         <Link
           href={href}
           className={cn(
-            'flex items-center gap-1 px-4 py-2 text-sm font-medium transition-colors hover:text-brand-secondary',
-            isActive ? 'text-brand-secondary' : 'text-text-primary dark:text-gray-300',
+            'flex items-center gap-1 px-4 py-2 text-sm font-medium transition-colors',
+            isActive ? 'text-brand-primary dark:text-brand-secondary' : 'text-slate-900 hover:text-brand-primary dark:text-slate-200 dark:hover:text-brand-secondary',
           )}
           aria-haspopup="true"
           aria-expanded={open}
@@ -108,8 +109,8 @@ function NavDropdown({ label, href, isActive, children }: DropdownProps) {
           type="button"
           onClick={() => setOpen((v) => !v)}
           className={cn(
-            'flex items-center gap-1 px-4 py-2 text-sm font-medium transition-colors hover:text-brand-secondary',
-            isActive ? 'text-brand-secondary' : 'text-text-primary dark:text-gray-300',
+            'flex items-center gap-1 px-4 py-2 text-sm font-medium transition-colors',
+            isActive ? 'text-brand-primary dark:text-brand-secondary' : 'text-slate-900 hover:text-brand-primary dark:text-slate-200 dark:hover:text-brand-secondary',
           )}
           aria-haspopup="true"
           aria-expanded={open}
@@ -125,7 +126,7 @@ function NavDropdown({ label, href, isActive, children }: DropdownProps) {
       {open && (
         <div
           role="menu"
-          className="absolute top-full left-0 min-w-56 bg-white dark:bg-[#183018] border border-[#e5e4e7] dark:border-brand-primary-light/40 shadow-xl py-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150"
+          className="absolute top-full left-0 z-50 min-w-56 border border-[#e5e4e7] bg-white py-2 shadow-xl dark:border-brand-primary-light/40 dark:bg-[#183018]"
         >
           {children}
         </div>
@@ -139,7 +140,7 @@ function DropdownItem({ href, label }: { href: string; label: string }) {
     <Link
       role="menuitem"
       href={href}
-      className="block px-4 py-2.5 text-sm text-text-primary dark:text-gray-300 hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors"
+      className="block px-4 py-2.5 text-sm text-slate-800 transition-colors hover:bg-brand-secondary/10 hover:text-brand-primary dark:text-slate-200 dark:hover:text-brand-secondary"
     >
       {label}
     </Link>
@@ -194,8 +195,8 @@ function CoursesDropdown({ isActive }: { isActive: boolean }) {
         type="button"
         onClick={openMenu}
         className={cn(
-          'flex items-center gap-1 px-4 py-2 text-sm font-medium transition-colors hover:text-brand-secondary',
-          isActive ? 'text-brand-secondary' : 'text-text-primary dark:text-gray-300',
+          'flex items-center gap-1 px-4 py-2 text-sm font-medium transition-colors',
+          isActive ? 'text-brand-primary dark:text-brand-secondary' : 'text-slate-900 hover:text-brand-primary dark:text-slate-200 dark:hover:text-brand-secondary',
         )}
         aria-haspopup="true"
         aria-expanded={open}
@@ -240,8 +241,8 @@ function CoursesDropdown({ isActive }: { isActive: boolean }) {
                     className={cn(
                       'flex w-full items-center justify-between gap-2 px-3 py-2.5 text-left text-xs font-semibold transition-colors',
                       selectedProvider === group.provider
-                        ? 'bg-white text-brand-primary shadow-sm dark:bg-[#234523] dark:text-brand-secondary'
-                        : 'text-text-secondary hover:bg-white/70 hover:text-brand-primary dark:text-gray-300 dark:hover:bg-[#234523]',
+                        ? 'bg-[#e8f0e8] text-brand-primary shadow-sm dark:bg-[#234523] dark:text-brand-secondary'
+                        : 'text-slate-700 hover:bg-[#f5f9f5] hover:text-brand-primary dark:text-slate-300 dark:hover:bg-[#234523]',
                     )}
                     aria-pressed={selectedProvider === group.provider}
                   >
@@ -270,7 +271,7 @@ function CoursesDropdown({ isActive }: { isActive: boolean }) {
                         <button
                           type="button"
                           onClick={() => setExpandedCategory(expanded ? null : category)}
-                          className="flex w-full items-center justify-between gap-3 px-3 py-3 text-left text-sm font-semibold text-text-primary transition-colors hover:bg-brand-neutral/50 dark:text-gray-200"
+                          className="flex w-full items-center justify-between gap-3 px-3 py-3 text-left text-sm font-semibold text-slate-900 transition-colors hover:bg-brand-neutral/50 dark:text-gray-200"
                           aria-expanded={expanded}
                           aria-controls={panelId}
                         >
@@ -287,7 +288,7 @@ function CoursesDropdown({ isActive }: { isActive: boolean }) {
                                 key={course.id}
                                 href={`/courses/${course.slug}`}
                                 onClick={close}
-                                className="border-l-2 border-transparent px-2 py-1.5 text-sm leading-snug text-text-secondary transition-colors hover:border-brand-secondary hover:bg-brand-neutral/50 hover:text-brand-primary dark:text-gray-300 dark:hover:text-brand-secondary"
+                                className="border-l-2 border-transparent px-2 py-1.5 text-sm leading-snug text-slate-700 transition-colors hover:border-brand-secondary hover:bg-brand-neutral/50 hover:text-brand-primary dark:text-slate-300 dark:hover:text-brand-secondary"
                               >
                                 {course.title}
                               </Link>
@@ -357,18 +358,18 @@ export function PublicHeader({ compactHeader }: { compactHeader: boolean }) {
           compactHeader ? 'max-h-0 opacity-0' : 'max-h-10 opacity-100',
         )}
       >
-        <Container className="flex items-center justify-between py-2">
+        <Container className="flex items-center justify-between gap-4 py-2">
           <div className="flex items-center gap-6">
             <a
               href="mailto:headoffice@ndzalama.org.za"
-              className="flex items-center gap-2 hover:text-brand-secondary transition-colors"
+              className="flex items-center gap-2 text-white/90 transition-colors hover:text-brand-secondary"
             >
               <FaEnvelope aria-hidden="true" />
               headoffice@ndzalama.org.za
             </a>
             <a
               href="tel:+27155900732"
-              className="flex items-center gap-2 hover:text-brand-secondary transition-colors"
+              className="flex items-center gap-2 text-white/90 transition-colors hover:text-brand-secondary"
             >
               <FaPhone aria-hidden="true" />
               +(27) 15-5900-732
@@ -377,34 +378,37 @@ export function PublicHeader({ compactHeader }: { compactHeader: boolean }) {
               href="https://api.whatsapp.com/send?phone=27664832441"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 hover:text-brand-secondary transition-colors"
+              className="flex items-center gap-2 text-white/90 transition-colors hover:text-brand-secondary"
             >
               <FaWhatsapp aria-hidden="true" />
               WhatsApp Us
             </a>
           </div>
 
-          <div className="inline-flex items-center gap-0 overflow-hidden border border-white/25 shadow-xs">
-            {[
-              { href: 'https://www.facebook.com/ndzalamatraining.co.za', label: 'Facebook', Icon: FaFacebookF, bg: 'bg-[#efa936] hover:bg-[#df9926]' },
-              { href: '#', label: 'Instagram', Icon: FaInstagram, bg: 'bg-[#249c9b] hover:bg-[#1e8887]' },
-              { href: '#', label: 'Twitter', Icon: FaTwitter, bg: 'bg-[#ed704c] hover:bg-[#d85e3a]' },
-              { href: '#', label: 'LinkedIn', Icon: FaLinkedinIn, bg: 'bg-[#6b6570] hover:bg-[#58535d]' },
-            ].map(({ href, label, Icon, bg }) => (
-              <a
-                key={label}
-                href={href}
-                target={href !== '#' ? '_blank' : undefined}
-                rel={href !== '#' ? 'noopener noreferrer' : undefined}
-                aria-label={label}
-                className={cn(
-                  'flex h-6 w-6 items-center justify-center text-white text-[11px] transition-colors hover:brightness-110',
-                  bg,
-                )}
-              >
-                <Icon aria-hidden="true" />
-              </a>
-            ))}
+          <div className="flex items-center gap-3">
+            <div className="inline-flex items-center gap-0 overflow-hidden border border-white/25 shadow-xs">
+              {[
+                { href: 'https://www.facebook.com/ndzalamatraining.co.za', label: 'Facebook', Icon: FaFacebookF, bg: 'bg-[#efa936] hover:bg-[#df9926]' },
+                { href: '#', label: 'Instagram', Icon: FaInstagram, bg: 'bg-[#249c9b] hover:bg-[#1e8887]' },
+                { href: '#', label: 'Twitter', Icon: FaTwitter, bg: 'bg-[#ed704c] hover:bg-[#d85e3a]' },
+                { href: '#', label: 'LinkedIn', Icon: FaLinkedinIn, bg: 'bg-[#6b6570] hover:bg-[#58535d]' },
+              ].map(({ href, label, Icon, bg }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target={href !== '#' ? '_blank' : undefined}
+                  rel={href !== '#' ? 'noopener noreferrer' : undefined}
+                  aria-label={label}
+                  className={cn(
+                    'flex h-6 w-6 items-center justify-center text-white text-[11px] transition-colors hover:brightness-110',
+                    bg,
+                  )}
+                >
+                  <Icon aria-hidden="true" />
+                </a>
+              ))}
+            </div>
+            <ThemeToggle />
           </div>
         </Container>
       </div>
@@ -429,8 +433,10 @@ export function PublicHeader({ compactHeader }: { compactHeader: boolean }) {
             <Link
               href="/"
               className={cn(
-                'px-4 py-2 text-sm font-medium transition-colors hover:text-brand-secondary',
-                pathname === '/' ? 'text-brand-secondary' : 'text-text-primary dark:text-gray-300',
+                'px-4 py-2 text-sm font-medium transition-colors',
+                pathname === '/'
+                  ? 'text-brand-primary dark:text-brand-secondary'
+                  : 'text-slate-900 hover:text-brand-primary dark:text-slate-200 dark:hover:text-brand-secondary',
               )}
             >
               Home
@@ -456,8 +462,10 @@ export function PublicHeader({ compactHeader }: { compactHeader: boolean }) {
             <Link
               href="/posts"
               className={cn(
-                'px-4 py-2 text-sm font-medium transition-colors hover:text-brand-secondary',
-                pathname.startsWith('/posts') ? 'text-brand-secondary' : 'text-text-primary dark:text-gray-300',
+                'px-4 py-2 text-sm font-medium transition-colors',
+                pathname.startsWith('/posts')
+                  ? 'text-brand-primary dark:text-brand-secondary'
+                  : 'text-slate-900 hover:text-brand-primary dark:text-slate-200 dark:hover:text-brand-secondary',
               )}
             >
               Updates
@@ -466,15 +474,17 @@ export function PublicHeader({ compactHeader }: { compactHeader: boolean }) {
             <Link
               href="/contact"
               className={cn(
-                'px-4 py-2 text-sm font-medium transition-colors hover:text-brand-secondary',
-                pathname === '/contact' ? 'text-brand-secondary' : 'text-text-primary dark:text-gray-300',
+                'px-4 py-2 text-sm font-medium transition-colors',
+                pathname === '/contact'
+                  ? 'text-brand-primary dark:text-brand-secondary'
+                  : 'text-slate-900 hover:text-brand-primary dark:text-slate-200 dark:hover:text-brand-secondary',
               )}
             >
               Contact
             </Link>
 
             {/* Learning CTA */}
-            <div className="flex items-center gap-2 ml-3">
+            <div className="ml-3 flex items-center gap-2">
               {user && isLearner ? (
                 // Logged-in learner on public site - show profile
                 <Link
@@ -527,14 +537,14 @@ export function PublicHeader({ compactHeader }: { compactHeader: boolean }) {
             className="lg:hidden border-t border-[#e5e4e7] dark:border-brand-primary-light/40 bg-white dark:bg-[#071407]"
           >
             <Container className="py-4 flex flex-col gap-1">
-              <Link href="/" onClick={() => setIsOpen(false)} className="block py-2 px-3 text-sm font-medium hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300">Home</Link>
+              <Link href="/" onClick={() => setIsOpen(false)} className="block py-2 px-3 text-sm font-medium text-slate-900 transition-colors hover:bg-brand-secondary/10 hover:text-brand-primary dark:text-slate-200 dark:hover:text-brand-secondary">Home</Link>
 
               {/* About accordion */}
               <div>
                 <button
                   type="button"
                   onClick={() => setMobileAboutOpen((v) => !v)}
-                  className="w-full flex items-center justify-between py-2 px-3 text-sm font-medium hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300"
+                  className="w-full flex items-center justify-between py-2 px-3 text-sm font-medium text-slate-900 transition-colors hover:bg-brand-secondary/10 hover:text-brand-primary dark:text-slate-200 dark:hover:text-brand-secondary"
                   aria-expanded={mobileAboutOpen}
                 >
                   About
@@ -543,7 +553,7 @@ export function PublicHeader({ compactHeader }: { compactHeader: boolean }) {
                 {mobileAboutOpen && (
                   <div className="pl-4 mt-1 flex flex-col gap-1">
                     {aboutLinks.map((l) => (
-                      <Link key={l.href} href={l.href} onClick={() => setIsOpen(false)} className="block py-2 px-3 text-sm text-text-secondary dark:text-gray-400 rounded hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors">{l.label}</Link>
+                      <Link key={l.href} href={l.href} onClick={() => setIsOpen(false)} className="block rounded py-2 px-3 text-sm text-slate-700 transition-colors hover:bg-brand-secondary/10 hover:text-brand-primary dark:text-slate-300 dark:hover:text-brand-secondary">{l.label}</Link>
                     ))}
                   </div>
                 )}
@@ -554,7 +564,7 @@ export function PublicHeader({ compactHeader }: { compactHeader: boolean }) {
                 <button
                   type="button"
                   onClick={() => setMobileCoursesOpen((v) => !v)}
-                  className="w-full flex items-center justify-between py-2 px-3 text-sm font-medium rounded hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300"
+                  className="w-full flex items-center justify-between rounded py-2 px-3 text-sm font-medium text-slate-900 transition-colors hover:bg-brand-secondary/10 hover:text-brand-primary dark:text-slate-200 dark:hover:text-brand-secondary"
                   aria-expanded={mobileCoursesOpen}
                 >
                   Courses
@@ -584,7 +594,7 @@ export function PublicHeader({ compactHeader }: { compactHeader: boolean }) {
                                   key={course.id}
                                   href={`/courses/${course.slug}`}
                                   onClick={() => setIsOpen(false)}
-                                  className="block rounded px-3 py-1.5 text-xs text-text-secondary transition-colors hover:bg-brand-secondary/10 hover:text-brand-secondary dark:text-gray-400"
+                                  className="block rounded px-3 py-1.5 text-xs text-slate-700 transition-colors hover:bg-brand-secondary/10 hover:text-brand-primary dark:text-slate-300 dark:hover:text-brand-secondary"
                                 >
                                   {course.title}
                                 </Link>
@@ -601,14 +611,14 @@ export function PublicHeader({ compactHeader }: { compactHeader: boolean }) {
                 )}
               </div>
 
-              <Link href="/posts" onClick={() => setIsOpen(false)} className="block py-2 px-3 text-sm font-medium hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300">Updates</Link>
+              <Link href="/posts" onClick={() => setIsOpen(false)} className="block py-2 px-3 text-sm font-medium text-slate-900 transition-colors hover:bg-brand-secondary/10 hover:text-brand-primary dark:text-slate-200 dark:hover:text-brand-secondary">Updates</Link>
 
               {/* Accreditation accordion (includes Verify) */}
               <div>
                 <button
                   type="button"
                   onClick={() => setMobileAccreditationOpen((v) => !v)}
-                  className="w-full flex items-center justify-between py-2 px-3 text-sm font-medium hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300"
+                  className="w-full flex items-center justify-between py-2 px-3 text-sm font-medium text-slate-900 transition-colors hover:bg-brand-secondary/10 hover:text-brand-primary dark:text-slate-200 dark:hover:text-brand-secondary"
                   aria-expanded={mobileAccreditationOpen}
                 >
                   Accreditation
@@ -617,15 +627,15 @@ export function PublicHeader({ compactHeader }: { compactHeader: boolean }) {
                 {mobileAccreditationOpen && (
                   <div className="pl-4 mt-1 flex flex-col gap-1">
                     {accreditationLinks.map((l) => (
-                      <Link key={l.href} href={l.href} onClick={() => setIsOpen(false)} className="block py-2 px-3 text-sm text-text-secondary dark:text-gray-400 hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors">{l.label}</Link>
+                      <Link key={l.href} href={l.href} onClick={() => setIsOpen(false)} className="block py-2 px-3 text-sm text-slate-700 transition-colors hover:bg-brand-secondary/10 hover:text-brand-primary dark:text-slate-300 dark:hover:text-brand-secondary">{l.label}</Link>
                     ))}
                   </div>
                 )}
               </div>
 
-              <Link href="/contact" onClick={() => setIsOpen(false)} className="block py-2 px-3 text-sm font-medium hover:bg-brand-secondary/10 hover:text-brand-secondary transition-colors text-text-primary dark:text-gray-300">Contact</Link>
+              <Link href="/contact" onClick={() => setIsOpen(false)} className="block py-2 px-3 text-sm font-medium text-slate-900 transition-colors hover:bg-brand-secondary/10 hover:text-brand-primary dark:text-slate-200 dark:hover:text-brand-secondary">Contact</Link>
 
-              <div className="flex flex-col gap-2 mt-3 pt-3 border-t border-[#e5e4e7] dark:border-[#2e303a]">
+              <div className="mt-3 flex flex-col gap-2 border-t border-[#e5e4e7] pt-3 dark:border-[#2e303a]">
                 {user && isLearner ? (
                   // Logged-in learner
                   <Link

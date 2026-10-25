@@ -24,7 +24,7 @@ export function CourseCard({ course }: CourseCardProps) {
   return (
     <Link
       href={`/courses/${course.slug}`}
-      className="group relative block bg-white dark:bg-[#102213] border border-slate-200 dark:border-white/10 hover:border-slate-400 dark:hover:border-white/40 shadow-sm hover:shadow-xl transition-all overflow-hidden"
+      className="group relative block bg-[#f7f3ee] dark:bg-[#102213] border border-[#e8dfd3] dark:border-white/10 hover:border-[#d9cdb5] dark:hover:border-white/40 shadow-sm hover:shadow-xl transition-all overflow-hidden"
     >
       <div className="relative w-full h-48 overflow-hidden bg-slate-100 dark:bg-slate-900">
         <Image
