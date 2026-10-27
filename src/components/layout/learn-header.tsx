@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useSession, signOut } from 'next-auth/react';
 import { usePathname, useRouter } from 'next/navigation';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { cn } from '@/lib/utils';
 import { 
   FaHome, 
@@ -110,6 +111,7 @@ export function LearnHeader() {
 
           {/* Right side: Auth-aware CTAs */}
           <div className="flex items-center gap-3">
+            <ThemeToggle />
             <Link
               href="/"
               title="Back to public home"

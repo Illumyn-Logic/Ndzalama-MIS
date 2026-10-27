@@ -1,4 +1,4 @@
-import { PrismaClient, UserRole, Gender, EquityGroup, CitizenStatus, SocioEconomicStatus, DisabilityType, AssessmentKind, ModuleType, QualificationStatus, ResourceKind } from '@prisma/client';
+import { PrismaClient, UserRole, Gender, EquityGroup, CitizenStatus, SocioEconomicStatus, DisabilityType, AssessmentKind, ModuleType, QualificationStatus, ResourceKind, InvoiceStatus, PaymentProvider, PaymentStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
@@ -145,8 +145,27 @@ async function main() {
         orgEmail: u.orgEmail,
         profile: {
           update: {
-            idOrPassportNumber: u.govId, // ✅ FIXED: Mapped to correct schema field
+            firstName: u.firstName,
+            lastName: u.lastName,
+            idNumber: u.govId,
+            idOrPassportNumber: u.govId,
             studentNumber: u.studentNumber,
+            dateOfBirth: new Date('1990-01-01'),
+            gender: Gender.PREFER_NOT_TO_SAY,
+            equity: EquityGroup.OTHER,
+            citizenStatus: CitizenStatus.SA_CITIZEN,
+            disability: DisabilityType.NONE,
+            socioEconomicStatus: SocioEconomicStatus.EMPLOYED,
+            homeLanguage: 'English',
+            phone: '0820000000',
+            alternativePhone: '0820000000',
+            streetAddress: '123 Ndzalama Training St',
+            suburbCity: 'Polokwane',
+            province: 'Limpopo',
+            postalCode: '0700',
+            isUrban: true,
+            nationality: 'South Africa',
+            highestQualification: 'Not specified',
           }
         }
       },
@@ -160,26 +179,67 @@ async function main() {
           create: {
             firstName: u.firstName,
             lastName: u.lastName,
-            idOrPassportNumber: u.govId, // ✅ FIXED: Mapped to correct schema field
+            idNumber: u.govId,
+            idOrPassportNumber: u.govId,
             studentNumber: u.studentNumber,
             phone: '0820000000',
             dateOfBirth: new Date('1990-01-01'),
-            gender: 'PREFER_NOT_TO_SAY' as Gender,
-            equity: 'OTHER' as EquityGroup,
-            citizenStatus: 'SA_CITIZEN' as CitizenStatus,
+            gender: Gender.PREFER_NOT_TO_SAY,
+            equity: EquityGroup.OTHER,
+            citizenStatus: CitizenStatus.SA_CITIZEN,
             homeLanguage: 'English',
-            socioEconomicStatus: 'EMPLOYED' as SocioEconomicStatus,
-            disability: 'NONE' as DisabilityType,
+            nationality: 'South Africa',
+            socioEconomicStatus: SocioEconomicStatus.EMPLOYED,
+            disability: DisabilityType.NONE,
             streetAddress: '123 Ndzalama Training St',
             suburbCity: 'Polokwane',
             province: 'Limpopo',
             postalCode: '0700',
+            highestQualification: 'Not specified',
           },
         },
       },
     });
     console.log(`✅ Upserted ${u.role.padEnd(12)} | ${u.email} ${u.orgEmail && u.orgEmail !== u.email ? `(${u.orgEmail})` : ''}`);
   }
+
+  const sampleLearner = await prisma.user.findUniqueOrThrow({
+    where: { email: 'thabo.molefe@gmail.com' },
+    select: { id: true },
+  });
+  const sampleInvoice = await prisma.invoice.upsert({
+    where: { number: 'NDZ-SEED-INV-2026-001' },
+    update: {
+      userId: sampleLearner.id,
+      lineItems: [{ description: 'Schema hardening sample invoice', amount: 1450 }],
+      amountDue: 1450,
+      status: InvoiceStatus.DRAFT,
+    },
+    create: {
+      number: 'NDZ-SEED-INV-2026-001',
+      userId: sampleLearner.id,
+      lineItems: [{ description: 'Schema hardening sample invoice', amount: 1450 }],
+      amountDue: 1450,
+      status: InvoiceStatus.DRAFT,
+    },
+  });
+  const samplePaymentRef = 'ndzalama-seed-payment-2026-001';
+  const existingSamplePayment = await prisma.payment.findFirst({
+    where: { provider: PaymentProvider.MANUAL_EFT, providerRef: samplePaymentRef },
+  });
+  const samplePaymentData = {
+    invoiceId: sampleInvoice.id,
+    provider: PaymentProvider.MANUAL_EFT,
+    providerRef: samplePaymentRef,
+    amount: 1450,
+    status: PaymentStatus.PENDING,
+  };
+  if (existingSamplePayment) {
+    await prisma.payment.update({ where: { id: existingSamplePayment.id }, data: samplePaymentData });
+  } else {
+    await prisma.payment.create({ data: samplePaymentData });
+  }
+  console.log(`✅ Seeded draft invoice ${sampleInvoice.number} with pending manual EFT payment`);
 
   await upsertCurriculum();
   await upsertEcdCurriculum();
