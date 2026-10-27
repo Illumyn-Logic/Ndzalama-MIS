@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { courses } from '@/data/courses';
+import { courses, courseCategories } from '@/data/courses';
+import Link from 'next/link';
 import { Container } from '@/components/ui/container';
 import { SectionTitle } from '@/components/ui/section-title';
 import { CourseCard } from '@/components/common/course-card';
@@ -9,7 +10,17 @@ export const metadata: Metadata = {
   description: 'Browse accredited programmes, legacy qualifications, and self-paced skill builder courses.',
 };
 
-export default function CoursesPage() {
+export default async function CoursesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string }>;
+}) {
+  const params = await searchParams;
+  const selectedCategory = courseCategories.find((category) => category === params.category);
+  const filteredCourses = selectedCategory
+    ? courses.filter((course) => course.category === selectedCategory)
+    : courses;
+
   return (
     <>
       {/* Hero: Canopy & Curriculum Header */}
@@ -47,11 +58,49 @@ export default function CoursesPage() {
             title="Course Catalogue"
             subtitle="Accredited qualifications, legacy unit standards, and self-paced skill builders"
           />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {courses.map((course) => (
-              <CourseCard key={course.id} course={course} />
+          <nav aria-label="Filter courses by category" className="mb-8 flex flex-wrap gap-2">
+            <Link
+              href="/courses"
+              aria-current={selectedCategory ? undefined : 'page'}
+              className={`border px-4 py-2 text-sm font-semibold transition-colors ${
+                selectedCategory
+                  ? 'border-slate-200 bg-white text-slate-700 hover:border-[#8eaf6a] dark:border-white/15 dark:bg-[#132214] dark:text-white/75'
+                  : 'border-[#547b36] bg-[#547b36] text-white'
+              }`}
+            >
+              All courses
+            </Link>
+            {courseCategories.map((category) => (
+              <Link
+                key={category}
+                href={`/courses?category=${encodeURIComponent(category)}`}
+                aria-current={selectedCategory === category ? 'page' : undefined}
+                className={`border px-4 py-2 text-sm font-semibold transition-colors ${
+                  selectedCategory === category
+                    ? 'border-[#547b36] bg-[#547b36] text-white'
+                    : 'border-slate-200 bg-white text-slate-700 hover:border-[#8eaf6a] dark:border-white/15 dark:bg-[#132214] dark:text-white/75'
+                }`}
+              >
+                {category}
+              </Link>
             ))}
-          </div>
+          </nav>
+          {selectedCategory && (
+            <h2 className="mb-5 text-xl font-bold text-slate-800 dark:text-white">
+              {selectedCategory}
+            </h2>
+          )}
+          {filteredCourses.length > 0 ? (
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {filteredCourses.map((course) => (
+              <CourseCard key={course.id} course={course} />
+              ))}
+            </div>
+          ) : (
+            <p className="border border-dashed border-slate-300 p-8 text-center text-slate-600 dark:border-white/20 dark:text-white/70">
+              No courses are currently listed in this category.
+            </p>
+          )}
         </Container>
       </section>
     </>

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Container } from '@/components/ui/container';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 import {
   FaFacebookF,
   FaInstagram,
@@ -178,6 +179,7 @@ export function PublicFooter() {
             &copy; {new Date().getFullYear()} Ndzalama Training Institute. All rights reserved.
           </p>
           <div className="flex items-center gap-4">
+            <ThemeToggle />
             <Link href="/privacy-policy" className="hover:text-brand-secondary transition-colors">
               Privacy Policy
             </Link>
