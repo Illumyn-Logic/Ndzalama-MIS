@@ -91,124 +91,125 @@ npx prisma studio  # Visual database browser
 
 ## Folder Structure
 
-```
+The repository is currently structured as follows (generated folders such as `.next` and `node_modules` are omitted unless specifically relevant):
+
+```text
 Ndzalama-MIS/
-├── docs/                              # Project documentation & reference materials
-│   ├── NDZALAMA_SYSTEM_BLUEPRINT_AND_SCHEMA.md   # Master system blueprint & DB schema spec
-│   ├── courses/                       # Course content documents (facilitator/learner guides, assessments)
-│   │   └── 101321 OC - Training Development Practitioner/
-│   │       ├── 242401001-KM-01/       # Knowledge Module 01 materials
-│   │       ├── 242401001-KM-02/       # Knowledge Module 02 materials
-│   │       ├── 242401001-KM-03/       # Knowledge Module 03 materials
-│   │       ├── 242401001-KM-04/       # Knowledge Module 04 materials
-│   │       ├── 242401001-KM-05/       # Knowledge Module 05 materials
-│   │       └── 242401001-KM-06/       # Knowledge Module 06 materials
-│   ├── forms/                         # Printable/fillable admin & learner forms
-│   ├── organisation/                  # Org charts, policy documents
-│   ├── pricing/                       # Pricing sheets
-│   ├── schedules/                     # Training schedule documents
-│   └── wetransfer/                    # Inbound file drops / shared resources
-│
-├── migrations/                        # Raw SQL migration files (Neon / Supabase compatible)
+├── .env.local                 # Local runtime configuration (gitignored)
+├── .gitignore
+├── .kiro/                     # Local project tooling metadata
+├── .vscode/
+├── AGENTS.md
+├── Build
+├── CLAUDE.md
+├── README.md
+├── TESTING.md
+├── eslint.config.mjs
+├── hello.ts
+├── neon.ts
+├── next-env.d.ts
+├── next.config.ts
+├── package-lock.json
+├── package.json
+├── postcss.config.mjs
+├── tailwind.config.ts
+├── tsconfig.json
+├── tsconfig.tsbuildinfo
+├── docs/
+│   ├── _/
+│   │   ├── ARCHITECTURE.md
+│   │   ├── AUTHENTICATION.md
+│   │   ├── DATABASE.md
+│   │   ├── DEPLOYMENT.md
+│   │   ├── LMS-FUNCTIONAL-SPEC.md
+│   │   ├── todo.md
+│   │   ├── Design/
+│   │   └── inspo/
+│   ├── ADMIN_CURRICULUM_BUILDER_IMPLEMENTATION.md
+│   ├── IMPLEMENTATION_GUIDE.md
+│   ├── NAV_REDESIGN_SUMMARY.md
+│   ├── NDZALAMA_SYSTEM_BLUEPRINT_AND_SCHEMA.md
+│   ├── PHASE1_COMPLETE.md
+│   ├── PHASE1_PROGRESS.md
+│   ├── PROJECT_SCAN_2026-10-10.md
+│   ├── courses/
+│   │   ├── 101321 OC - Training Development Practitioner/
+│   │   ├── 97154 - OC - Occupational Trainer/
+│   │   ├── 97542 - OC - Early Childhood Development Practitioner/
+│   │   ├── SP-201201-Workplace Preparation/
+│   │   ├── SP-211009-Workplace Essential Skills/
+│   │   └── work-based-learning-and-development-practitioner/
+│   ├── forms/
+│   ├── organisation/
+│   ├── pricing/
+│   ├── schedules/
+│   └── wetransfer/
+├── migrations/
 │   ├── 20260819_ndzalama_init_schema.sql
-│   └── sqlite/                        # SQLite variant migrations (dev/testing)
-│
+│   └── sqlite/
 ├── prisma/
-│   ├── schema.prisma                  # Prisma schema (PostgreSQL, RBAC models)
-│   ├── migrations/                    # Prisma-managed migration history
-│   └── readme.md                      # Prisma-specific notes
-│
-├── public/                            # Static assets served at root
-│   └── images/                        # Site images
-│
+│   ├── migrations/
+│   ├── readme.md
+│   ├── schema.prisma
+│   └── seed.ts
+├── public/
+│   └── images/
 ├── src/
-│   ├── app/                           # Next.js App Router
-│   │   ├── layout.tsx                 # Root layout
-│   │   ├── globals.css                # Global styles (Tailwind entry)
-│   │   │
-│   │   ├── (public)/                  # Public-facing marketing site (no auth required)
-│   │   │   ├── page.tsx               # Homepage
-│   │   │   ├── layout.tsx             # Public layout (header + footer)
-│   │   │   ├── about/
-│   │   │   ├── accreditation-services/
-│   │   │   ├── apply/                 # Prospective learner intake form
-│   │   │   ├── contact/
-│   │   │   ├── courses/               # Public course catalogue
-│   │   │   ├── faq/
-│   │   │   ├── posts/                 # Dynamic news & blog posts
-│   │   │   ├── privacy-policy/
-│   │   │   ├── terms-of-use/
-│   │   │   ├── thank-you/
-│   │   │   ├── verify/                # Public certificate verification
-│   │   │   └── why-choose-us/
-│   │   │
-│   │   ├── (auth)/                    # Authentication pages
+│   ├── app/
+│   │   ├── (auth)/
 │   │   │   ├── login/
 │   │   │   └── register/
-│   │   │
-│   │   └── (dashboard)/               # Protected role-based dashboards (auth required)
-│   │       ├── layout.tsx             # Dashboard shell (sidebar + header)
-│   │       ├── admin/                 # Admin / Registrar workspace
-│   │       │   ├── page.tsx
-│   │       │   ├── courses/           # Course management
-│   │       │   └── learners/          # Learner management
-│   │       ├── assessor/
-│   │       │   └── page.tsx
-│   │       ├── facilitator/
-│   │       │   └── page.tsx
-│   │       ├── learner/
-│   │       │   └── page.tsx
-│   │       └── moderator/
-│   │           └── page.tsx
-│   │
-│   ├── auth.ts                        # NextAuth v5 configuration
-│   │
+│   │   ├── (dashboard)/
+│   │   │   ├── admin/
+│   │   │   ├── assessor/
+│   │   │   ├── dashboard/
+│   │   │   ├── facilitator/
+│   │   │   └── moderator/
+│   │   ├── (public)/
+│   │   │   ├── about/
+│   │   │   ├── accreditation-services/
+│   │   │   ├── apply/
+│   │   │   ├── contact/
+│   │   │   ├── courses/
+│   │   │   ├── faq/
+│   │   │   ├── posts/
+│   │   │   ├── privacy-policy/
+│   │   │   ├── thank-you/
+│   │   │   ├── verify/
+│   │   │   └── why-choose-us/
+│   │   ├── admin/
+│   │   ├── api/
+│   │   ├── learn/
+│   │   ├── favicon.ico
+│   │   ├── globals.css
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   ├── auth.ts
 │   ├── components/
-│   │   ├── common/                    # Shared business components
-│   │   │   ├── award-logo-strip.tsx
-│   │   │   ├── course-card.tsx
-│   │   │   ├── demo-role-switcher.tsx
-│   │   │   └── testimonial-card.tsx
-│   │   ├── layout/                    # Shell / chrome components
-│   │   │   ├── dashboard-header.tsx
-│   │   │   ├── dashboard-sidebar.tsx
-│   │   │   ├── public-footer.tsx
-│   │   │   └── public-header.tsx
-│   │   └── ui/                        # Primitive UI building blocks
-│   │       ├── button.tsx
-│   │       ├── container.tsx
-│   │       └── section-title.tsx
-│   │
+│   │   ├── admin/
+│   │   ├── common/
+│   │   ├── layout/
+│   │   ├── learn/
+│   │   └── ui/
 │   ├── context/
-│   │   └── demo-auth-context.tsx      # Demo role-switching context (dev only)
-│   │
-│   ├── data/                          # Static/seed data modules
+│   ├── data/
 │   │   ├── accreditationServices.ts
 │   │   ├── courses.ts
 │   │   ├── navLinks.ts
 │   │   ├── schedules.ts
 │   │   └── testimonials.ts
-│   │
-│   └── lib/                           # Shared utilities & server clients
-│       ├── prisma.ts                  # Prisma client singleton
-│       ├── utils.ts                   # General utility helpers
-│       └── offline-data.ts            # Offline / fallback data layer
-│
-├── types/                             # Global TypeScript declarations
-│   ├── cache-life.d.ts
-│   ├── root-params.d.ts
-│   ├── routes.d.ts
-│   └── validator.ts
-│
-├── .env                               # Environment variables (do not commit secrets)
-├── .env.local                         # Local overrides (git-ignored)
-├── .gitignore
-├── eslint.config.mjs
-├── next.config.ts
-├── postcss.config.mjs
-├── tsconfig.json
-├── package.json
-└── README.md
+│   ├── lib/
+│   │   ├── brand-colors.ts
+│   │   ├── compliance.ts
+│   │   ├── offline_data.ts
+│   │   ├── prisma.ts
+│   │   ├── student_number.ts
+│   │   └── utils.ts
+│   ├── proxy.ts
+│   └── types/
+├── node_modules/            # generated dependency tree
+├── .next/                   # generated Next.js build output
+└── .git/                    # Git metadata
 ```
 
 ---
