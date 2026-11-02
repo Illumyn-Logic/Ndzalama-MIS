@@ -5,7 +5,11 @@ import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import type { UserRole } from "@prisma/client";
 
+const domainCookie = process.env.AUTH_COOKIE_DOMAIN ||
+  (process.env.NODE_ENV === "production" ? ".ndzalama.co.za" : undefined);
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  trustHost: true,
   adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt", // JWT is better for Neon serverless
@@ -13,6 +17,39 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: {
     signIn: "/login",
   },
+  cookies: domainCookie
+    ? {
+        sessionToken: {
+          name: "next-auth.session-token",
+          options: {
+            httpOnly: true,
+            sameSite: "lax",
+            path: "/",
+            secure: true,
+            domain: domainCookie,
+          },
+        },
+        callbackUrl: {
+          name: "next-auth.callback-url",
+          options: {
+            sameSite: "lax",
+            path: "/",
+            secure: true,
+            domain: domainCookie,
+          },
+        },
+        csrfToken: {
+          name: "next-auth.csrf-token",
+          options: {
+            httpOnly: true,
+            sameSite: "lax",
+            path: "/",
+            secure: true,
+            domain: domainCookie,
+          },
+        },
+      }
+    : undefined,
   providers: [
     Credentials({
       name: "credentials",
